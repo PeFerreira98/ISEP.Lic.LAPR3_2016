@@ -1,6 +1,7 @@
 package lapr.project.model.network;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -10,13 +11,13 @@ public class Segment {
  
     private float beginningCoord;
     private float endCoord;
-    private ArrayList altitudes_slots;
+    private double altitudes_slots[];
     private String direction;
     private float wind_direction;
     private float wind_speed;
 
     
-    public Segment(float bCoord, float eCoord, ArrayList a_slots, String direction, float wind_direction, float wind_speed){
+    public Segment(float bCoord, float eCoord, double a_slots[], String direction, float wind_direction, float wind_speed){
         this.beginningCoord = bCoord;
         this.endCoord = eCoord;
         this.altitudes_slots = a_slots;
@@ -31,7 +32,6 @@ public class Segment {
     public Segment() {
         this.beginningCoord = 0;
         this.endCoord = 0;
-        this.altitudes_slots = new ArrayList<>();
         this.direction = "";
         this.wind_direction = 0;
         this.wind_speed = 0;
@@ -68,14 +68,14 @@ public class Segment {
     /**
      * @return the altitudes_slots
      */
-    public ArrayList getAltitudes_slots() {
+    public double[] getAltitudes_slots() {
         return altitudes_slots;
     }
 
     /**
      * @param altitudes_slots the altitudes_slots to set
      */
-    public void setAltitudes_slots(ArrayList altitudes_slots) {
+    public void setAltitudes_slots(double altitudes_slots[]) {
         this.altitudes_slots = altitudes_slots;
     }
 
