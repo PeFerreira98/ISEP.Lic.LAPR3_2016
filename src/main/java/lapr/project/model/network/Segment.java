@@ -1,4 +1,4 @@
-package network;
+package lapr.project.model.network;
 
 import java.util.ArrayList;
 
