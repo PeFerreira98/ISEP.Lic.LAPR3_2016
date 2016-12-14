@@ -14,41 +14,49 @@ import lapr.project.model.network.AirNetwork;
  * @author João
  */
 public class Project {
-    
+
+    private int id;
+    private String name;
     private AirNetwork AirNetwork;
-    private LinkedHashMap<Integer, Airport> mapAirports;
-    private LinkedHashMap<Integer, AircraftModel> mapAircrafts;
-    
-    public Project(){
-    this.AirNetwork= new AirNetwork();
-    this.mapAirports = new LinkedHashMap<>();
-    this.mapAircrafts = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, Airport> airportHashMap;
+    private LinkedHashMap<Integer, Aircraft> aircraftHashMap;
+    private LinkedHashMap<Integer, AircraftModel> aircraftModelHashMap;
+
+    public Project(int id, String nome) {
+        this.AirNetwork = new AirNetwork();
+        this.airportHashMap = new LinkedHashMap<>();
+        this.aircraftModelHashMap = new LinkedHashMap<>();
     }
 
-    public AirNetwork getAirNetwork() {
-        return AirNetwork;
-    }
-
-    public void setAirNetwork(AirNetwork AirNetwork) {
+    public Project(int id, String name, AirNetwork AirNetwork, LinkedHashMap<Integer, Airport> airportHashMap, LinkedHashMap<Integer, Aircraft> aircraftHashMap, LinkedHashMap<Integer, AircraftModel> aircraftModelHashMap) {
+        this.id = id;
+        this.name = name;
         this.AirNetwork = AirNetwork;
+        this.airportHashMap = airportHashMap;
+        this.aircraftHashMap = aircraftHashMap;
+        this.aircraftModelHashMap = aircraftModelHashMap;
     }
 
-    public LinkedHashMap<Integer, Airport> getMapAirports() {
-        return mapAirports;
+    public Aircraft addAircraft(Aircraft newAircraft) {
+
+        for (Aircraft aircraft : this.aircraftHashMap.values()) {
+            if (newAircraft.equals(aircraft)) {
+                return null;
+            }
+        }
+
+        return this.aircraftHashMap.put(newAircraft.getId(), newAircraft);
     }
 
-    public void setMapAirports(LinkedHashMap<Integer, Airport> mapAirports) {
-        this.mapAirports = mapAirports;
+    public AircraftModel addAircraftModel(AircraftModel newAircraftModel) {
+
+        for (AircraftModel aircraftModel : this.aircraftModelHashMap.values()) {
+            if (newAircraftModel.equals(aircraftModel)) {
+                return null;
+            }
+        }
+
+        return this.aircraftModelHashMap.put(newAircraftModel.getId(), newAircraftModel);
     }
 
-    public LinkedHashMap<Integer, AircraftModel> getMapAircrafts() {
-        return mapAircrafts;
-    }
-
-    public void setMapAircrafts(LinkedHashMap<Integer, AircraftModel> mapAircrafts) {
-        this.mapAircrafts = mapAircrafts;
-    }
-    
-    
-    
 }
