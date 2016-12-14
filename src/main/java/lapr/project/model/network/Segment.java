@@ -22,7 +22,7 @@ public class Segment {
         this.beginningCoord = bCoord;
         this.endCoord = eCoord;
         this.altitudes_slots = a_slots;
-        this.direction.equals(direction);
+        this.direction = direction;
         this.wind_direction = wind_direction;
         this.wind_speed = wind_speed;
     }

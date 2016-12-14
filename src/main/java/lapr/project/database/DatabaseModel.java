@@ -6,7 +6,12 @@
 package lapr.project.database;
 
 import java.sql.*;
-import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lapr.project.model.Aircraft;
+import lapr.project.model.AircraftModel;
+import lapr.project.model.Airport;
+//import oracle.jdbc.OracleTypes;
 
 /**
  *
@@ -24,4 +29,141 @@ public class DatabaseModel {
     public DatabaseModel() {
 
     }
+    
+    /**
+     * Método utilizado para ligar a base de dados.
+     *
+     */
+      public void openDB(){
+        // LER O DRIVER Oracle JDBC E CONECTAR À BASE DE DADOS ORACLE
+        
+        //DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+        try {
+            this.con = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+            this.st = con.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+      /**
+     * Método utilizado para desligar a base de dados.
+     *
+     */
+      public void closeDB(){
+        try {
+            this.con.close();
+            this.rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+      
+      /**
+     * Método utilizado para receber todos os projectos da base de dados.
+     *
+     * @return
+     * @throws SQLException
+     */
+//    public List<Project> getProjects() throws SQLException {
+//        List<Project> list_projects = new ArrayList<>();
+//         DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+//        this.con = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+//        this.st = con.createStatement();
+//        this.rs = this.st.executeQuery("SELECT * FROM PROJECT");
+//        while (rs.next()) {
+//            Project p = new Project();
+//            p.setName(rs.getString("NAME"));
+//            p.setDescription(rs.getString("description"));
+//            list_projects.add(p);
+//            
+//        }
+//        rs.close();
+//        this.con.close();
+//        return list_projects;
+//    }
+      
+      /**
+     * Método utilizado para guardar dados de um modelo de um avião na base de dados.
+     *
+     * @param air
+     * @throws SQLException
+     */
+    public void addAircraftModel(AircraftModel air){
+        try {
+            this.st.execute("insert into AircraftModel(id, type, motorization, emprtyWeight,MTOW, MZFW, maximunFuelCapacity, serviceCeiling, cruiseSpeed, wingArea, dragCoeficient, liftCoeficient) "
+                    + "values ('" + air.getId()+ "', '"
+                    + air.getType().toString()+ "', '"
+                    + air.getMotorization().toString()+ "', '"
+                    + air.getEmptyWeight()+ "', '"
+                    + air.getMTOW()+ "', '"
+                    + air.getMZFW()+ "', '"
+                    + air.getMaximumFuelCapacity()+ "', '"
+                    + air.getServiceCeiling()+ "', '"
+                    + air.getCruiseSpeed()+ "', '"
+                    + air.getWingArea()+ "', '"
+                    + air.getDragCoeficient()+ "', '"
+                    + air.getLiftCoeficient()+ "')");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        //return getLastInsertedProjectCod();
+    }
+
+    /**
+     * Método utilizado para guardar dados de um avião na base de dados.
+     *
+     * @param air
+     */
+    public void addAircraft(Aircraft air){
+        try {
+            this.st.execute("insert into Aircraft(model, id, company, numberFirstClass, numberNormalClass, numberElementsCrew) "
+                    + "values ('" + air.getModel()+ "', '"
+                    + air.getId()+ "', '"
+                    + air.getCompany()+ "', '"
+                    + air.getNumberFirstClass()+ "', '"
+                    + air.getNumberNormalClass()+ "', '"
+                    + air.getNumberElementsCrew()+ "')");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        //return getLastInsertedProjectCod();
+    }
+    
+    /**
+     * Método utilizado para guardar dados de um aeroporto na base de dados.
+     *
+     * @param ap
+     */
+    public void addAirport(Airport ap){
+        try {
+            this.st.execute("insert into Airport(name, town, country, IATAcode, latitude, longitude, altitude) "
+                    + "values ('" + ap.getName()+ "', '"
+                    + ap.getTown()+ "', '"
+                    + ap.getCountry()+ "', '"
+                    + ap.getIATAcode()+ "', '"
+                    + ap.getLatitude()+ "', '"
+                    + ap.getLongitude()+ "', '"
+                    + ap.getAltitude()+ "')");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        //return getLastInsertedProjectCod();
+    }
+      
+    public void editAircraft(Aircraft  air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew){
+        int idAircraft = air.getId();
+        try {
+            this.st.execute("UPDATE Project set comany = " + company
+                    + " && numberFirstClass = " + nrFirstClass
+                    + " && numberNormalClass = " + nrNormalClass
+                    + " && numberElements = " + nrElementsCrew
+                    + " where id = " + idAircraft);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }
