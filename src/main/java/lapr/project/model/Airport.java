@@ -15,18 +15,14 @@ public class Airport {
     private String town;
     private String country;
     private String IATAcode;
-    private double latitude;
-    private double longitude;
-    private double altitude;
+    private Location location;
 
-    public Airport(String name, String town, String country, String IATAcode, double latitude, double longitude, double altitude) {
+    public Airport(String name, String town, String country, String IATAcode, Location location) {
         this.name = name;
         this.town = town;
         this.country = country;
         this.IATAcode = IATAcode;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.altitude = altitude;
+        this.location = location;
     }
 
     public String getName() {
@@ -61,28 +57,12 @@ public class Airport {
         this.IATAcode = IATAcode;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public Location getLocation(){
+        return this.location;
     }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
+    
+    public void setLocation(Location l){
+        this.location = l;
     }
     
     public boolean equals(Object otherObj) {
@@ -101,7 +81,7 @@ public class Airport {
 
     @Override
     public String toString() {
-        return "Airport{" + "name=" + name + ", town=" + town + ", country=" + country + ", IATAcode=" + IATAcode + ", latitude=" + latitude + ", longitude=" + longitude + ", altitude=" + altitude + '}';
+        return "Airport{" + "name=" + name + ", town=" + town + ", country=" + country + ", IATAcode=" + IATAcode + ", latitude=" + location.getLatitude() + ", longitude=" + location.getLongitude() + ", altitude=" + location.getAltitude() + '}';
     }
 
 }

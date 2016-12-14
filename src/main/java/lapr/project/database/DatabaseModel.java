@@ -6,11 +6,14 @@
 package lapr.project.database;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
+import lapr.project.model.Project;
 //import oracle.jdbc.OracleTypes;
 
 /**
@@ -62,31 +65,28 @@ public class DatabaseModel {
      * Método utilizado para receber todos os projectos da base de dados.
      *
      * @return
-     * @throws SQLException
      */
-//    public List<Project> getProjects() throws SQLException {
-//        List<Project> list_projects = new ArrayList<>();
-//         DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-//        this.con = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
-//        this.st = con.createStatement();
-//        this.rs = this.st.executeQuery("SELECT * FROM PROJECT");
-//        while (rs.next()) {
-//            Project p = new Project();
-//            p.setName(rs.getString("NAME"));
-//            p.setDescription(rs.getString("description"));
-//            list_projects.add(p);
-//            
-//        }
-//        rs.close();
-//        this.con.close();
-//        return list_projects;
-//    }
-      
+    public List<Project> getProjects(){
+        List<Project> list_projects = new ArrayList<>();
+        
+        try {
+            this.rs = this.st.executeQuery("SELECT * FROM PROJECT");
+            while (rs.next()) {
+                Project p = new Project(rs.getInt("id"),rs.getString("NAME"));
+                list_projects.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        closeDB();
+        return list_projects;
+    }
+          
       /**
      * Método utilizado para guardar dados de um modelo de um avião na base de dados.
      *
      * @param air
-     * @throws SQLException
      */
     public void addAircraftModel(AircraftModel air){
         try {
@@ -138,14 +138,12 @@ public class DatabaseModel {
      */
     public void addAirport(Airport ap){
         try {
-            this.st.execute("insert into Airport(name, town, country, IATAcode, latitude, longitude, altitude) "
+            this.st.execute("insert into Airport(name, town, country, IATAcode, location) "
                     + "values ('" + ap.getName()+ "', '"
                     + ap.getTown()+ "', '"
                     + ap.getCountry()+ "', '"
                     + ap.getIATAcode()+ "', '"
-                    + ap.getLatitude()+ "', '"
-                    + ap.getLongitude()+ "', '"
-                    + ap.getAltitude()+ "')");
+                    + ap.getLocation()+ "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,7 +154,7 @@ public class DatabaseModel {
     public void editAircraft(Aircraft  air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew){
         int idAircraft = air.getId();
         try {
-            this.st.execute("UPDATE Project set comany = " + company
+            this.st.execute("UPDATE Aircraft set comany = " + company
                     + " && numberFirstClass = " + nrFirstClass
                     + " && numberNormalClass = " + nrNormalClass
                     + " && numberElements = " + nrElementsCrew
