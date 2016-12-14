@@ -1,4 +1,4 @@
-package lapr.project.model.graphexp;
+package lapr.project.model.graph;
 
 import java.util.ArrayList;
 import java.util.Iterator;

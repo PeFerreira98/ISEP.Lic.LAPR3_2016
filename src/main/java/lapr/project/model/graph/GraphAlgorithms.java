@@ -1,7 +1,7 @@
 /*
  * A collection of graph algorithms.
  */
-package lapr.project.model.graphexp;
+package lapr.project.model.graph;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
