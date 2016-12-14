@@ -12,8 +12,8 @@ import java.util.HashMap;
  *
  * @author João
  */
-public class AircraftModel{
-    
+public class AircraftModel {
+
     private int id;
     private Type type;
     private Motorization motorization;
@@ -26,33 +26,35 @@ public class AircraftModel{
     private double wingArea;
     private double dragCoeficient;
     private double liftCoeficient;
-    
-    public enum Type{
+
+    public enum Type {
+
         passenger,
         cargo,
         mixed;
     }
-    
-    public enum Motorization{
+
+    public enum Motorization {
+
         turboprop,
         turbofan,
         turbojet,
         electricPropeller;
     }
-    
+
     public AircraftModel(int id, Type type, Motorization motorization, double emptyWeight, double MTOW, double MZFW, double maximumFuelCapacity,
-            double serviceCeiling, double cruiseSpeed, double wingArea, double dragCoeficient, double liftCoeficient){
-        this.id=id;
-        this.type=type;
-        this.emptyWeight=emptyWeight;
-        this.MTOW=MTOW;
-        this.MZFW=MZFW;
-        this.maximumFuelCapacity=maximumFuelCapacity;
-        this.serviceCeiling=serviceCeiling;
-        this.cruiseSpeed=cruiseSpeed;
-        this.wingArea=wingArea;
-        this.dragCoeficient=dragCoeficient;
-        this.liftCoeficient=liftCoeficient;
+            double serviceCeiling, double cruiseSpeed, double wingArea, double dragCoeficient, double liftCoeficient) {
+        this.id = id;
+        this.type = type;
+        this.emptyWeight = emptyWeight;
+        this.MTOW = MTOW;
+        this.MZFW = MZFW;
+        this.maximumFuelCapacity = maximumFuelCapacity;
+        this.serviceCeiling = serviceCeiling;
+        this.cruiseSpeed = cruiseSpeed;
+        this.wingArea = wingArea;
+        this.dragCoeficient = dragCoeficient;
+        this.liftCoeficient = liftCoeficient;
     }
 
     public int getId() {
@@ -150,10 +152,22 @@ public class AircraftModel{
     public void setLiftCoeficient(double liftCoeficient) {
         this.liftCoeficient = liftCoeficient;
     }
-    
+
+    public boolean equals(Object otherObj) {
+        if (this == otherObj) {
+            return true;
+        }
+        if (otherObj == null || this.getClass() != otherObj.getClass()) {
+            return false;
+        }
+        AircraftModel otherAircraftModel = (AircraftModel) otherObj;
+
+        return this.id == otherAircraftModel.id;
+    }
+
     @Override
     public String toString() {
         return "AircraftModel{" + "id=" + id + ", type=" + type + ", motorization=" + motorization + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maximumFuelCapacity=" + maximumFuelCapacity + ", serviceCeiling=" + serviceCeiling + ", cruiseSpeed=" + cruiseSpeed + ", wingArea=" + wingArea + ", dragCoeficient=" + dragCoeficient + ", liftCoeficient=" + liftCoeficient + '}';
     }
-    
+
 }

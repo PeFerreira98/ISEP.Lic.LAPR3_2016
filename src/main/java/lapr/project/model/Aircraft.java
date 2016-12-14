@@ -74,4 +74,24 @@ public class Aircraft{
     public void setNumberElementsCrew(int numberElementsCrew) {
         this.numberElementsCrew = numberElementsCrew;
     }
+    
+    public boolean equals(Object otherObj) {
+            if (this == otherObj) {
+                return true;
+            }
+            if (otherObj == null || this.getClass() != otherObj.getClass()) {
+                return false;
+            }
+            Aircraft otherAircraft = (Aircraft) otherObj;
+
+            return this.id == otherAircraft.id;
+        }
+
+    
+    @Override
+    public String toString() {
+        return "Aircraft{" + "model=" + model + ", id=" + id + ", company=" + company + ", numberFirstClass=" + numberFirstClass + ", numberNormalClass=" + numberNormalClass + ", numberElementsCrew=" + numberElementsCrew + '}';
+    }
+    
+    
 }

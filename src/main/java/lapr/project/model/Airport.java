@@ -84,6 +84,20 @@ public class Airport {
     public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
+    
+    public boolean equals(Object otherObj) {
+            if (this == otherObj) {
+                return true;
+            }
+            if (otherObj == null || this.getClass() != otherObj.getClass()) {
+                return false;
+            }
+            Airport otherAirport = (Airport) otherObj;
+
+            return this.IATAcode.equalsIgnoreCase(otherAirport.IATAcode);
+        }
+
+    
 
     @Override
     public String toString() {
