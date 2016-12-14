@@ -5,7 +5,7 @@
  */
 package lapr.project.model.network;
 
-import lapr.project.model.Graph.Graph;
+import lapr.project.model.graphexp.Graph;
 
 /**
  *

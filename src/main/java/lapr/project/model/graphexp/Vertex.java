@@ -1,5 +1,5 @@
 
-package lapr.project.model.Graph;
+package lapr.project.model.graphexp;
 
 import java.util.HashMap;
 import java.util.Iterator;

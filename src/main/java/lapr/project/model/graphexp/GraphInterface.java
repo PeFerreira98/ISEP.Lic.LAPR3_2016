@@ -1,5 +1,5 @@
 
-package lapr.project.model.Graph;
+package lapr.project.model.graphexp;
 
 /**
  *
