@@ -2,6 +2,7 @@ package lapr.project.model.network;
 
 import java.util.Arrays;
 import java.util.Objects;
+import lapr.project.model.Location;
 
 /**
  *
@@ -11,8 +12,7 @@ public class Node implements Comparable<Node>{
 
     private static int maxid = 0;
     private int id;
-    private double beginningCoord[];
-    private double endCoord[];
+    private Location location;
 
     /**
      * Construtor vazio
@@ -27,9 +27,8 @@ public class Node implements Comparable<Node>{
      * @param bCoord
      * @param eCoord
      */
-    public Node(double bCoord[], double eCoord[]) {
-        this.beginningCoord = bCoord;
-        this.endCoord = eCoord;
+    public Node(Location location) {
+        this.location=location;
     }
 
     /**
@@ -37,12 +36,8 @@ public class Node implements Comparable<Node>{
      *
      * @return nome do Node
      */
-    public double[] getBeginningCoord() {
-        return this.beginningCoord;
-    }
-
-    public double[] getEndCoord() {
-        return this.endCoord;
+    public Location getLocalizacaoNode(){
+        return this.location;
     }
 
     /**
@@ -68,13 +63,7 @@ public class Node implements Comparable<Node>{
      * @param coord
      * @param id novo nome de Node
      */
-    public void setBeginningCoord(double coord[]) {
-        this.beginningCoord = coord;
-    }
-
-    public void setEndCoord(double coord[]) {
-        this.endCoord = coord;
-    }
+    
 
     /**
      * Clona um determinado Node
@@ -84,7 +73,7 @@ public class Node implements Comparable<Node>{
      */
     @Override
     protected Node clone() throws CloneNotSupportedException {
-        Node n = new Node(beginningCoord, endCoord);
+        Node n = new Node(location);
         return n;
     }
 
@@ -96,7 +85,7 @@ public class Node implements Comparable<Node>{
      */
     @Override
     public int compareTo(Node t) {
-        if (this.beginningCoord == t.getBeginningCoord()) {
+        if (this.location == t.location) {
             return 0;
         }
         return 1;
@@ -126,8 +115,8 @@ public class Node implements Comparable<Node>{
         }
         
         final Node other = (Node) obj;
-        return !(!Objects.equals(this.beginningCoord, other.beginningCoord)
-                && !Objects.equals(this.endCoord, other.endCoord));
+        return !(!Objects.equals(this.location, other.location)
+                && !Objects.equals(this.location, other.location));
     }
 
     /**
@@ -137,7 +126,7 @@ public class Node implements Comparable<Node>{
      */
     @Override
     public String toString() {
-        return "Node{" + Arrays.toString(beginningCoord) + " : " + Arrays.toString(endCoord) + '}';
+        return "Node{" + location + "'}'";
     }
 
 }

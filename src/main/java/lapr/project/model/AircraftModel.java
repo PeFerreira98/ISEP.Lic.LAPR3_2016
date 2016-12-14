@@ -5,11 +5,14 @@
  */
 package lapr.project.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  *
  * @author João
  */
-public class AircraftModel {
+public class AircraftModel{
     
     private int id;
     private Type type;
@@ -132,11 +135,6 @@ public class AircraftModel {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "AircraftModel{" + "id=" + id + ", type=" + type + ", motorization=" + motorization + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maximumFuelCapacity=" + maximumFuelCapacity + ", serviceCeiling=" + serviceCeiling + ", cruiseSpeed=" + cruiseSpeed + ", wingArea=" + wingArea + ", dragCoeficient=" + dragCoeficient + ", liftCoeficient=" + liftCoeficient + '}';
-    }
-
     public Motorization getMotorization() {
         return motorization;
     }
@@ -151,6 +149,11 @@ public class AircraftModel {
 
     public void setLiftCoeficient(double liftCoeficient) {
         this.liftCoeficient = liftCoeficient;
+    }
+    
+    @Override
+    public String toString() {
+        return "AircraftModel{" + "id=" + id + ", type=" + type + ", motorization=" + motorization + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maximumFuelCapacity=" + maximumFuelCapacity + ", serviceCeiling=" + serviceCeiling + ", cruiseSpeed=" + cruiseSpeed + ", wingArea=" + wingArea + ", dragCoeficient=" + dragCoeficient + ", liftCoeficient=" + liftCoeficient + '}';
     }
     
 }

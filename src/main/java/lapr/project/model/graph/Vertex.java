@@ -13,7 +13,7 @@ import java.util.Map;
  */
 
 public class Vertex<V,E> {
-    
+
     private int key ;       //Vertex key number
     private V  element ;   //Vertex information
     private Map<Vertex<V,E>, Edge<V,E>> outVerts; //adjacent vertices

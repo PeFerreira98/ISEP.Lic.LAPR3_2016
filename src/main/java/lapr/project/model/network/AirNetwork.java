@@ -13,12 +13,10 @@ import lapr.project.model.graph.Graph;
  */
 public class AirNetwork {
 
-    //private Graph<Node, Segment> airNetwork;
+    private Graph<Node, Segment> airNetwork;
 
     public AirNetwork() {
-        //this.airNetwork = new Graph<>(false);
+        this.airNetwork = new Graph<>(false);
     }
     
-    
-
 }
