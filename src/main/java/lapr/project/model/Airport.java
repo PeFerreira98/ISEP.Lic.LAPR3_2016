@@ -5,6 +5,8 @@
  */
 package lapr.project.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author João
@@ -29,42 +31,23 @@ public class Airport {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTown() {
         return town;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
     }
 
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     public String getIATAcode() {
         return IATAcode;
     }
-
-    public void setIATAcode(String IATAcode) {
-        this.IATAcode = IATAcode;
-    }
-
+    
     public Location getLocation(){
         return this.location;
     }
     
-    public void setLocation(Location l){
-        this.location = l;
-    }
-    
+    @Override
     public boolean equals(Object otherObj) {
             if (this == otherObj) {
                 return true;
@@ -74,10 +57,8 @@ public class Airport {
             }
             Airport otherAirport = (Airport) otherObj;
 
-            return this.IATAcode.equalsIgnoreCase(otherAirport.IATAcode);
+            return this.IATAcode.equalsIgnoreCase(otherAirport.getIATAcode());
         }
-
-    
 
     @Override
     public String toString() {
