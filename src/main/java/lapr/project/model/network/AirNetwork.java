@@ -5,7 +5,9 @@
  */
 package lapr.project.model.network;
 
+import java.util.Map;
 import lapr.project.model.graph.Graph;
+import lapr.project.model.graph.Vertex;
 
 /**
  *
@@ -14,9 +16,75 @@ import lapr.project.model.graph.Graph;
 public class AirNetwork {
 
     private Graph<Node, Segment> airNetwork;
+    private Map<String,Node> map_Nodes;
+    private Map<String, Segment> map_Segment;
 
     public AirNetwork() {
         this.airNetwork = new Graph<>(false);
     }
     
+    /**
+     * Devolve o objecto airNetwork
+     *
+     * @return objecto airNetwork
+     */
+    public Graph<Node, Segment> getNetwork() {
+        return airNetwork;
+    }
+    
+    /**
+     * Metodo utilizado para devolver a lista dos nodes.
+     *
+     * @return lst_Nodes
+     */
+    public Map<String,Node> getMapNodes() {
+        return map_Nodes;
+    }
+    
+    public Map<String,Segment> getMapSegment(){
+        return map_Segment;
+    }
+    
+    /**
+     * Adiciona Node n a Network
+     *
+     * @param n Node adicionado
+     */
+    public void addNode(Node n) {
+        //map_Nodes.put(n.getID(), n);
+        this.airNetwork.insertVertex(n);
+    }
+    
+    /**
+     * Adiciona Segment s a Network
+     *
+     * @param s Segment adicionado
+     */
+    public void addSegment(Segment s) {
+        map_Segment.put(s.getId(), s);
+        //this.airNetwork.insertEdge(s.getBeginningNode(), s.getEndNode(), s, FIX_ME (peso do ramo));
+    }
+    
+    /**
+     * Metodo utilizado para criar um grafo em que nenhum dos vertices (nodes) 
+     * sao becos sem saida
+     * 
+     * @return true se o grafo foi criado correctamente, false caso contrario.
+     */
+    public boolean createGraph(){
+        map_Nodes.values().stream().forEach((node) -> {
+            airNetwork.insertVertex(node);
+        });
+        
+        map_Segment.values().stream().forEach((segment) -> {
+            airNetwork.insertEdge(segment.getBeginningNode(), segment.getEndNode(), segment, 0);
+        });
+        
+        for (Vertex v : airNetwork.vertices()) {
+            if(airNetwork.outDegree(v) == 0 || airNetwork.inDegree(v) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
 }
