@@ -21,7 +21,7 @@ public class Node implements Comparable<Node> {
         return id;
     }
 
-    public Location getLatitude() {
+    public Location getLocation() {
         return location;
     }
 

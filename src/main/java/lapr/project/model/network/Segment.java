@@ -1,5 +1,6 @@
 package lapr.project.model.network;
 
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import lapr.project.model.Location;
@@ -17,18 +18,27 @@ public class Segment {
     private String direction;
     private float wind_direction;
     private float wind_speed;
+    private double distance;
 
     
-    public Segment(String id, Node bCoord, Node eCoord, double a_slots[], String direction, float wind_direction, float wind_speed){
+    public Segment(String id, Node bNode, Node eNode, double a_slots[], String direction, float wind_direction, float wind_speed){
         this.id = id;
-        this.beginningNode = bCoord;
-        this.endNode = eCoord;
+        this.beginningNode = bNode;
+        this.endNode = eNode;
         this.altitudes_slots = a_slots;
         this.direction = direction;
         this.wind_direction = wind_direction;
         this.wind_speed = wind_speed;
+        this.distance = distanceBetweenNodes(bNode, eNode);
     }
 
+    private double distanceBetweenNodes(Node n1, Node n2){
+        double c = n2.getLocation().getLatitude()-n1.getLocation().getLatitude();
+        double c2 = n2.getLocation().getLongitude()-n1.getLocation().getLongitude();
+        double h = Math.sqrt(Math.pow(c,2) + Math.pow(c2,2));
+        
+        return h;
+    }
     /**
      * Construtor vazio de Segment
      */
