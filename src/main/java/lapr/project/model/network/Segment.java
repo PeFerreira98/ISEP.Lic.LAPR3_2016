@@ -10,17 +10,19 @@ import lapr.project.model.Location;
  */
 public class Segment {
  
-    private Location beginningCoord;
-    private Location endCoord;
+    private String id;
+    private Node beginningNode;
+    private Node endNode;
     private double altitudes_slots[];
     private String direction;
     private float wind_direction;
     private float wind_speed;
 
     
-    public Segment(Location bCoord, Location eCoord, double a_slots[], String direction, float wind_direction, float wind_speed){
-        this.beginningCoord = bCoord;
-        this.endCoord = eCoord;
+    public Segment(String id, Node bCoord, Node eCoord, double a_slots[], String direction, float wind_direction, float wind_speed){
+        this.id = id;
+        this.beginningNode = bCoord;
+        this.endNode = eCoord;
         this.altitudes_slots = a_slots;
         this.direction = direction;
         this.wind_direction = wind_direction;
@@ -31,39 +33,44 @@ public class Segment {
      * Construtor vazio de Segment
      */
     public Segment() {
-        this.beginningCoord = null;
-        this.endCoord = null;
+        this.id = "";
+        this.beginningNode = null;
+        this.endNode = null;
         this.direction = "";
         this.wind_direction = 0;
         this.wind_speed = 0;
     }
 
+    
+    public String getId(){
+        return this.id;
+    }
     /**
      * @return the beginningCoord
      */
-    public Location getBeginningCoord() {
-        return beginningCoord;
+    public Node getBeginningNode() {
+        return beginningNode;
     }
 
     /**
-     * @param beginningCoord the beginningCoord to set
+     * @param beginningNode the beginningCoord to set
      */
-    public void setBeginningCoord(Location beginningCoord) {
-        this.beginningCoord = beginningCoord;
+    public void setBeginningNode(Node beginningNode) {
+        this.beginningNode = beginningNode;
     }
 
     /**
      * @return the endCoord
      */
-    public Location getEndCoord() {
-        return endCoord;
+    public Node getEndNode() {
+        return endNode;
     }
 
     /**
-     * @param endCoord the endCoord to set
+     * @param endNode the endNode to set
      */
-    public void setEndCoord(Location endCoord) {
-        this.endCoord = endCoord;
+    public void setEndNode(Node endNode) {
+        this.endNode = endNode;
     }
 
     /**
