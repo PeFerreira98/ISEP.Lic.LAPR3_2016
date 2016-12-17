@@ -25,7 +25,6 @@ import lapr.project.model.network.Segment;
  */
 public class NetworkStAXParser {
     
-    private Project c_project;
     private AirNetwork c_airnetwork;
     private Node c_node;
     private Segment c_segment;
@@ -62,10 +61,10 @@ public class NetworkStAXParser {
     
     
     public NetworkStAXParser(Project project) {
-        this.c_project = project;
+        this.c_airnetwork = project.getAirNetwork();
     }
 
-    public Project XMLReader(String filePath) {
+    public AirNetwork XMLReader(String filePath) {
 
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -152,12 +151,36 @@ public class NetworkStAXParser {
                             b_longitude = false;
                         }
                         
-//                        if (b_altitude) {
-//                            System.out.println("\taltitude: " + characters.getData());
-//                            String s_altitude = characters.getData().replace(" m", "");
-//                            d_altitude = Double.parseDouble(s_altitude);
-//                            b_altitude = false;
-//                        }
+                        if (b_startNode) {
+                            System.out.println("\tstart_node: " + characters.getData());
+                            s_startNode = characters.getData();
+                            b_startNode = false;
+                        }
+                        
+                        if (b_endNode) {
+                            System.out.println("\tend_node: " + characters.getData());
+                            s_endNode = characters.getData();
+                            b_endNode = false;
+                        }
+                        
+                        if (b_direction) {
+                            System.out.println("\tdirection: " + characters.getData());
+                            s_direction = characters.getData();
+                            b_direction = false;
+                        }
+                        
+                        if (b_windIntensity) {
+                            System.out.println("\twind_intensity: " + characters.getData());
+                            String s_windIntensity = characters.getData().replace(" knot", "");
+                            d_windIntensity = Double.parseDouble(s_windIntensity);
+                            b_windIntensity = false;
+                        }
+                        
+                        if (b_windDirection) {
+                            System.out.println("\twind_direction: " + characters.getData());
+                            d_windDirection = Double.parseDouble(characters.getData());
+                            b_windDirection = false;
+                        }
 
                         break;
 
@@ -167,12 +190,23 @@ public class NetworkStAXParser {
                         
                         if (endName.equalsIgnoreCase("node")) {
                             c_node = new Node(s_nodeId, new Location(d_latitude, d_longitude, 0));
-//                            this.c_airnetwork
+                            this.c_airnetwork.addNode(c_node);
                             System.out.println("End Element : node" + "\n");
                         }
 
                         if (endName.equalsIgnoreCase("node_list")) {
                             System.out.println("End Element : node_list" + "\n");
+                        }
+                        
+                        if (endName.equalsIgnoreCase("segment")) {
+                            
+                            Node c_node_beg = this.c_airnetwork.getNode(s_startNode);
+                            Node c_node_end = this.c_airnetwork.getNode(s_endNode);
+                            double[] d_slot = {0}; //FIXME
+                            
+                            this.c_segment = new Segment(s_segmentId, c_node_beg, c_node_end, d_slot, s_direction, d_windDirection, d_windIntensity);
+                            this.c_airnetwork.addSegment(c_segment);
+                            System.out.println("End Element : segment" + "\n");
                         }
                         
                         if (endName.equalsIgnoreCase("segment_list")) {
@@ -188,7 +222,7 @@ public class NetworkStAXParser {
             }
         } catch (FileNotFoundException | XMLStreamException e) {
         }
-        return this.c_project;
+        return this.c_airnetwork;
     }
 
 }

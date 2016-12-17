@@ -1,27 +1,21 @@
 package lapr.project.model.network;
 
-import java.sql.DatabaseMetaData;
-import java.util.ArrayList;
-import java.util.List;
-import lapr.project.model.Location;
-
 /**
  *
  * @author G33
  */
 public class Segment {
- 
+
     private String id;
     private Node beginningNode;
     private Node endNode;
     private double altitudes_slots[];
     private String direction;
-    private float wind_direction;
-    private float wind_speed;
+    private double wind_direction;
+    private double wind_speed;
     private double distance;
 
-    
-    public Segment(String id, Node bNode, Node eNode, double a_slots[], String direction, float wind_direction, float wind_speed){
+    public Segment(String id, Node bNode, Node eNode, double a_slots[], String direction, double wind_direction, double wind_speed) {
         this.id = id;
         this.beginningNode = bNode;
         this.endNode = eNode;
@@ -32,13 +26,14 @@ public class Segment {
         this.distance = distanceBetweenNodes(bNode, eNode);
     }
 
-    private double distanceBetweenNodes(Node n1, Node n2){
-        double c = n2.getLocation().getLatitude()-n1.getLocation().getLatitude();
-        double c2 = n2.getLocation().getLongitude()-n1.getLocation().getLongitude();
-        double h = Math.sqrt(Math.pow(c,2) + Math.pow(c2,2));
-        
+    private double distanceBetweenNodes(Node n1, Node n2) {
+        double c = n2.getLocation().getLatitude() - n1.getLocation().getLatitude();
+        double c2 = n2.getLocation().getLongitude() - n1.getLocation().getLongitude();
+        double h = Math.sqrt(Math.pow(c, 2) + Math.pow(c2, 2));
+
         return h;
     }
+
     /**
      * Construtor vazio de Segment
      */
@@ -51,22 +46,15 @@ public class Segment {
         this.wind_speed = 0;
     }
 
-    
-    public String getId(){
+    public String getId() {
         return this.id;
     }
+
     /**
      * @return the beginningCoord
      */
     public Node getBeginningNode() {
         return beginningNode;
-    }
-
-    /**
-     * @param beginningNode the beginningCoord to set
-     */
-    public void setBeginningNode(Node beginningNode) {
-        this.beginningNode = beginningNode;
     }
 
     /**
@@ -77,24 +65,10 @@ public class Segment {
     }
 
     /**
-     * @param endNode the endNode to set
-     */
-    public void setEndNode(Node endNode) {
-        this.endNode = endNode;
-    }
-
-    /**
      * @return the altitudes_slots
      */
     public double[] getAltitudes_slots() {
         return altitudes_slots;
-    }
-
-    /**
-     * @param altitudes_slots the altitudes_slots to set
-     */
-    public void setAltitudes_slots(double altitudes_slots[]) {
-        this.altitudes_slots = altitudes_slots;
     }
 
     /**
@@ -105,37 +79,27 @@ public class Segment {
     }
 
     /**
-     * @param direction the direction to set
-     */
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
-
-    /**
      * @return the wind_direction
      */
-    public float getWind_direction() {
+    public double getWind_direction() {
         return wind_direction;
-    }
-
-    /**
-     * @param wind_direction the wind_direction to set
-     */
-    public void setWind_direction(float wind_direction) {
-        this.wind_direction = wind_direction;
     }
 
     /**
      * @return the wind_speed
      */
-    public float getWind_speed() {
+    public double getWind_speed() {
         return wind_speed;
     }
 
-    /**
-     * @param wind_speed the wind_speed to set
-     */
-    public void setWind_speed(float wind_speed) {
-        this.wind_speed = wind_speed;
-    }   
+    public double getDistance() {
+        return distance;
+    }
+
+    @Override
+    public String toString() {
+        return "Segment{" + "id=" + id + ", bNode=" + beginningNode + ", eNode=" + endNode + ", d=" + distance + '}';
+    }
+    
+    
 }
