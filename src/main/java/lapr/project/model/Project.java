@@ -21,6 +21,7 @@ public class Project {
     private LinkedHashMap<String, Airport> airportHashMap;
     private LinkedHashMap<Integer, Aircraft> aircraftHashMap;
     private LinkedHashMap<Integer, AircraftModel> aircraftModelHashMap;
+    private LinkedHashMap<Integer, Flight> flightsList;
 
     public Project(int id, String nome) {
         this.AirNetwork = new AirNetwork();
@@ -36,7 +37,7 @@ public class Project {
         this.aircraftHashMap = aircraftHashMap;
         this.aircraftModelHashMap = aircraftModelHashMap;
     }
-    
+
     public Airport addAirport(Airport newAirport) {
 
         for (Airport airport : this.airportHashMap.values()) {
@@ -92,6 +93,20 @@ public class Project {
 
     public LinkedHashMap<Integer, AircraftModel> getAircraftModelHashMap() {
         return aircraftModelHashMap;
+    }
+
+    public LinkedHashMap<Integer, Flight> getFlightsList() {
+        return this.flightsList;
+    }
+
+    public Flight addFlight(Flight newFlight) {
+        
+        for (Flight flight : this.flightsList.values()) {
+            if (newFlight.equals(flight)) {
+                return null;
+            }
+        }
+        return this.flightsList.put(newFlight.getId(), newFlight);
     }
     
 }

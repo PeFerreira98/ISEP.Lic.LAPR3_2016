@@ -36,6 +36,10 @@ public class Flight {
         this.scheduled_arrival = sa;
         this.flight_plan = new ArrayList<>();
     }
+    
+    public Flight(){
+        
+    }
 
     public int getId() {
         return id;
