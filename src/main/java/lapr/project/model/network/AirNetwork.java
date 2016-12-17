@@ -5,6 +5,7 @@
  */
 package lapr.project.model.network;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import lapr.project.model.graph.Graph;
 import lapr.project.model.graph.Vertex;
@@ -21,6 +22,8 @@ public class AirNetwork {
 
     public AirNetwork() {
         this.airNetwork = new Graph<>(false);
+        this.map_Nodes = new LinkedHashMap<>();
+        this.map_Segment = new LinkedHashMap<>();
     }
     
     /**
@@ -45,13 +48,17 @@ public class AirNetwork {
         return map_Segment;
     }
     
+    public Node getNode(String nodeId) {
+        return this.map_Nodes.get(nodeId);
+    }
+    
     /**
      * Adiciona Node n a Network
      *
      * @param n Node adicionado
      */
     public void addNode(Node n) {
-        //map_Nodes.put(n.getID(), n);
+        map_Nodes.put(n.getId(), n);
         this.airNetwork.insertVertex(n);
     }
     
@@ -62,7 +69,7 @@ public class AirNetwork {
      */
     public void addSegment(Segment s) {
         map_Segment.put(s.getId(), s);
-        //this.airNetwork.insertEdge(s.getBeginningNode(), s.getEndNode(), s, FIX_ME (peso do ramo));
+        this.airNetwork.insertEdge(s.getBeginningNode(), s.getEndNode(), s, s.getDistance());
     }
     
     /**
@@ -87,4 +94,5 @@ public class AirNetwork {
         }
         return true;
     }
+
 }

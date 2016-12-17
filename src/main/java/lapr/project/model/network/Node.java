@@ -66,4 +66,9 @@ public class Node implements Comparable<Node> {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Node{" + id + '}';
+    }
+
 }
