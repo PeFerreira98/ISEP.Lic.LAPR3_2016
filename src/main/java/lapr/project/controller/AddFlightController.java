@@ -5,7 +5,7 @@
  */
 package lapr.project.controller;
 
-import Register.FlightRegister;
+import lapr.project.model.register.FlightRegister;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
