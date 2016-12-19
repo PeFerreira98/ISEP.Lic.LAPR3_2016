@@ -5,8 +5,7 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Objects;
 
 /**
  *
@@ -14,160 +13,134 @@ import java.util.HashMap;
  */
 public class AircraftModel {
 
-    private int id;
     private Type type;
-    private Motorization motorization;
+    private double numberMotors;
+    private String motor;
+    private MotorType motorType;
     private double emptyWeight;
     private double MTOW;
     private double MZFW;
-    private double maximumFuelCapacity;
-    private double serviceCeiling;
-    private double cruiseSpeed;
+    private double maxPayload;
+    private double fuelCapacity;
+    private double VMO;
+    private double MMO;
     private double wingArea;
+    private double wingSpan;
     private double dragCoeficient;
-    private double liftCoeficient;
-
+    private double e;
+    
     public enum Type {
-
-        passenger,
-        cargo,
-        mixed;
+        PASSENGER,
+        CARGO,
+        MIXED;
+    }
+    public enum MotorType {
+        TURBOPROP,
+        TURBOFAN,
+        TURBOJET,
+        ELECTRICPROPELER;
     }
 
-    public enum Motorization {
-
-        turboprop,
-        turbofan,
-        turbojet,
-        electricPropeller;
-    }
-
-    public AircraftModel(int id, Type type, Motorization motorization, double emptyWeight, double MTOW, double MZFW, double maximumFuelCapacity,
-            double serviceCeiling, double cruiseSpeed, double wingArea, double dragCoeficient, double liftCoeficient) {
-        this.id = id;
+    public AircraftModel(Type type, double numberMotors, String motor, MotorType motorType, double emptyWeight, double MTOW, double MZFW, double maxPayload, double fuelCapacity, double VMO, double MMO, double wingArea, double wingSpan, double dragCoeficient, double e) {
         this.type = type;
+        this.numberMotors = numberMotors;
+        this.motor = motor;
+        this.motorType = motorType;
         this.emptyWeight = emptyWeight;
         this.MTOW = MTOW;
         this.MZFW = MZFW;
-        this.maximumFuelCapacity = maximumFuelCapacity;
-        this.serviceCeiling = serviceCeiling;
-        this.cruiseSpeed = cruiseSpeed;
+        this.maxPayload = maxPayload;
+        this.fuelCapacity = fuelCapacity;
+        this.VMO = VMO;
+        this.MMO = MMO;
         this.wingArea = wingArea;
+        this.wingSpan = wingSpan;
         this.dragCoeficient = dragCoeficient;
-        this.liftCoeficient = liftCoeficient;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public double getEmptyWeight() {
-        return emptyWeight;
-    }
-
-    public void setEmptyWeight(double emptyWeight) {
-        this.emptyWeight = emptyWeight;
-    }
-
-    public double getMTOW() {
-        return MTOW;
-    }
-
-    public void setMTOW(double MTOW) {
-        this.MTOW = MTOW;
-    }
-
-    public double getMZFW() {
-        return MZFW;
-    }
-
-    public void setMZFW(double MZFW) {
-        this.MZFW = MZFW;
-    }
-
-    public double getMaximumFuelCapacity() {
-        return maximumFuelCapacity;
-    }
-
-    public void setMaximumFuelCapacity(double maximumFuelCapacity) {
-        this.maximumFuelCapacity = maximumFuelCapacity;
-    }
-
-    public double getServiceCeiling() {
-        return serviceCeiling;
-    }
-
-    public void setServiceCeiling(double serviceCeiling) {
-        this.serviceCeiling = serviceCeiling;
-    }
-
-    public double getCruiseSpeed() {
-        return cruiseSpeed;
-    }
-
-    public void setCruiseSpeed(double cruiseSpeed) {
-        this.cruiseSpeed = cruiseSpeed;
-    }
-
-    public double getWingArea() {
-        return wingArea;
-    }
-
-    public void setWingArea(double wingArea) {
-        this.wingArea = wingArea;
-    }
-
-    public double getDragCoeficient() {
-        return dragCoeficient;
-    }
-
-    public void setDragCoeficient(double dragCoeficient) {
-        this.dragCoeficient = dragCoeficient;
+        this.e = e;
     }
 
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public double getNumberMotors() {
+        return numberMotors;
     }
 
-    public Motorization getMotorization() {
-        return motorization;
+    public String getMotor() {
+        return motor;
     }
 
-    public void setMotorization(Motorization motorization) {
-        this.motorization = motorization;
+    public MotorType getMotorType() {
+        return motorType;
     }
 
-    public double getLiftCoeficient() {
-        return liftCoeficient;
+    public double getEmptyWeight() {
+        return emptyWeight;
     }
 
-    public void setLiftCoeficient(double liftCoeficient) {
-        this.liftCoeficient = liftCoeficient;
+    public double getMTOW() {
+        return MTOW;
     }
 
-    public boolean equals(Object otherObj) {
-        if (this == otherObj) {
-            return true;
-        }
-        if (otherObj == null || this.getClass() != otherObj.getClass()) {
+    public double getMZFW() {
+        return MZFW;
+    }
+
+    public double getMaxPayload() {
+        return maxPayload;
+    }
+
+    public double getFuelCapacity() {
+        return fuelCapacity;
+    }
+
+    public double getVMO() {
+        return VMO;
+    }
+
+    public double getMMO() {
+        return MMO;
+    }
+
+    public double getWingArea() {
+        return wingArea;
+    }
+
+    public double getWingSpan() {
+        return wingSpan;
+    }
+
+    public double getDragCoeficient() {
+        return dragCoeficient;
+    }
+
+    public double getE() {
+        return e;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        AircraftModel otherAircraftModel = (AircraftModel) otherObj;
-
-        return this.id == otherAircraftModel.id;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        final AircraftModel other = (AircraftModel) obj;
+        return Objects.equals(this.motor, other.motor);
     }
 
     @Override
     public String toString() {
-        return "AircraftModel{" + "id=" + id + ", type=" + type + ", motorization=" + motorization + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maximumFuelCapacity=" + maximumFuelCapacity + ", serviceCeiling=" + serviceCeiling + ", cruiseSpeed=" + cruiseSpeed + ", wingArea=" + wingArea + ", dragCoeficient=" + dragCoeficient + ", liftCoeficient=" + liftCoeficient + '}';
+        return "AircraftModel{" + "type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", dragCoeficient=" + dragCoeficient + ", e=" + e + '}';
     }
-
+      
 }

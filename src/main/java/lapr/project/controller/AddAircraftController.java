@@ -5,7 +5,10 @@
  */
 package lapr.project.controller;
 
+import lapr.project.database.DatabaseModel;
 import lapr.project.model.*;
+import lapr.project.model.register.AircraftRegister;
+import lapr.project.utils.AircraftStAXParser;
 
 /**
  *
@@ -19,17 +22,18 @@ public class AddAircraftController {
         this.project = project;
     }
 
-    public Aircraft addAircraft(AircraftModel model, int id, String company, 
-            int numberFirstClass, int numberNormalClass, int numberElementsCrew) {
+    public void addAircraft(String filePath) {
 
-        final Aircraft newAircraft = new Aircraft(model, id, company, numberFirstClass, numberNormalClass, numberElementsCrew);
+        final AircraftStAXParser aircraftStAXParser = new AircraftStAXParser();
+        final AircraftRegister aircraftRegister = aircraftStAXParser.XMLReader(filePath);
 
-        if (this.project.addAircraft(newAircraft) != null) {
-//        final DatabaseModel databaseModel = new DatabaseModel();
-//        databaseModel.addAircraft(newAircraft);
+        for (Aircraft aircraft : aircraftRegister.getAircraftMap().values()) {
+            if (this.project.addAircraft(aircraft) != null) {
+//                final DatabaseModel databaseModel = new DatabaseModel();
+//                databaseModel.addAircraft(aircraft);
+            }
         }
-
-        return newAircraft;
+        
     }
 
 }

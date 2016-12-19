@@ -5,9 +5,9 @@
  */
 package lapr.project.model;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import lapr.project.model.network.AirNetwork;
+import lapr.project.model.register.AircraftRegister;
 
 /**
  *
@@ -18,24 +18,32 @@ public class Project {
     private int id;
     private String name;
     private AirNetwork AirNetwork;
-    private LinkedHashMap<String, Airport> airportHashMap;
-    private LinkedHashMap<Integer, Aircraft> aircraftHashMap;
-    private LinkedHashMap<Integer, AircraftModel> aircraftModelHashMap;
-    private LinkedHashMap<Integer, Flight> flightsList;
+    private AircraftRegister aircraftRegister;
 
-    public Project(int id, String nome) {
+    private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister;
+    private LinkedHashMap<Integer, Flight> flightsList; //TODO: change to flightregister
+
+    public Project(int id, String name) {
+        this.id = id;
+        this.name = name;
         this.AirNetwork = new AirNetwork();
+        this.aircraftRegister = new AircraftRegister();
+        
         this.airportHashMap = new LinkedHashMap<>();
-        this.aircraftModelHashMap = new LinkedHashMap<>();
-    }
+        this.flightsList = new LinkedHashMap<>();
+    }    
 
-    public Project(int id, String name, AirNetwork AirNetwork, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Aircraft> aircraftHashMap, LinkedHashMap<Integer, AircraftModel> aircraftModelHashMap) {
+    public Project(int id, String name, AirNetwork AirNetwork, AircraftRegister aircraftRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
         this.id = id;
         this.name = name;
         this.AirNetwork = AirNetwork;
+        this.aircraftRegister = aircraftRegister;
         this.airportHashMap = airportHashMap;
-        this.aircraftHashMap = aircraftHashMap;
-        this.aircraftModelHashMap = aircraftModelHashMap;
+        this.flightsList = flightsList;
+    }
+
+    public Aircraft addAircraft(Aircraft newAircraft) {
+        return this.aircraftRegister.addAircraft(newAircraft);
     }
 
     public Airport addAirport(Airport newAirport) {
@@ -49,26 +57,14 @@ public class Project {
         return this.airportHashMap.put(newAirport.getIATAcode(), newAirport);
     }
 
-    public Aircraft addAircraft(Aircraft newAircraft) {
+    public Flight addFlight(Flight newFlight) {
 
-        for (Aircraft aircraft : this.aircraftHashMap.values()) {
-            if (newAircraft.equals(aircraft)) {
+        for (Flight flight : this.flightsList.values()) {
+            if (newFlight.equals(flight)) {
                 return null;
             }
         }
-
-        return this.aircraftHashMap.put(newAircraft.getId(), newAircraft);
-    }
-
-    public AircraftModel addAircraftModel(AircraftModel newAircraftModel) {
-
-        for (AircraftModel aircraftModel : this.aircraftModelHashMap.values()) {
-            if (newAircraftModel.equals(aircraftModel)) {
-                return null;
-            }
-        }
-
-        return this.aircraftModelHashMap.put(newAircraftModel.getId(), newAircraftModel);
+        return this.flightsList.put(newFlight.getId(), newFlight);
     }
 
     public int getId() {
@@ -83,30 +79,16 @@ public class Project {
         return AirNetwork;
     }
 
+    public AircraftRegister getAircraftRegister() {
+        return aircraftRegister;
+    }
+
     public LinkedHashMap<String, Airport> getAirportHashMap() {
         return airportHashMap;
     }
 
-    public LinkedHashMap<Integer, Aircraft> getAircraftHashMap() {
-        return aircraftHashMap;
-    }
-
-    public LinkedHashMap<Integer, AircraftModel> getAircraftModelHashMap() {
-        return aircraftModelHashMap;
-    }
-
     public LinkedHashMap<Integer, Flight> getFlightsList() {
-        return this.flightsList;
+        return flightsList;
     }
 
-    public Flight addFlight(Flight newFlight) {
-        
-        for (Flight flight : this.flightsList.values()) {
-            if (newFlight.equals(flight)) {
-                return null;
-            }
-        }
-        return this.flightsList.put(newFlight.getId(), newFlight);
-    }
-    
 }

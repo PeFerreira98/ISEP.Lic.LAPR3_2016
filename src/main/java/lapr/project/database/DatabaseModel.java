@@ -90,19 +90,23 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air){
         try {
-            this.st.execute("insert into AircraftModel(id, type, motorization, emprtyWeight,MTOW, MZFW, maximunFuelCapacity, serviceCeiling, cruiseSpeed, wingArea, dragCoeficient, liftCoeficient) "
-                    + "values ('" + air.getId()+ "', '"
-                    + air.getType().toString()+ "', '"
-                    + air.getMotorization().toString()+ "', '"
-                    + air.getEmptyWeight()+ "', '"
-                    + air.getMTOW()+ "', '"
-                    + air.getMZFW()+ "', '"
-                    + air.getMaximumFuelCapacity()+ "', '"
-                    + air.getServiceCeiling()+ "', '"
-                    + air.getCruiseSpeed()+ "', '"
-                    + air.getWingArea()+ "', '"
-                    + air.getDragCoeficient()+ "', '"
-                    + air.getLiftCoeficient()+ "')");
+            this.st.execute("insert into AircraftModel(id, type, numberMotors, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e) "
+                    + "values ('" 
+                    + air.getMotor() + "', '"
+                    + air.getType().toString() + "', '"
+                    + air.getNumberMotors() + "', '"
+                    + air.getMotorType().toString() + "', '"
+                    + air.getEmptyWeight() + "', '"
+                    + air.getMTOW() + "', '"
+                    + air.getMZFW() + "', '"
+                    + air.getMaxPayload() + "', '"
+                    + air.getFuelCapacity() + "', '"
+                    + air.getVMO() + "', '"
+                    + air.getMMO() + "', '"
+                    + air.getWingArea() + "', '"
+                    + air.getWingSpan() + "', '"
+                    + air.getDragCoeficient() + "', '"
+                    + air.getE() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,7 +124,7 @@ public class DatabaseModel {
             this.st.execute("insert into Aircraft(model, id, company, numberFirstClass, numberNormalClass, numberElementsCrew) "
                     + "values ('" + air.getModel()+ "', '"
                     + air.getId()+ "', '"
-                    + air.getCompany()+ "', '"
+                    + air.getMaker()+ "', '"
                     + air.getNumberFirstClass()+ "', '"
                     + air.getNumberNormalClass()+ "', '"
                     + air.getNumberElementsCrew()+ "')");
@@ -152,7 +156,7 @@ public class DatabaseModel {
     }
       
     public void editAircraft(Aircraft  air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew){
-        int idAircraft = air.getId();
+        String idAircraft = air.getId();
         try {
             this.st.execute("UPDATE Aircraft set comany = " + company
                     + " && numberFirstClass = " + nrFirstClass

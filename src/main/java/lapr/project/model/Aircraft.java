@@ -5,6 +5,9 @@
  */
 package lapr.project.model;
 
+import java.util.Objects;
+import lapr.project.model.register.RegimeRegister;
+
 /**
  *
  * @author João
@@ -12,16 +15,21 @@ package lapr.project.model;
 public class Aircraft{
     
     private AircraftModel model;
-    private int id;
-    private String company;
+    private RegimeRegister regimeRegister;
+    private String id;
+    private String description;
+    private String maker;
     private int numberFirstClass;
     private int numberNormalClass;
     private int numberElementsCrew;
 
-    public Aircraft(AircraftModel model, int id, String company, int numberFirstClass, int numberNormalClass, int numberElementsCrew) {
+    public Aircraft(AircraftModel model, RegimeRegister regimeRegister, String id, String description, String maker, int numberFirstClass, int numberNormalClass, int numberElementsCrew) {
         this.model = model;
+        this.regimeRegister = regimeRegister;
+        
         this.id = id;
-        this.company = company;
+        this.description = description;
+        this.maker = maker;
         this.numberFirstClass = numberFirstClass;
         this.numberNormalClass = numberNormalClass;
         this.numberElementsCrew = numberElementsCrew;
@@ -31,67 +39,46 @@ public class Aircraft{
         return model;
     }
 
-    public void setModel(AircraftModel model) {
-        this.model = model;
+    public RegimeRegister getRegimeRegister() {
+        return regimeRegister;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getDescription() {
+        return description;
     }
 
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
+    public String getMaker() {
+        return maker;
     }
 
     public int getNumberFirstClass() {
         return numberFirstClass;
     }
 
-    public void setNumberFirstClass(int numberFirstClass) {
-        this.numberFirstClass = numberFirstClass;
-    }
-
     public int getNumberNormalClass() {
         return numberNormalClass;
-    }
-
-    public void setNumberNormalClass(int numberNormalClass) {
-        this.numberNormalClass = numberNormalClass;
     }
 
     public int getNumberElementsCrew() {
         return numberElementsCrew;
     }
 
-    public void setNumberElementsCrew(int numberElementsCrew) {
-        this.numberElementsCrew = numberElementsCrew;
-    }
-    
     public boolean equals(Object otherObj) {
-            if (this == otherObj) {
-                return true;
-            }
             if (otherObj == null || this.getClass() != otherObj.getClass()) {
                 return false;
             }
+            
             Aircraft otherAircraft = (Aircraft) otherObj;
-
-            return this.id == otherAircraft.id;
+            return Objects.equals(this.id, otherAircraft.getId());
         }
 
-    
     @Override
     public String toString() {
-        return "Aircraft{" + "model=" + model + ", id=" + id + ", company=" + company + ", numberFirstClass=" + numberFirstClass + ", numberNormalClass=" + numberNormalClass + ", numberElementsCrew=" + numberElementsCrew + '}';
+        return "Aircraft{" + "id=" + id + ", description=" + description + ", maker=" + maker + ",\n model=" + model + ",\n regimeRegister=" + regimeRegister + '}';
     }
-    
-    
+
 }
