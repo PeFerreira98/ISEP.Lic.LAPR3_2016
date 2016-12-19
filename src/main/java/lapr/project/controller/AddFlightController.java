@@ -46,7 +46,8 @@ public class AddFlightController {
         Flight flight = new Flight(id, type, departure_day, minimum_stop, departure_day, flight_plan);
         
         if(regFlights.validateFlight(flight)==true){
-        this.proj.addFlight(flight);
+        this.regFlights.addFlight(flight);
+        
         }
     }
 }

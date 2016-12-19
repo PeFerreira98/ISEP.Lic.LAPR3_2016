@@ -16,7 +16,11 @@ public class Node implements Comparable<Node> {
         this.id = id;
         this.location = location;
     }
-
+    
+    public Node(){
+        
+    }
+    
     public String getId() {
         return id;
     }
