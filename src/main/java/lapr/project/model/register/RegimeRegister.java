@@ -5,6 +5,7 @@
  */
 package lapr.project.model.register;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +40,10 @@ public class RegimeRegister {
         }
 
         return true;
+    }
+    
+    public Regime getRegime(String regime){
+        return this.regimeMap.get(regime);
     }
 
     @Override
