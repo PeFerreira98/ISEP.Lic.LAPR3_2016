@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.*;
 import lapr.project.model.*;
-import lapr.project.model.register.AircraftRegister;
+import lapr.project.model.register.AircraftModelRegister;
 import lapr.project.model.register.RegimeRegister;
 
 /**
@@ -23,8 +23,7 @@ import lapr.project.model.register.RegimeRegister;
  */
 public class AircraftStAXParser {
     
-    private AircraftRegister c_aircraftRegister;
-    private Aircraft c_aircraft;
+    private AircraftModelRegister c_aircraftModelRegister;
     private AircraftModel c_aircraftModel;
     private RegimeRegister c_regimeRegister;
     private Regime c_regime;
@@ -86,14 +85,14 @@ public class AircraftStAXParser {
 
     
     public AircraftStAXParser(Project project) {
-        this.c_aircraftRegister = project.getAircraftRegister();
+        this.c_aircraftModelRegister = project.getAircraftModelRegister();
     }
 
     public AircraftStAXParser() {
-        this.c_aircraftRegister = new AircraftRegister();
+        this.c_aircraftModelRegister = new AircraftModelRegister();
     }
 
-    public AircraftRegister XMLReader(String filePath) {
+    public AircraftModelRegister XMLReader(String filePath) {
 
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -360,10 +359,9 @@ public class AircraftStAXParser {
                         }
                         
                         if (endName.equalsIgnoreCase("aircraft")) {
-                            this.c_aircraftModel = new AircraftModel(AircraftModel.Type.valueOf(s_type.toUpperCase()), d_numberMotors, s_motor, AircraftModel.MotorType.valueOf(s_motorType.toUpperCase()), d_EWeight, d_MTOW, d_MZFW, d_maxPayload, d_fuelCapacity, d_VMO, d_MMO, d_wingArea, d_wingSpan, d_EWeight, d_e);
-                            this.c_aircraft = new Aircraft(c_aircraftModel, c_regimeRegister, s_airId, s_airDescription, s_maker, 0, 0, 0);
+                            this.c_aircraftModel = new AircraftModel(s_airId, s_airDescription, s_maker, AircraftModel.Type.valueOf(s_type.toUpperCase()), d_numberMotors, s_motor, AircraftModel.MotorType.valueOf(s_motorType.toUpperCase()), c_regimeRegister, d_EWeight, d_MTOW, d_MZFW, d_maxPayload, d_fuelCapacity, d_VMO, d_MMO, d_wingArea, d_wingSpan, d_EWeight, d_e);
                             
-                            this.c_aircraftRegister.addAircraft(c_aircraft);
+                            this.c_aircraftModelRegister.addAircraftModel(c_aircraftModel);
                             System.out.println("End Element : aircraft" + "\n");
                         }
 
@@ -376,7 +374,7 @@ public class AircraftStAXParser {
             }
         } catch (FileNotFoundException | XMLStreamException e) {
         }
-        return this.c_aircraftRegister;
+        return this.c_aircraftModelRegister;
     }
 
 }

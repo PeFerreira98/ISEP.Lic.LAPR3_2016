@@ -92,11 +92,15 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air){
         try {
-            this.st.execute("insert into AircraftModel(id, type, numberMotors, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e) "
+            this.st.execute("insert into AircraftModel(regimeRegister, id, description, maker, type, numberMotors, motor, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e) "
                     + "values ('" 
-                    + air.getMotor() + "', '"
+                    //+ air.getRegimeRegister().getId() + "', '"
+                    + air.getId() + "', '"
+                    + air.getDescription() + "', '"
+                    + air.getMaker() + "', '"
                     + air.getType().toString() + "', '"
                     + air.getNumberMotors() + "', '"
+                    + air.getMotor() + "', '"
                     + air.getMotorType().toString() + "', '"
                     + air.getEmptyWeight() + "', '"
                     + air.getMTOW() + "', '"
@@ -124,9 +128,9 @@ public class DatabaseModel {
     public void addAircraft(Aircraft air){
         try {
             this.st.execute("insert into Aircraft(model, id, company, numberFirstClass, numberNormalClass, numberElementsCrew) "
-                    + "values ('" + air.getModel()+ "', '"
+                    + "values ('" 
+                    + air.getModel().getId()+ "', '"
                     + air.getId()+ "', '"
-                    + air.getMaker()+ "', '"
                     + air.getNumberFirstClass()+ "', '"
                     + air.getNumberNormalClass()+ "', '"
                     + air.getNumberElementsCrew()+ "')");

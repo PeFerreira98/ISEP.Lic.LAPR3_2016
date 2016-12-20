@@ -6,6 +6,7 @@
 package lapr.project.model;
 
 import java.util.Objects;
+import lapr.project.model.register.RegimeRegister;
 
 /**
  *
@@ -13,10 +14,17 @@ import java.util.Objects;
  */
 public class AircraftModel {
 
+    private String id;
+    private String description;
+    private String maker;
     private Type type;
+    
     private double numberMotors;
     private String motor;
     private MotorType motorType;
+    
+    private RegimeRegister regimeRegister;
+    
     private double emptyWeight;
     private double MTOW;
     private double MZFW;
@@ -41,11 +49,15 @@ public class AircraftModel {
         ELECTRICPROPELER;
     }
 
-    public AircraftModel(Type type, double numberMotors, String motor, MotorType motorType, double emptyWeight, double MTOW, double MZFW, double maxPayload, double fuelCapacity, double VMO, double MMO, double wingArea, double wingSpan, double dragCoeficient, double e) {
+    public AircraftModel(String id, String description, String maker, Type type, double numberMotors, String motor, MotorType motorType, RegimeRegister regimeRegister, double emptyWeight, double MTOW, double MZFW, double maxPayload, double fuelCapacity, double VMO, double MMO, double wingArea, double wingSpan, double dragCoeficient, double e) {
+        this.id = id;
+        this.description = description;
+        this.maker = maker;
         this.type = type;
         this.numberMotors = numberMotors;
         this.motor = motor;
         this.motorType = motorType;
+        this.regimeRegister = regimeRegister;
         this.emptyWeight = emptyWeight;
         this.MTOW = MTOW;
         this.MZFW = MZFW;
@@ -59,6 +71,18 @@ public class AircraftModel {
         this.e = e;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getMaker() {
+        return maker;
+    }
+    
     public Type getType() {
         return type;
     }
@@ -75,6 +99,10 @@ public class AircraftModel {
         return motorType;
     }
 
+    public RegimeRegister getRegimeRegister() {
+        return regimeRegister;
+    }
+    
     public double getEmptyWeight() {
         return emptyWeight;
     }
@@ -135,12 +163,12 @@ public class AircraftModel {
         }
         
         final AircraftModel other = (AircraftModel) obj;
-        return Objects.equals(this.motor, other.motor);
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
     public String toString() {
-        return "AircraftModel{" + "type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", dragCoeficient=" + dragCoeficient + ", e=" + e + '}';
+        return "AircraftModel{" + "id=" + id + ", description=" + description + ", maker=" + maker + ", type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", dragCoeficient=" + dragCoeficient + ", e=" + e + ",\n regimeRegister=" + regimeRegister + '}';
     }
       
 }

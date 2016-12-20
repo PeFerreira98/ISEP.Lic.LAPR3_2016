@@ -7,7 +7,7 @@ package lapr.project.model;
 
 import java.util.LinkedHashMap;
 import lapr.project.model.network.AirNetwork;
-import lapr.project.model.register.AircraftRegister;
+import lapr.project.model.register.AircraftModelRegister;
 
 /**
  *
@@ -19,34 +19,38 @@ public class Project {
     private String name;
     private String description;
     private AirNetwork AirNetwork;
-    private AircraftRegister aircraftRegister;
+    private AircraftModelRegister aircraftModelRegister;
 
-    private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister;
+    private LinkedHashMap<String, Aircraft> aircraftHashMap; //TODO: change to aircraftRegister
+    private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister
     private LinkedHashMap<Integer, Flight> flightsList; //TODO: change to flightregister
 
     public Project(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+        
         this.AirNetwork = new AirNetwork();
-        this.aircraftRegister = new AircraftRegister();
-
+        this.aircraftModelRegister = new AircraftModelRegister();
+        
+        this.aircraftHashMap = new LinkedHashMap<>();
         this.airportHashMap = new LinkedHashMap<>();
         this.flightsList = new LinkedHashMap<>();
-    }
+    }    
 
-    public Project(int id, String name, String description, AirNetwork AirNetwork, AircraftRegister aircraftRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
+    public Project(int id, String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.AirNetwork = AirNetwork;
-        this.aircraftRegister = aircraftRegister;
+        this.aircraftModelRegister = aircraftModelRegister;
+        this.aircraftHashMap = aircraftHashMap;
         this.airportHashMap = airportHashMap;
         this.flightsList = flightsList;
     }
 
-    public Aircraft addAircraft(Aircraft newAircraft) {
-        return this.aircraftRegister.addAircraft(newAircraft);
+    public AircraftModel addAircraftModel(AircraftModel newAircraftModel) {
+        return this.aircraftModelRegister.addAircraftModel(newAircraftModel);
     }
 
     public Airport addAirport(Airport newAirport) {
@@ -70,6 +74,11 @@ public class Project {
         return this.flightsList.put(newFlight.getId(), newFlight);
     }
 
+    public Project duplicate() {
+        Project p = new Project(getId(), getName(), getDescription());
+        return p;
+    }
+
     public int getId() {
         return id;
     }
@@ -86,8 +95,12 @@ public class Project {
         return AirNetwork;
     }
 
-    public AircraftRegister getAircraftRegister() {
-        return aircraftRegister;
+    public AircraftModelRegister getAircraftModelRegister() {
+        return aircraftModelRegister;
+    }
+
+    public LinkedHashMap<String, Aircraft> getAircraftHashMap() {
+        return aircraftHashMap;
     }
 
     public LinkedHashMap<String, Airport> getAirportHashMap() {
@@ -96,56 +109,6 @@ public class Project {
 
     public LinkedHashMap<Integer, Flight> getFlightsList() {
         return flightsList;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setAirNetwork(AirNetwork AirNetwork) {
-        this.AirNetwork = AirNetwork;
-    }
-
-    public void setAircraftRegister(AircraftRegister aircraftRegister) {
-        this.aircraftRegister = aircraftRegister;
-    }
-
-    public void setAirportHashMap(LinkedHashMap<String, Airport> airportHashMap) {
-        this.airportHashMap = airportHashMap;
-    }
-
-    public void setFlightsList(LinkedHashMap<Integer, Flight> flightsList) {
-        this.flightsList = flightsList;
-    }
-
-    public Project duplicate() {
-        Project p = new Project(getId(), getName(), getDescription());
-        p.setId(getId());
-        p.setName(getName());
-        p.setDescription(getDescription());
-        p.setAirNetwork(getAirNetwork());
-        p.setAircraftRegister(getAircraftRegister());
-        p.setAirportHashMap(getAirportHashMap());
-        p.setFlightsList(getFlightsList());
-        return p;
-
-    }
-
-    public boolean valida() {
-        return name != null && description != null;
-    }
-
-    @Override
-    public String toString() {
-        return this.getName();
     }
 
 }

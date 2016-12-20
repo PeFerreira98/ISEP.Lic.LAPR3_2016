@@ -6,7 +6,7 @@
 package lapr.project.utils;
 
 import lapr.project.model.Project;
-import lapr.project.model.register.AircraftRegister;
+import lapr.project.model.register.AircraftModelRegister;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,8 +50,8 @@ public class AircraftStAXParserTest {
         Project expProject = new Project(0, "Project0","Description0");
         AircraftStAXParser instance = new AircraftStAXParser(expProject);
         
-        AircraftRegister expResult = expProject.getAircraftRegister();
-        AircraftRegister result = instance.XMLReader(filePath);
+        AircraftModelRegister expResult = expProject.getAircraftModelRegister();
+        AircraftModelRegister result = instance.XMLReader(filePath);
         
         assertEquals(expResult, result);
     }

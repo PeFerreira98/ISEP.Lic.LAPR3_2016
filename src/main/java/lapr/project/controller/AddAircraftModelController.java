@@ -7,30 +7,30 @@ package lapr.project.controller;
 
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.*;
-import lapr.project.model.register.AircraftRegister;
+import lapr.project.model.register.AircraftModelRegister;
 import lapr.project.utils.AircraftStAXParser;
 
 /**
  *
  * @author zero_
  */
-public class AddAircraftController {
+public class AddAircraftModelController {
 
     private final Project project;
 
-    public AddAircraftController(Project project) {
+    public AddAircraftModelController(Project project) {
         this.project = project;
     }
 
-    public void addAircraft(String filePath) {
+    public void addAircraftModel(String filePath) {
 
         final AircraftStAXParser aircraftStAXParser = new AircraftStAXParser();
-        final AircraftRegister aircraftRegister = aircraftStAXParser.XMLReader(filePath);
+        final AircraftModelRegister aircraftModelRegister = aircraftStAXParser.XMLReader(filePath);
 
-        for (Aircraft aircraft : aircraftRegister.getAircraftMap().values()) {
-            if (this.project.addAircraft(aircraft) != null) {
+        for (AircraftModel aircraftModel : aircraftModelRegister.getAircraftModelMap().values()) {
+            if (this.project.addAircraftModel(aircraftModel) != null) {
 //                final DatabaseModel databaseModel = new DatabaseModel();
-//                databaseModel.addAircraft(aircraft);
+//                databaseModel.addAircraftModel(aircraftModel);
             }
         }
         

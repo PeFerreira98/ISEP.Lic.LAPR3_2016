@@ -11,15 +11,14 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author zero_
  */
-public class AddAircraftControllerTest {
+public class AddAircraftModelControllerTest {
     
-    public AddAircraftControllerTest() {
+    public AddAircraftModelControllerTest() {
     }
     
     @BeforeClass
@@ -39,16 +38,17 @@ public class AddAircraftControllerTest {
     }
 
     /**
-     * Test of addAircraft method, of class AddAircraftController.
+     * Test of addAircraftModel method, of class AddAircraftModelController.
      */
     @Test
-    public void testAddAircraft() {
-        System.out.println("addAircraft");
-        String filePath = "inOutFiles/TestSet01_Aircraft.xml";
-        Project expProject = new Project(0, "Project0","Description0");
+    public void testAddAircraftModel() {
+        System.out.println("addAircraftModel");
         
-        AddAircraftController instance = new AddAircraftController(expProject);
-        instance.addAircraft(filePath);
+        String filePath = "inOutFiles/TestSet01_Aircraft.xml";
+        Project expProject = new Project(0, "Project0", "Description");
+        
+        AddAircraftModelController instance = new AddAircraftModelController(expProject);
+        instance.addAircraftModel(filePath);
         
         //TODO: assertequals
     }
