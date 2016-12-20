@@ -45,7 +45,7 @@ public class AddAircraftControllerTest {
     public void testAddAircraft() {
         System.out.println("addAircraft");
         String filePath = "inOutFiles/TestSet01_Aircraft.xml";
-        Project expProject = new Project(0, "Project0");
+        Project expProject = new Project(0, "Project0","Description0");
         
         AddAircraftController instance = new AddAircraftController(expProject);
         instance.addAircraft(filePath);

@@ -47,7 +47,7 @@ public class NetworkStAXParserTest {
         System.out.println("XMLReader");
         String filePath = "inOutFiles/TestSet01a_Network.xml";
         
-        Project expProject = new Project(0, "Project0");
+        Project expProject = new Project(0, "Project0","Description0");
         NetworkStAXParser instance = new NetworkStAXParser(expProject);
        
         AirNetwork result = instance.XMLReader(filePath);

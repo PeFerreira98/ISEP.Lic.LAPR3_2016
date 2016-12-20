@@ -17,25 +17,28 @@ public class Project {
 
     private int id;
     private String name;
+    private String description;
     private AirNetwork AirNetwork;
     private AircraftRegister aircraftRegister;
 
     private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister;
     private LinkedHashMap<Integer, Flight> flightsList; //TODO: change to flightregister
 
-    public Project(int id, String name) {
+    public Project(int id, String name, String description) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.AirNetwork = new AirNetwork();
         this.aircraftRegister = new AircraftRegister();
-        
+
         this.airportHashMap = new LinkedHashMap<>();
         this.flightsList = new LinkedHashMap<>();
-    }    
+    }
 
-    public Project(int id, String name, AirNetwork AirNetwork, AircraftRegister aircraftRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
+    public Project(int id, String name, String description, AirNetwork AirNetwork, AircraftRegister aircraftRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.AirNetwork = AirNetwork;
         this.aircraftRegister = aircraftRegister;
         this.airportHashMap = airportHashMap;
@@ -75,6 +78,10 @@ public class Project {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public AirNetwork getAirNetwork() {
         return AirNetwork;
     }
@@ -89,6 +96,56 @@ public class Project {
 
     public LinkedHashMap<Integer, Flight> getFlightsList() {
         return flightsList;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAirNetwork(AirNetwork AirNetwork) {
+        this.AirNetwork = AirNetwork;
+    }
+
+    public void setAircraftRegister(AircraftRegister aircraftRegister) {
+        this.aircraftRegister = aircraftRegister;
+    }
+
+    public void setAirportHashMap(LinkedHashMap<String, Airport> airportHashMap) {
+        this.airportHashMap = airportHashMap;
+    }
+
+    public void setFlightsList(LinkedHashMap<Integer, Flight> flightsList) {
+        this.flightsList = flightsList;
+    }
+
+    public Project duplicate() {
+        Project p = new Project(getId(), getName(), getDescription());
+        p.setId(getId());
+        p.setName(getName());
+        p.setDescription(getDescription());
+        p.setAirNetwork(getAirNetwork());
+        p.setAircraftRegister(getAircraftRegister());
+        p.setAirportHashMap(getAirportHashMap());
+        p.setFlightsList(getFlightsList());
+        return p;
+
+    }
+
+    public boolean valida() {
+        return name != null && description != null;
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 
 }

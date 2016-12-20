@@ -72,7 +72,7 @@ public class DatabaseModel {
         try {
             this.rs = this.st.executeQuery("SELECT * FROM PROJECT");
             while (rs.next()) {
-                Project p = new Project(rs.getInt("id"),rs.getString("NAME"));
+                Project p = new Project(rs.getInt("id"),rs.getString("NAME"),rs.getString("DESCRIPTION"));
                 list_projects.add(p);
             }
         } catch (SQLException ex) {
