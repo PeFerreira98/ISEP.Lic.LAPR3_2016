@@ -16,6 +16,7 @@ import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
+import lapr.project.model.network.Segment;
 //import oracle.jdbc.OracleTypes;
 
 /**
@@ -164,7 +165,7 @@ public class DatabaseModel {
     public void editAircraft(Aircraft  air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew){
         String idAircraft = air.getId();
         try {
-            this.st.execute("UPDATE Aircraft set comany = " + company
+            this.st.execute("UPDATE Aircraft set company = " + company
                     + " && numberFirstClass = " + nrFirstClass
                     + " && numberNormalClass = " + nrNormalClass
                     + " && numberElements = " + nrElementsCrew
@@ -172,13 +173,14 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        closeDB();
     }
     
-    public List<Node> getNodes(){
+    public List<Node> getListNodes(Project p){
         List<Node> lst_nodes = new ArrayList<>();
         
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM NODE");
+            this.rs = this.st.executeQuery("SELECT * FROM NODE WHERE project_id ="+p.getId());
             while (rs.next()) {
                 Node n = new Node(rs.getString("node_name"),
                         rs.getDouble("latitude"),
@@ -191,5 +193,60 @@ public class DatabaseModel {
         
         closeDB();
         return lst_nodes;
+    }
+    
+    private Node getNode(Project p, int id_node){
+        Node n = new Node();
+        try {
+            st.execute("SELECT * FROM NODE "
+                    + "WHERE name = " + id_node
+                    + " AND project_id = " + p.getId());
+        
+            n = new Node(rs.getString("name"),
+            rs.getDouble("latitude"),
+            rs.getDouble("longitude"));
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+    
+    public void addNode(Project p, Node n){
+        try {
+            this.st.execute("inser into Node(id, latitude, longitude)"
+                    + "values ('"
+                    + n.getName() + "','"
+                    + n.getLatitude() + "','"
+                    + n.getLongitude() + "')'"
+            + "WHERE project_id = " + p.getId());
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+    }
+    
+    public List<Segment> getSegments(Project p){
+        List<Segment> lst_seg = new ArrayList<>();
+        
+        try {
+            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_id= " + p.getId());
+        
+        while(rs.next()){
+            Node n1 = getNode(p, rs.getInt("Node_Id_Start"));
+            Node n2 = getNode(p, rs.getInt("Node_Id_End"));
+            Segment s = new Segment(rs.getString("Segment_name"),
+                        n1,
+                        n2,
+                        null,
+                        rs.getString("direction"),
+                        rs.getDouble("wind_direction"),
+                        rs.getDouble("wind_instensity"));
+            lst_seg.add(s);
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        return lst_seg;
     }
 }
