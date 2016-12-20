@@ -31,20 +31,20 @@ public class AircraftRegister {
         return true;
     }
 
-    public Aircraft addAircraft(Aircraft newAircraft) {
+    public boolean addAircraft(Aircraft newAircraft) {
         if (validateAircraft(newAircraft)) {
             this.aircraftRegister.put(newAircraft.getId(), newAircraft);
-            return this.aircraftRegister.get(newAircraft.getId());
-        }
-        return null;
+            return false;
+    }
+        return true;
     }
     
-    public Aircraft getAircraftByID(String ID){
+    public boolean getAircraftByID(String ID){
         for (Aircraft aircraft : this.aircraftRegister.values()) {
             if(aircraft.getId().equals(ID))
-                return this.aircraftRegister.get(aircraft.getId());
-            
+                this.aircraftRegister.get(aircraft.getId());
+            return false;
         }
-        return null;
+        return true;
     }
 }
