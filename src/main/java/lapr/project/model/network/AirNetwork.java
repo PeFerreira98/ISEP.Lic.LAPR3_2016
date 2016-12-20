@@ -58,7 +58,7 @@ public class AirNetwork {
      * @param n Node adicionado
      */
     public void addNode(Node n) {
-        map_Nodes.put(n.getId(), n);
+        map_Nodes.put(n.getName(), n);
         this.airNetwork.insertVertex(n);
     }
     

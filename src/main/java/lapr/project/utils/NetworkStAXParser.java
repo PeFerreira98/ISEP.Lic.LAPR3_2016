@@ -189,7 +189,7 @@ public class NetworkStAXParser {
                         String endName = endElement.getName().getLocalPart();
                         
                         if (endName.equalsIgnoreCase("node")) {
-                            c_node = new Node(s_nodeId, new Location(d_latitude, d_longitude, 0));
+                            c_node = new Node(s_nodeId, d_latitude, d_longitude);
                             this.c_airnetwork.addNode(c_node);
                             System.out.println("End Element : node" + "\n");
                         }

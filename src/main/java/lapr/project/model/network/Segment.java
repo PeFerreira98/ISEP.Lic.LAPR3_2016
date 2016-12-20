@@ -27,8 +27,8 @@ public class Segment {
     }
 
     private double distanceBetweenNodes(Node n1, Node n2) {
-        double c = n2.getLocation().getLatitude() - n1.getLocation().getLatitude();
-        double c2 = n2.getLocation().getLongitude() - n1.getLocation().getLongitude();
+        double c = n2.getLatitude() - n1.getLatitude();
+        double c2 = n2.getLongitude() - n1.getLongitude();
         double h = Math.sqrt(Math.pow(c, 2) + Math.pow(c2, 2));
 
         return h;

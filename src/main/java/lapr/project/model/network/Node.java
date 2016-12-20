@@ -9,25 +9,20 @@ import lapr.project.model.Location;
  */
 public class Node implements Comparable<Node> {
 
-    private String id;
-    private Location location;
+    private String name;
+    private double latitude;
+    private double longitude;
 
-    public Node(String id, Location location) {
-        this.id = id;
-        this.location = location;
-    }
+    public Node(String name, double latitude, double longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+   }
     
     public Node(){
         
     }
     
-    public String getId() {
-        return id;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
 
     /**
      * Clona um determinado Node
@@ -37,7 +32,7 @@ public class Node implements Comparable<Node> {
      */
     @Override
     protected Node clone() throws CloneNotSupportedException {
-        Node n = new Node(this.id, this.location);
+        Node n = new Node(this.name, this.latitude, this.longitude);
         return n;
     }
 
@@ -49,7 +44,7 @@ public class Node implements Comparable<Node> {
      */
     @Override
     public int compareTo(Node t) {
-        if (this.id.equals(t.getId())) {
+        if (this.name.equals(t.getName())) {
             return 0;
         }
         return 1;
@@ -64,7 +59,7 @@ public class Node implements Comparable<Node> {
             return false;
         }
         final Node other = (Node) obj;
-        if (!Objects.equals(this.id, other.getId())) {
+        if (!Objects.equals(this.name, other.getName())) {
             return false;
         }
         return true;
@@ -72,7 +67,49 @@ public class Node implements Comparable<Node> {
 
     @Override
     public String toString() {
-        return "Node{" + id + '}';
+        return "Node{" + name + '}';
+    }
+
+    /**
+     * @return the node_name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param node_name the node_name to set
+     */
+    public void setName(String node_name) {
+        this.name = node_name;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the longitude
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * @param longitude the longitude to set
+     */
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 }

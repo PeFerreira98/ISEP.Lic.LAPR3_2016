@@ -5,6 +5,7 @@
  */
 package lapr.project.database;
 
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Node;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.Project;
+import lapr.project.model.network.Node;
 //import oracle.jdbc.OracleTypes;
 
 /**
@@ -168,4 +170,22 @@ public class DatabaseModel {
         }
     }
     
+    public List<Node> getNodes(){
+        List<Node> lst_nodes = new ArrayList<>();
+        
+        try {
+            this.rs = this.st.executeQuery("SELECT * FROM NODE");
+            while (rs.next()) {
+                Node n = new Node(rs.getString("node_name"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"));
+                lst_nodes.add(n);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        closeDB();
+        return lst_nodes;
+    }
 }
