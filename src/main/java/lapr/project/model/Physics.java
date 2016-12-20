@@ -47,6 +47,20 @@ public class Physics {
 
     public double calculateRangeEachSegment(Aircraft aircraft, Segment segment) {
 
+        double distance=calculateSegmentDistance(aircraft, segment);
+        
+        double time = calculateSegmentDistanceInMiles(distance)/aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed(); //tempo(s)=distance(m)/speed(miles/sec?)
+        
+        double fuelComsuption= time*aircraft.getModel().getRegimeRegister().getRegime("cruise").getThrust(); //(Consumo no segment)
+        
+        //Falta calcular o consumo nesta distancia à velocidade cruseiro
+        return (aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed() / aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC())
+                * (calculateLiftCoeficient(aircraft, segment) / calculateDragCoeficient(aircraft, segment)
+                * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
+    }
+
+    public double calculateSegmentDistance(Aircraft aircraft, Segment segment) {
+
         double latitude1 = segment.getBeginningNode().getLatitude();
         double longitude1 = segment.getBeginningNode().getLongitude();
         double latitude2 = segment.getEndNode().getLatitude();
@@ -59,14 +73,14 @@ public class Physics {
 
         double d = 2 * Math.atan2(Math.sqrt(c), Math.sqrt(1 - c));
         double r = 6371000;
-        double distancia = r * d;
-
-        //Falta converter para miles e falta calcular o consumo nesta distancia à velocidade cruseiro
-        return (aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed() / aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC())
-                * (calculateLiftCoeficient(aircraft, segment) / calculateDragCoeficient(aircraft, segment)
-                * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
+        
+        return r * d;
     }
-
+    
+    public double calculateSegmentDistanceInMiles(double distance){
+        return 0.62*distance;
+    }
+    
     public double calculateAircraftFinalWeight(Aircraft aircraft) {
         return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity();
     }
