@@ -35,6 +35,18 @@ public class Project {
         this.airportHashMap = new LinkedHashMap<>();
         this.flightsList = new LinkedHashMap<>();
     }    
+    
+    public Project(int id, String name, String description) {
+        this.name = name;
+        this.description = description;
+        
+        this.AirNetwork = new AirNetwork();
+        this.aircraftModelRegister = new AircraftModelRegister();
+        
+        this.aircraftHashMap = new LinkedHashMap<>();
+        this.airportHashMap = new LinkedHashMap<>();
+        this.flightsList = new LinkedHashMap<>();
+    }    
 
     public Project(String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
         this.name = name;

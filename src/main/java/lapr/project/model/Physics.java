@@ -8,6 +8,11 @@ package lapr.project.model;
 import lapr.project.model.network.Segment;
 import lapr.project.model.register.AircraftModelRegister;
 import java.lang.Math;
+import java.util.Deque;
+import lapr.project.model.graph.Edge;
+import lapr.project.model.graph.Graph;
+import lapr.project.model.graph.Vertex;
+import lapr.project.model.network.Node;
 
 /**
  *
@@ -17,7 +22,7 @@ public class Physics {
 
     private AircraftModelRegister AircraftReg;
 
-    public double calculateLiftForceInASegment(Aircraft aircraft, Segment segment) {
+    public static double calculateLiftForceInASegment(Aircraft aircraft, Segment segment) {
         double AirDensity;
         //if (segment.getAltitudes_slots()<1000.0)
         AirDensity = 0.5;
@@ -25,7 +30,7 @@ public class Physics {
         return calculateLiftCoeficient(aircraft, segment) * (AirDensity * Math.pow(aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed(), 2) / 2) * AreaAircraft;
     }
 
-    public double calculateDragForceInASegment(Aircraft aircraft, Segment segment) {
+    public static double calculateDragForceInASegment(Aircraft aircraft, Segment segment) {
         double AirDensity = 0.5;  //segment.getAltitudeSlots().getAirDensity();
         double AreaAircraft = 30;
 
@@ -33,33 +38,39 @@ public class Physics {
                 / 2 * AreaAircraft;
     }
 
-    public double calculateLiftCoeficient(Aircraft aircraft, Segment segment) {
+    public static double calculateLiftCoeficient(Aircraft aircraft, Segment segment) {
         double AirDensity = 0.5;  //segment.getAltitudeSlots().getAirDensity();
         double AreaAircraft = 30;
         return (2 * aircraft.getModel().getEmptyWeight() * 9.8) / (AirDensity * AreaAircraft * Math.pow(aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed(), 2));
     }
 
-    public double calculateDragCoeficient(Aircraft aircraft, Segment segment) {
+    public static double calculateDragCoeficient(Aircraft aircraft, Segment segment) {
         double AirDensity = 0.5;  //segment.getAltitudeSlots().getAirDensity();
         double AreaAircraft = 30;
         return aircraft.getModel().getDragCoeficient() + (Math.pow(calculateLiftCoeficient(aircraft, segment), 2)) / (Math.PI * (Math.pow(aircraft.getModel().getWingSpan(), 2) / aircraft.getModel().getWingArea() * Math.exp(1)));
     }
 
-    public double calculateRangeEachSegment(Aircraft aircraft, Segment segment) {
+    public static double calculateRangeEachSegment(Aircraft aircraft, Segment segment) {
 
-        double distance=calculateSegmentDistance(aircraft, segment);
-        
-        double time = calculateSegmentDistanceInMiles(distance)/aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed(); //tempo(s)=distance(m)/speed(miles/sec?)
-        
-        double fuelComsuption= time*aircraft.getModel().getRegimeRegister().getRegime("cruise").getThrust(); //(Consumo no segment)
-        
+        double distance = calculateSegmentDistance(aircraft, segment);
+
+        double time = calculateTravelTimeInASegment(aircraft, segment);
+
+        double fuelComsuption = time * aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC(); //(Consumo no segment)
+
         //Falta calcular o consumo nesta distancia à velocidade cruseiro
         return (aircraft.getModel().getRegimeRegister().getRegime("cruise").getSpeed() / aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC())
                 * (calculateLiftCoeficient(aircraft, segment) / calculateDragCoeficient(aircraft, segment)
                 * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
     }
-
-    public double calculateSegmentDistance(Aircraft aircraft, Segment segment) {
+    
+    public static double calculateTravelTimeInASegment(Aircraft aircraft, Segment segment){
+        //System.out.println(segment);
+        double distance = calculateSegmentDistance(aircraft, segment);
+        //System.out.println(distance);
+        return calculateSegmentDistanceInMiles(distance) / aircraft.getModel().getRegimeRegister().getRegime("Cruise").getSpeed(); //tempo(s)=distance(m)/speed(miles/sec?)
+    }
+    public static double calculateSegmentDistance(Aircraft aircraft, Segment segment) {
 
         double latitude1 = segment.getBeginningNode().getLatitude();
         double longitude1 = segment.getBeginningNode().getLongitude();
@@ -73,16 +84,15 @@ public class Physics {
 
         double d = 2 * Math.atan2(Math.sqrt(c), Math.sqrt(1 - c));
         double r = 6371000;
-        
+
         return r * d;
     }
-    
-    public double calculateSegmentDistanceInMiles(double distance){
-        return 0.62*distance;
-    }
-    
-    public double calculateAircraftFinalWeight(Aircraft aircraft) {
-        return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity();
+
+    public static double calculateSegmentDistanceInMiles(double distance) {
+        return 0.62 * distance;
     }
 
+    public static double calculateAircraftFinalWeight(Aircraft aircraft) {
+        return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity();
+    }
 }
