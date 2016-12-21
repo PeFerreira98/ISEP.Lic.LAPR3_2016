@@ -15,7 +15,6 @@ import lapr.project.model.register.AircraftModelRegister;
  */
 public class Project {
 
-    private int id;
     private String name;
     private String description;
     private AirNetwork AirNetwork;
@@ -25,8 +24,7 @@ public class Project {
     private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister
     private LinkedHashMap<Integer, Flight> flightsList; //TODO: change to flightregister
 
-    public Project(int id, String name, String description) {
-        this.id = id;
+    public Project(String name, String description) {
         this.name = name;
         this.description = description;
         
@@ -38,8 +36,7 @@ public class Project {
         this.flightsList = new LinkedHashMap<>();
     }    
 
-    public Project(int id, String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
-        this.id = id;
+    public Project(String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
         this.name = name;
         this.description = description;
         this.AirNetwork = AirNetwork;
@@ -75,12 +72,8 @@ public class Project {
     }
 
     public Project duplicate() {
-        Project p = new Project(getId(), getName(), getDescription());
+        Project p = new Project(getName() + " - Copia", getDescription());
         return p;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
