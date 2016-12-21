@@ -35,6 +35,16 @@ public class Flight {
         this.departure_day = d;
         this.minimun_stop = ms;
         this.scheduled_arrival = sa;
+        this.flight_plan = fp;
+        this.aircraft = aircraf;
+    }
+    
+    public Flight(int id, FlightType type, Date d, double ms, Date sa,Aircraft aircraf){
+        this.id = id;
+        this.type = type;
+        this.departure_day = d;
+        this.minimun_stop = ms;
+        this.scheduled_arrival = sa;
         this.flight_plan = new ArrayList<>();
         this.aircraft = aircraf;
     }

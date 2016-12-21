@@ -5,7 +5,6 @@
  */
 package lapr.project.database;
 
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Node;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,7 @@ import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.Flight;
+import lapr.project.model.Flight.FlightType;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
@@ -34,6 +34,10 @@ public class DatabaseModel {
     ResultSet rs;
     Project project;
 
+    public DatabaseModel(){
+        openDB();
+    }
+    
     public DatabaseModel(Project p) {
         this.project = p;
         openDB();
@@ -43,7 +47,7 @@ public class DatabaseModel {
      * Método utilizado para ligar a base de dados.
      *
      */
-      public void openDB(){
+    public void openDB(){
         // LER O DRIVER Oracle JDBC E CONECTAR À BASE DE DADOS ORACLE
         
         //DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
@@ -54,11 +58,12 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-      /**
+      
+    /**
      * Método utilizado para desligar a base de dados.
      *
      */
-      public void closeDB(){
+    public void closeDB(){
         try {
             this.con.close();
             this.rs.close();
@@ -67,7 +72,7 @@ public class DatabaseModel {
         }
       }
       
-      /**
+    /**
      * Método utilizado para receber todos os projectos da base de dados.
      *
      * @return
@@ -105,14 +110,15 @@ public class DatabaseModel {
     
     public void addSegment(Segment segment){
         try {
-            this.st.execute("insert into Segment(id, bNode, eNode, direction, windDirection, windSpeed, distance) "
+            this.st.execute("insert into Segment(id, bNode, eNode, direction, windDirection, windSpeed, distance, project_id) "
                     + "values ('" 
                     + segment.getId() + "', '"
                     + segment.getBeginningNode() + "', '"
                     + segment.getEndNode() + "', '"
                     + segment.getDirection() + "', '"
                     + segment.getWind_speed() + "', '"
-                    + segment.getDistance() + "')");
+                    + segment.getDistance() + "', '"
+                    + this.project.getId() + "')'");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,7 +126,32 @@ public class DatabaseModel {
         //return getLastInsertedProjectCod();
     }
     
-      /**
+    public List<Segment> getSegments(/*Project p*/){
+        List<Segment> lst_seg = new ArrayList<>();
+        
+        try {
+            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_id= " + this.project.getId());
+        
+            while(rs.next()){
+                Node n1 = getNode(rs.getInt("Node_Id_Start"));
+                Node n2 = getNode(rs.getInt("Node_Id_End"));
+                Segment s = new Segment(rs.getString("Segment_name"),
+                            n1,
+                            n2,
+                            null,
+                            rs.getString("direction"),
+                            rs.getDouble("wind_direction"),
+                            rs.getDouble("wind_instensity"));
+                lst_seg.add(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        return lst_seg;
+    }
+    
+    /**
      * Método utilizado para guardar dados de um modelo de um avião na base de dados.
      *
      * @param air
@@ -174,6 +205,20 @@ public class DatabaseModel {
         closeDB();
         //return getLastInsertedProjectCod();
     }
+        
+    public void editAircraft(Aircraft  air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew){
+        String idAircraft = air.getId();
+        try {
+            this.st.execute("UPDATE Aircraft set company = " + company
+                    + " && numberFirstClass = " + nrFirstClass
+                    + " && numberNormalClass = " + nrNormalClass
+                    + " && numberElements = " + nrElementsCrew
+                    + " where id = " + idAircraft);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+    }
     
     /**
      * Método utilizado para guardar dados de um aeroporto na base de dados.
@@ -195,21 +240,7 @@ public class DatabaseModel {
         closeDB();
         //return getLastInsertedProjectCod();
     }
-      
-    public void editAircraft(Aircraft  air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew){
-        String idAircraft = air.getId();
-        try {
-            this.st.execute("UPDATE Aircraft set company = " + company
-                    + " && numberFirstClass = " + nrFirstClass
-                    + " && numberNormalClass = " + nrNormalClass
-                    + " && numberElements = " + nrElementsCrew
-                    + " where id = " + idAircraft);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        closeDB();
-    }
-    
+          
     public List<Node> getListNodes(Project p){
         List<Node> lst_nodes = new ArrayList<>();
         
@@ -231,14 +262,18 @@ public class DatabaseModel {
     
     private Node getNode(int id_node){
         Node n = new Node();
+        Statement st2;
+        ResultSet rs2;
+        
         try {
-            st.execute("SELECT * FROM NODE "
+            st2 = con.createStatement();
+            rs2 = st2.executeQuery("SELECT * FROM NODE "
                     + "WHERE name = " + id_node
                     + " AND project_id = " + this.project.getId());
         
-            n = new Node(rs.getString("name"),
-            rs.getDouble("latitude"),
-            rs.getDouble("longitude"));
+            n = new Node(rs2.getString("name"),
+            rs2.getDouble("latitude"),
+            rs2.getDouble("longitude"));
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -260,32 +295,7 @@ public class DatabaseModel {
         }
         closeDB();
     }
-    
-    public List<Segment> getSegments(/*Project p*/){
-        List<Segment> lst_seg = new ArrayList<>();
         
-        try {
-            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_id= " + this.project.getId());
-        
-        while(rs.next()){
-            Node n1 = getNode(rs.getInt("Node_Id_Start"));
-            Node n2 = getNode(rs.getInt("Node_Id_End"));
-            Segment s = new Segment(rs.getString("Segment_name"),
-                        n1,
-                        n2,
-                        null,
-                        rs.getString("direction"),
-                        rs.getDouble("wind_direction"),
-                        rs.getDouble("wind_instensity"));
-            lst_seg.add(s);
-        }
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        closeDB();
-        return lst_seg;
-    }
-    
     public void addFlight(Flight f){
         if(f != null){
             try {
@@ -303,5 +313,86 @@ public class DatabaseModel {
                 Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+//    private ArrayList<Segment> getListSegmentByFlight(int id_flight){
+//        ArrayList<Segment> lst_segment = new ArrayList<>();
+//        Statement st2;
+//        ResultSet rs2;
+//        try {
+//            
+//            st2 = con.createStatement();
+//            
+//            rs2 = st2.executeQuery("SELECT Segment.* FROM FlightPlan, Segment WHERE FlightPlan.id_fligt = " + id_flight
+//            + " AND FlightPlan.id_segment = Segment.id_segment");
+//            
+//            while(rs.next()){
+//                Node n1 = getNode(rs2.getInt("Node_Id_Start"));
+//                Node n2 = getNode(rs2.getInt("Node_Id_End"));
+//                Segment s = new Segment(rs2.getString("Segment_name"),
+//                                n1,
+//                                n2,
+//                                null,
+//                                rs2.getString("direction"),
+//                                rs2.getDouble("wind_direction"),
+//                                rs2.getDouble("wind_instensity"));
+//                lst_segment.add(s);
+//            }
+//            
+//            rs2.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//               
+//        return lst_segment;
+//    }
+    
+    public List<Flight> getListFlights(){
+        List<Flight> lst_Flight = new ArrayList<>();
+        try {
+            this.rs = this.st.executeQuery("SELECT * FROM FLIgHT WHERE project_id = " + this.project.getId());
+                      
+            while(rs.next()){
+                int id_flight = rs.getInt("id_flight");
+                FlightType type = FlightType.valueOf(rs.getString("Type"));
+                Date departure_day = rs.getDate("departure_day");
+                double minimun_stop = rs.getDouble("mininum_stop");
+                Date shedule_arrival = rs.getDate("shedule_day");
+                int aircraft_id = rs.getInt("aircraft_id");
+
+                //ArrayList<Segment> lst_s = getListSegmentByFlight(id_flight);
+                
+                Aircraft aircraft = this.project.getAircraftHashMap().get(aircraft_id);
+                Flight f = new Flight(id_flight, type, departure_day, minimun_stop,shedule_arrival,aircraft); 
+                lst_Flight.add(f);
+            }
+            
+            //Add segments to flights
+            for(int i = 0; i < lst_Flight.size(); i++){
+                this.rs = this.st.executeQuery("SELECT S.* FROM SEgMENT S, FLIgHTPLAN FP, FLIgHT F WHERE S.project_id = " + this.project.getId()
+                + " AND S.segment_id = FP.segment_id"
+                + "AND FP.flight_id = F.flight_id"
+                + "AND F.flight_id = " + lst_Flight.get(i).getId());
+                
+                while(rs.next()){
+                    Node n1 = getNode(rs.getInt("Node_Id_Start"));
+                    Node n2 = getNode(rs.getInt("Node_Id_End"));
+                    Segment s = new Segment(rs.getString("Segment_name"),
+                                    n1,
+                                    n2,
+                                    null,
+                                    rs.getString("direction"),
+                                    rs.getDouble("wind_direction"),
+                                    rs.getDouble("wind_instensity"));
+                    lst_Flight.get(i).getFlight_plan().add(s);
+                }
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return lst_Flight;
     }
 }
