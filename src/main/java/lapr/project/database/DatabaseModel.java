@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
+import lapr.project.model.Flight;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
@@ -31,8 +32,10 @@ public class DatabaseModel {
     Connection con;
     Statement st;
     ResultSet rs;
+    Project project;
 
-    public DatabaseModel() {
+    public DatabaseModel(Project p) {
+        this.project = p;
         openDB();
     }
     
@@ -179,12 +182,13 @@ public class DatabaseModel {
      */
     public void addAirport(Airport ap){
         try {
-            this.st.execute("insert into Airport(name, town, country, IATAcode, location) "
+            this.st.execute("insert into Airport(name, town, country, IATAcode, location, project_id) "
                     + "values ('" + ap.getName()+ "', '"
                     + ap.getTown()+ "', '"
                     + ap.getCountry()+ "', '"
                     + ap.getIATAcode()+ "', '"
-                    + ap.getLocation()+ "')");
+                    + ap.getLocation()+ "', '"
+                    + this.project.getId() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -225,12 +229,12 @@ public class DatabaseModel {
         return lst_nodes;
     }
     
-    private Node getNode(Project p, int id_node){
+    private Node getNode(int id_node){
         Node n = new Node();
         try {
             st.execute("SELECT * FROM NODE "
                     + "WHERE name = " + id_node
-                    + " AND project_id = " + p.getId());
+                    + " AND project_id = " + this.project.getId());
         
             n = new Node(rs.getString("name"),
             rs.getDouble("latitude"),
@@ -241,29 +245,31 @@ public class DatabaseModel {
         return n;
     }
     
-    public void addNode(Project p, Node n){
+    public void addNode(Node n){
         try {
-            this.st.execute("inser into Node(id, latitude, longitude)"
+            this.st.execute("inser into Node(id, latitude, longitude, project_id)"
                     + "values ('"
-                    + n.getName() + "','"
-                    + n.getLatitude() + "','"
-                    + n.getLongitude() + "')'"
-            + "WHERE project_id = " + p.getId());
+                    + n.getName() + "', '"
+                    + n.getLatitude() + "', '"
+                    + n.getLongitude() + "', '"
+                    + this.project.getId() + "')'");
+//            "')'"
+//            + "WHERE project_id = " + p.getId());
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         closeDB();
     }
     
-    public List<Segment> getSegments(Project p){
+    public List<Segment> getSegments(/*Project p*/){
         List<Segment> lst_seg = new ArrayList<>();
         
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_id= " + p.getId());
+            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_id= " + this.project.getId());
         
         while(rs.next()){
-            Node n1 = getNode(p, rs.getInt("Node_Id_Start"));
-            Node n2 = getNode(p, rs.getInt("Node_Id_End"));
+            Node n1 = getNode(rs.getInt("Node_Id_Start"));
+            Node n2 = getNode(rs.getInt("Node_Id_End"));
             Segment s = new Segment(rs.getString("Segment_name"),
                         n1,
                         n2,
@@ -278,5 +284,23 @@ public class DatabaseModel {
         }
         closeDB();
         return lst_seg;
+    }
+    
+    public void addFlight(Flight f){
+        if(f != null){
+            try {
+                this.st.execute("inser into Flight(Type, Departure_day,Minimun_stop,Scheduled_arrival, Flight_plan,Project_id,Airport_id_Start,Airport_id_End) "
+                        + "values (" + f.getType() + "', '"
+                        + f.getDeparture_day() + "', '"
+                        + f.getMinimun_stop() + "', '"
+                        + f.getScheduled_arrival() + "', '"
+                        + f.getFlight_plan() + "', '"
+                        + this.project.getId() + "', '"
+                        + f.getFlight_plan().get(0).getBeginningNode() + "', '"
+                        + f.getFlight_plan().get(f.getFlight_plan().size()).getEndNode() + "')'");
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ public class AddAircraftModelController {
 
         for (AircraftModel aircraftModel : aircraftModelRegister.getAircraftModelMap().values()) {
             if (this.project.addAircraftModel(aircraftModel) != null) {
-                final DatabaseModel databaseModel = new DatabaseModel();
+                final DatabaseModel databaseModel = new DatabaseModel(this.project);
                 databaseModel.addAircraftModel(aircraftModel);
             }
         }

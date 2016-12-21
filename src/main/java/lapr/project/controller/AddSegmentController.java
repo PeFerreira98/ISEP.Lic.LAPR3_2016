@@ -48,11 +48,9 @@ public class AddSegmentController {
     public void insertSegment(Segment s){
         if(s != null){
             this.proj.getAirNetwork().addSegment(s);
-            DatabaseModel dbm = new DatabaseModel();
+            DatabaseModel dbm = new DatabaseModel(this.proj);
             dbm.addSegment(segment);
         }
-        
-                
     }
     
 }
