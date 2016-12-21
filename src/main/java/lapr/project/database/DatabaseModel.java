@@ -33,7 +33,7 @@ public class DatabaseModel {
     ResultSet rs;
 
     public DatabaseModel() {
-
+        openDB();
     }
     
     /**
@@ -85,7 +85,38 @@ public class DatabaseModel {
         closeDB();
         return list_projects;
     }
-          
+    
+    public void addProject(Project project){
+        try {
+            this.st.execute("insert into Project(id, name, description) "
+                    + "values ('" 
+                    + project.getId() + "', '"
+                    + project.getName() + "', '"
+                    + project.getDescription() + "')");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        //return getLastInsertedProjectCod();
+    }
+    
+    public void addSegment(Segment segment){
+        try {
+            this.st.execute("insert into Segment(id, bNode, eNode, direction, windDirection, windSpeed, distance) "
+                    + "values ('" 
+                    + segment.getId() + "', '"
+                    + segment.getBeginningNode() + "', '"
+                    + segment.getEndNode() + "', '"
+                    + segment.getDirection() + "', '"
+                    + segment.getWind_speed() + "', '"
+                    + segment.getDistance() + "')");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        closeDB();
+        //return getLastInsertedProjectCod();
+    }
+    
       /**
      * Método utilizado para guardar dados de um modelo de um avião na base de dados.
      *
@@ -93,9 +124,8 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air){
         try {
-            this.st.execute("insert into AircraftModel(regimeRegister, id, description, maker, type, numberMotors, motor, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e) "
+            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e) "
                     + "values ('" 
-                    //+ air.getRegimeRegister().getId() + "', '"
                     + air.getId() + "', '"
                     + air.getDescription() + "', '"
                     + air.getMaker() + "', '"

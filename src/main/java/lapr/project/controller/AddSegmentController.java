@@ -6,6 +6,7 @@
 package lapr.project.controller;
 
 import java.util.HashMap;
+import lapr.project.database.DatabaseModel;
 import lapr.project.model.Location;
 import lapr.project.model.Project;
 import lapr.project.model.network.AirNetwork;
@@ -31,16 +32,27 @@ public class AddSegmentController {
         this.segment= segment;
         this.proj = proj;
         this.fileSegments= fileSegments;
+    }    
+    
+//    public boolean insertSegment(Location locNodeOrig, Location locNodeDest){
+//       
+//        if(NodesReg.getNodesList().containsKey(locNodeOrig.)) É preciso adicionar Location ID
+//        
+//        return false;
+//    }
+    
+    public AddSegmentController(Project p){
+        this.proj = p;
     }
     
-    
-    
-    public boolean insertSegment(Location locNodeOrig, Location locNodeDest){
-       
-        //if(NodesReg.getNodesList().containsKey(locNodeOrig.)) É preciso adicionar Location ID
+    public void insertSegment(Segment s){
+        if(s != null){
+            this.proj.getAirNetwork().addSegment(s);
+            DatabaseModel dbm = new DatabaseModel();
+            dbm.addSegment(segment);
+        }
         
-        return false;
+                
     }
-    
     
 }
