@@ -18,6 +18,7 @@ public class Flight {
     
     private int id;
     private FlightType type;
+    private Aircraft aircraft;
     private Date departure_day;
     private double minimun_stop;
     private Date scheduled_arrival;
@@ -28,17 +29,22 @@ public class Flight {
         charter;
     }
     
-    public Flight(int id, FlightType type, Date d, double ms, Date sa, ArrayList<Segment> fp){
+    public Flight(int id, FlightType type, Date d, double ms, Date sa, ArrayList<Segment> fp,Aircraft aircraf){
         this.id = id;
         this.type = type;
         this.departure_day = d;
         this.minimun_stop = ms;
         this.scheduled_arrival = sa;
         this.flight_plan = new ArrayList<>();
+        this.aircraft = aircraf;
     }
     
     public Flight(){
         
+    }
+    
+    public Aircraft getAircraft(){
+        return this.aircraft;
     }
 
     public int getId() {

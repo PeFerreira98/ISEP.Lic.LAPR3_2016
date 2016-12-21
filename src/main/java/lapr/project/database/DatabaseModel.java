@@ -289,7 +289,7 @@ public class DatabaseModel {
     public void addFlight(Flight f){
         if(f != null){
             try {
-                this.st.execute("inser into Flight(Type, Departure_day,Minimun_stop,Scheduled_arrival, Flight_plan,Project_id,Airport_id_Start,Airport_id_End) "
+                this.st.execute("inser into Flight(Type, Departure_day,Minimun_stop,Scheduled_arrival, Flight_plan,Project_id,Airport_id_Start,Airport_id_End, Aircraft_id) "
                         + "values (" + f.getType() + "', '"
                         + f.getDeparture_day() + "', '"
                         + f.getMinimun_stop() + "', '"
@@ -297,7 +297,8 @@ public class DatabaseModel {
                         + f.getFlight_plan() + "', '"
                         + this.project.getId() + "', '"
                         + f.getFlight_plan().get(0).getBeginningNode() + "', '"
-                        + f.getFlight_plan().get(f.getFlight_plan().size()).getEndNode() + "')'");
+                        + f.getFlight_plan().get(f.getFlight_plan().size()).getEndNode() + "', '"
+                        + f.getAircraft().getId() + "')'");
             } catch (SQLException ex) {
                 Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
             }

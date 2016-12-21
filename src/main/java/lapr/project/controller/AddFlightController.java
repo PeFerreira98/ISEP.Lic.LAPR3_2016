@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import lapr.project.model.Aircraft;
 import lapr.project.model.Flight;
 import lapr.project.model.Flight.FlightType;
 import lapr.project.model.Project;
@@ -41,9 +42,9 @@ public class AddFlightController {
     }
     
     public void setData(int id, FlightType type, Date departure_day, double minimum_stop,
-            Date scheduled_arrival, ArrayList<Segment> flight_plan){
+            Date scheduled_arrival, ArrayList<Segment> flight_plan, Aircraft aircraft){
         
-        Flight flight = new Flight(id, type, departure_day, minimum_stop, departure_day, flight_plan);
+        Flight flight = new Flight(id, type, departure_day, minimum_stop, departure_day, flight_plan, aircraft);
         
         if(regFlights.validateFlight(flight)==true){
         this.regFlights.addFlight(flight);
