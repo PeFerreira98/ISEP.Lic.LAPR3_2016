@@ -95,4 +95,37 @@ public class Physics {
     public static double calculateAircraftFinalWeight(Aircraft aircraft) {
         return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity();
     }
+    
+    public static double speedAndMMOConverterMachToKmsHour(Double aircraftSpeedORMmoValue){
+        
+        return aircraftSpeedORMmoValue*1225.04;
+    }
+    
+    public static double tsfcConverter(Aircraft aircraft){
+        
+        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC()/3600*101972;
+    }
+    
+//    public static double thrustConversor(Aircraft aircraft){
+//        
+//        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC()
+//    }
+    
+    public static double altitudeConverterFeetToMeters(Aircraft aircraft){
+        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getAltitude()*0.3048;
+    }
+    
+    public static double aicraftWeightConverterPoundsToKg(double anyAircraftWeightValue){
+        return anyAircraftWeightValue*0.45359237;
+    }
+    
+   public static double aircraftVMOConverterKnotToKmsHour(Aircraft aircraft){
+       return aircraft.getModel().getVMO()*1.852;
+   }
+   
+   public static double aircraftFuelCapacityConverterGallonsToLiter(Aircraft aircraft){
+       return (aircraft.getModel().getFuelCapacity()*0.82)/0.2642;       //Fuel density = 0,82 fuel (1kg water = 0,82 fuel(petrol)
+   }
+   
 }
+
