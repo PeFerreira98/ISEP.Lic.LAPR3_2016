@@ -8,6 +8,7 @@ package lapr.project.controller;
 import java.util.List;
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Project;
+import lapr.project.ui.CopyProjectUI;
 import lapr.project.ui.ProjectMenuUI;
 
 /**
@@ -42,5 +43,9 @@ public class ProjectListController {
     
     public void openProject(Project p){
         new ProjectMenuUI(p);
+    }
+    
+    public void copyProject(Project proj){
+        new CopyProjectUI(proj);
     }
 }

@@ -33,7 +33,7 @@ public class MainUI extends javax.swing.JFrame {
         initComponents();
         super.setVisible(true);
         
-        initComponents();
+        inicializar();
     }
     
     private void inicializar() {
@@ -80,6 +80,7 @@ public class MainUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btn_Open = new javax.swing.JButton();
         btn_CreateProject = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem_Open = new javax.swing.JMenuItem();
@@ -111,6 +112,13 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Copy");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
 
         jMenuItem_Open.setText("Open Project");
@@ -135,9 +143,12 @@ public class MainUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(btn_Open, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_CreateProject, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btn_Open, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_CreateProject, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -148,10 +159,12 @@ public class MainUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btn_Open)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_Open)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_CreateProject)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
@@ -159,14 +172,26 @@ public class MainUI extends javax.swing.JFrame {
 
     private void btn_OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_OpenActionPerformed
         Project proj = this.ctrl_projList.getListProjects().get(this.lst_projects.getSelectedIndex());
-        
-        this.ctrl_projList.openProject(proj);
+        if(proj == null){
+            JOptionPane.showMessageDialog(this, "Select one project");
+        }else{
+            this.ctrl_projList.openProject(proj);
+        }
     }//GEN-LAST:event_btn_OpenActionPerformed
 
     private void btn_CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CreateProjectActionPerformed
-        String filePath = new String();
         this.ctrl_createProj.LoadProject();
+        dispose();
     }//GEN-LAST:event_btn_CreateProjectActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Project proj = this.ctrl_projList.getListProjects().get(this.lst_projects.getSelectedIndex());
+        if(proj == null){
+            JOptionPane.showMessageDialog(this, "Select one project");
+        }else{
+            this.ctrl_projList.copyProject(proj);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,6 +231,7 @@ public class MainUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_CreateProject;
     private javax.swing.JButton btn_Open;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;

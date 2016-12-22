@@ -24,6 +24,7 @@ public class LoadProjectUI extends javax.swing.JFrame {
     public LoadProjectUI() {
         this.ctrl_createProj = new CreateProjectController();
         initComponents();
+        super.setVisible(true);
     }
 
     /**
@@ -48,6 +49,7 @@ public class LoadProjectUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btn_network.setText("Load network");
+        btn_network.setEnabled(false);
         btn_network.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_networkActionPerformed(evt);
@@ -55,6 +57,7 @@ public class LoadProjectUI extends javax.swing.JFrame {
         });
 
         btn_airModels.setText("Load aircrafts models");
+        btn_airModels.setEnabled(false);
         btn_airModels.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_airModelsActionPerformed(evt);
@@ -62,6 +65,7 @@ public class LoadProjectUI extends javax.swing.JFrame {
         });
 
         btn_airports.setText("Load airports");
+        btn_airports.setEnabled(false);
         btn_airports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_airportsActionPerformed(evt);
@@ -69,6 +73,7 @@ public class LoadProjectUI extends javax.swing.JFrame {
         });
 
         btn_save.setText("Save ");
+        btn_save.setEnabled(false);
         btn_save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_saveActionPerformed(evt);
@@ -182,6 +187,7 @@ public class LoadProjectUI extends javax.swing.JFrame {
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         this.ctrl_createProj.saveInDataBase();
+        new MainUI();
         dispose();
     }//GEN-LAST:event_btn_saveActionPerformed
 
@@ -192,6 +198,10 @@ public class LoadProjectUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Name project already exists");
         }else{
             this.ctrl_createProj.validateProjectNameAndDescription(txt_name.getText(), txt_desc.getText());
+            this.btn_airModels.setEnabled(true);
+            this.btn_airports.setEnabled(true);
+            this.btn_network.setEnabled(true);
+            this.btn_save.setEnabled(true);
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
