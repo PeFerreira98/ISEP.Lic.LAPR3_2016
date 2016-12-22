@@ -47,7 +47,7 @@ public class AircraftStAXParserTest {
         System.out.println("XMLReader");
         String filePath = "inOutFiles/TestSet01_Aircraft.xml";
         
-        Project expProject = new Project(0, "Project0","Description0");
+        Project expProject = new Project("Project0","Description0");
         AircraftStAXParser instance = new AircraftStAXParser(expProject);
         
         AircraftModelRegister expResult = expProject.getAircraftModelRegister();

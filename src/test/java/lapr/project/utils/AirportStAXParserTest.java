@@ -46,7 +46,7 @@ public class AirportStAXParserTest {
         System.out.println("XMLReader");
         String filePath = "inOutFiles/TestSet01a_Airports.xml";
         
-        Project expResult = new Project(0, "Project0","Description0");
+        Project expResult = new Project("Project0","Description0");
         AirportStAXParser instance = new AirportStAXParser(expResult);
         Project result = instance.XMLReader(filePath);
         
