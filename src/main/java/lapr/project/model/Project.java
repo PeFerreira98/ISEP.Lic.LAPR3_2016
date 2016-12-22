@@ -23,7 +23,11 @@ public class Project {
     private LinkedHashMap<String, Aircraft> aircraftHashMap; //TODO: change to aircraftRegister
     private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister
     private LinkedHashMap<Integer, Flight> flightsList; //TODO: change to flightregister
-
+    
+    public Project(){
+        
+    }
+    
     public Project(String name, String description) {
         this.name = name;
         this.description = description;

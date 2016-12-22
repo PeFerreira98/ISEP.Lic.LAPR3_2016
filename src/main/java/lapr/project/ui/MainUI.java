@@ -5,17 +5,65 @@
  */
 package lapr.project.ui;
 
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import lapr.project.controller.CreateProjectController;
+import lapr.project.controller.ProjectListController;
+import lapr.project.model.Project;
+
 /**
  *
  * @author Marcos
  */
 public class MainUI extends javax.swing.JFrame {
 
+    
+    private ProjectListController ctrl_projList;
+    private CreateProjectController ctrl_createProj;
     /**
      * Creates new form MainUI
      */
     public MainUI() {
+        this.ctrl_projList = new ProjectListController();
+        this.ctrl_createProj = new CreateProjectController();
+
+        super.setTitle("Load Project");
         initComponents();
+        super.setVisible(true);
+        
+        initComponents();
+    }
+    
+    private void inicializar() {
+        List<Project> lst_p = this.ctrl_projList.getListProjects();
+
+        if (lst_p == null) {
+            this.lst_projects.setModel(new DefaultListModel());
+
+            JOptionPane.showMessageDialog(this, "There are no existing Projects.");
+
+            return;
+        }
+
+        int tam = lst_p.size();
+        final String[] a = new String[tam];
+        for (int i = 0; i < tam; i++) {
+            a[i] = lst_p.get(i).toString();
+        }
+
+        DefaultListModel lm = new DefaultListModel() {
+            public int getSize() {
+                return a.length;
+            }
+
+            public Object getElementAt(int i) {
+                return a[i];
+            }
+        };
+
+        this.lst_projects.setModel(lm);
     }
 
     /**
@@ -27,6 +75,11 @@ public class MainUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lst_projects = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        btn_Open = new javax.swing.JButton();
+        btn_CreateProject = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem_Open = new javax.swing.JMenuItem();
@@ -34,6 +87,29 @@ public class MainUI extends javax.swing.JFrame {
         jMenuItem_Edit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lst_projects.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lst_projects);
+
+        jLabel1.setText("Project list");
+
+        btn_Open.setText("Open");
+        btn_Open.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_OpenActionPerformed(evt);
+            }
+        });
+
+        btn_CreateProject.setText("Load XML");
+        btn_CreateProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CreateProjectActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -54,15 +130,43 @@ public class MainUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 621, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btn_Open, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_CreateProject, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_Open)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_CreateProject)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_OpenActionPerformed
+        Project proj = this.ctrl_projList.getListProjects().get(this.lst_projects.getSelectedIndex());
+        
+        this.ctrl_projList.openProject(proj);
+    }//GEN-LAST:event_btn_OpenActionPerformed
+
+    private void btn_CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CreateProjectActionPerformed
+        String filePath = new String();
+        this.ctrl_createProj.LoadProject();
+    }//GEN-LAST:event_btn_CreateProjectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -100,10 +204,15 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_CreateProject;
+    private javax.swing.JButton btn_Open;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem_Create;
     private javax.swing.JMenuItem jMenuItem_Edit;
     private javax.swing.JMenuItem jMenuItem_Open;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> lst_projects;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,6 +7,7 @@ package lapr.project.controller;
 
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Project;
+import lapr.project.ui.LoadProjectUI;
 import lapr.project.utils.*;
 
 /**
@@ -22,6 +23,7 @@ public class CreateProjectController {
     private Project proj;
     
     public CreateProjectController(){
+        this.proj = new Project();
         db = new DatabaseModel();
     }
     
@@ -31,6 +33,10 @@ public class CreateProjectController {
             return true;
         }
         return false;
+    }
+    
+    public void LoadProject(){
+        new LoadProjectUI();
     }
     
     public void addNetwork(String path){
