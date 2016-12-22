@@ -48,11 +48,10 @@ public class Flight {
         this.flight_plan = new ArrayList<>();
         this.aircraft = aircraf;
     }
-    
+        
     public Flight(){
         
     }
-    
     public Aircraft getAircraft(){
         return this.aircraft;
     }
