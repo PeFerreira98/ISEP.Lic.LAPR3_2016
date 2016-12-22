@@ -99,6 +99,29 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        project.getAirNetwork().getMapSegment().values().stream().forEach((s) -> {
+            addSegment(s);
+        });
+        project.getAirNetwork().getMapNodes().values().stream().forEach((n) -> {
+            openDB();
+            addNode(n);
+        });
+        project.getAirportHashMap().values().stream().forEach((airport) -> {
+            openDB();
+            addAirport(airport);
+        });
+        project.getAircraftHashMap().values().stream().forEach((aircraft) -> {
+            openDB();
+            addAircraft(aircraft);
+        });
+        project.getAircraftModelRegister().getAircraftModelMap().values().stream().forEach((airModel) -> {
+            openDB();
+            addAircraftModel(airModel);
+        });
+        project.getFlightsList().values().stream().forEach((f) -> {
+            openDB();
+            addFlight(f);
+        });
         closeDB();
         //return getLastInsertedProjectCod();
     }
@@ -153,7 +176,7 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air){
         try {
-            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e) "
+            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e, project_id) "
                     + "values ('" 
                     + air.getId() + "', '"
                     + air.getDescription() + "', '"
@@ -172,7 +195,8 @@ public class DatabaseModel {
                     + air.getWingArea() + "', '"
                     + air.getWingSpan() + "', '"
                     + air.getDragCoeficient() + "', '"
-                    + air.getE() + "')");
+                    + air.getE() + "', '"
+                    + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -187,13 +211,14 @@ public class DatabaseModel {
      */
     public void addAircraft(Aircraft air){
         try {
-            this.st.execute("insert into Aircraft(model, id, company, numberFirstClass, numberNormalClass, numberElementsCrew) "
+            this.st.execute("insert into Aircraft(id, model, company, numberFirstClass, numberNormalClass, numberElementsCrew, project_id) "
                     + "values ('" 
-                    + air.getModel().getId()+ "', '"
                     + air.getId()+ "', '"
+                    + air.getModel().getId()+ "', '"
                     + air.getNumberFirstClass()+ "', '"
                     + air.getNumberNormalClass()+ "', '"
-                    + air.getNumberElementsCrew()+ "')");
+                    + air.getNumberElementsCrew()+ "','"
+                    + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -222,12 +247,14 @@ public class DatabaseModel {
      */
     public void addAirport(Airport ap){
         try {
-            this.st.execute("insert into Airport(name, town, country, IATAcode, location, project_name) "
-                    + "values ('" + ap.getName()+ "', '"
+            this.st.execute("insert into Airport(IATAcode, name, town, country, latitude, longitude, altitude, project_name) "
+                    + "values ('" + ap.getIATAcode()+ "', '"
+                    + ap.getName()+ "', '"
                     + ap.getTown()+ "', '"
                     + ap.getCountry()+ "', '"
-                    + ap.getIATAcode()+ "', '"
-                    + ap.getLocation()+ "', '"
+                    + ap.getLocation().getLatitude() + "', '"
+                    + ap.getLocation().getLongitude() + "', '"
+                    + ap.getLocation().getAltitude() + "', '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -269,6 +296,8 @@ public class DatabaseModel {
             n = new Node(rs2.getString("name"),
             rs2.getDouble("latitude"),
             rs2.getDouble("longitude"));
+            
+            rs2.close();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -345,7 +374,7 @@ public class DatabaseModel {
     public List<Flight> getListFlights(){
         List<Flight> lst_Flight = new ArrayList<>();
         try {
-            this.rs = this.st.executeQuery("SELECT F*, A.description FROM FLIgHT F, AirCraft A "
+            this.rs = this.st.executeQuery("SELECT F.*, A.description FROM FLIgHT F, Aircraft A "
                     + "WHERE Fliht.project_name = " + this.project.getName()
                     + " And F.aircraft_id = A.aircraft_id");
                       
@@ -369,7 +398,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        closeDB();
         return lst_Flight;
     }
     

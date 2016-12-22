@@ -25,7 +25,7 @@ public class CreateProjectController {
         db = new DatabaseModel();
     }
     
-    public boolean projectNameAndDescription(String name, String description){
+    public boolean validateProjectNameAndDescription(String name, String description){
         if(db.validateName(name)){
             proj = new Project(name, description);
             return true;
@@ -47,7 +47,7 @@ public class CreateProjectController {
         aircraftParser = new AircraftStAXParser(proj);
         aircraftParser.XMLReader(path);
     }
-    
+        
     public void saveInDataBase(){
         db.addProject(proj);
     }
