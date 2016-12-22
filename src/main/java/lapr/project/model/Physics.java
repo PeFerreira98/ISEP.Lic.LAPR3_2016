@@ -65,10 +65,9 @@ public class Physics {
     }
     
     public static double calculateTravelTimeInASegment(Aircraft aircraft, Segment segment){
-        //System.out.println(segment);
         double distance = calculateSegmentDistance(aircraft, segment);
-        //System.out.println(distance);
-        return calculateSegmentDistanceInMiles(distance) / aircraft.getModel().getRegimeRegister().getRegime("Cruise").getSpeed(); //tempo(s)=distance(m)/speed(miles/sec?)
+        //calculateSegmentDistanceInMiles(distance) / speedAndMMOConverterMachToKmsHour(aircraft.getModel().getRegimeRegister().getRegime("Cruise").getSpeed());
+        return distance / speedAndMMOConverterMachToKmsHour(aircraft.getModel().getRegimeRegister().getRegime("Cruise").getSpeed()); //tempo(s)=distance(m)/speed(miles/sec?)
     }
     public static double calculateSegmentDistance(Aircraft aircraft, Segment segment) {
 
@@ -83,7 +82,7 @@ public class Physics {
         double c = Math.sin(a / 2) * Math.sin(b / 2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(b / 2) * Math.sin(b / 2);
 
         double d = 2 * Math.atan2(Math.sqrt(c), Math.sqrt(1 - c));
-        double r = 6371000;
+        double r = 6371;
 
         return r * d;
     }
@@ -127,5 +126,10 @@ public class Physics {
        return (aircraft.getModel().getFuelCapacity()*0.82)/0.2642;       //Fuel density = 0,82 fuel (1kg water = 0,82 fuel(petrol)
    }
    
+   
+   public static void setsToAircraftValues(Aircraft aircraft){
+       
+       
+   }
 }
 

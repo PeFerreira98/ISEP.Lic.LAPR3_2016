@@ -59,7 +59,6 @@ class Main {
 //        String country2 = "c";
 //        String IATAcode2 = "c";
         //Airport c = new Airport(name2, town2, country2, IATAcode2, 0, 0, 0);
-
 //        air.a.put(1, b);
 //        air.a.put(2, c);
 //        
@@ -67,7 +66,6 @@ class Main {
 //            if(air.a.containsKey(2))
 //            System.out.println(a.toString());
 //        }
-    
         Project project = new Project(0, "proj0", "proj");
 
         NetworkStAXParser network = new NetworkStAXParser(project);
@@ -78,7 +76,6 @@ class Main {
 
         Aircraft a1 = new Aircraft(project.getAircraftModelRegister().getAircraftModel("Dummy 01"), "a1", "desc", 1, 1, 1);
 
-        
         double expResult = 0.0;
         AirNetwork an = project.getAirNetwork();
 
@@ -87,24 +84,29 @@ class Main {
 //        for (Node node : an.getMapNodes().values()) {
 //            deque.add(node);
 //        }
-        
         Map<Double, LinkedList<Node>> expected;
 
         System.out.println(a1);
-        
+
         Map<Double, LinkedList<Node>> result = an.getFastestPath(an.getNetwork(), an.getNode("PT02"), an.getNode("ES01"), deque, a1);
 
 //        Map<Double, LinkedList<Node>> expResult = expected;
-
         System.out.println(result);
-        
-        double a=Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT03"));
-        double b=Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT04"));
+
+//        double a=Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT03"));
+//        double b=Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT04"));
+//        System.out.println(a);
+//        System.out.println(b);
+//        double c=Physics.calculateSegmentDistanceInMiles(a);
+//        double d=Physics.calculateSegmentDistanceInMiles(b);
+//        System.out.println((c/0.85)+(d/0.85));
+
+        double a = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT03"));
+        double b = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT04"));
         System.out.println(a);
         System.out.println(b);
-        double c=Physics.calculateSegmentDistanceInMiles(a);
-        double d=Physics.calculateSegmentDistanceInMiles(b);
-        System.out.println((c/0.85)+(d/0.85));
         
+//        System.out.println((a / Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed()))
+//                + (b /Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed())));
     }
 }
