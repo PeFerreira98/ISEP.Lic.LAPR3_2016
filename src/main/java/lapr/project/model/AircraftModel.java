@@ -6,13 +6,13 @@
 package lapr.project.model;
 
 import java.util.Objects;
-import lapr.project.model.register.RegimeRegister;
+import lapr.project.model.register.CDragRegister;
 
 /**
  *
  * @author João
  */
-public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
+public class AircraftModel {
 
     private String id;
     private String description;
@@ -23,31 +23,27 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
     private String motor;
     private MotorType motorType;
     
-//    private double cruiseAltitude;
-//    private double cruiseSpeed;
-//    private double TSFC;
-//    private double lapseRateFactor;
-//    
-//    private double thrust_0;
-//    private double thrustMaxSpeed;
-//    private double maxSpeed;
+    private double cruiseAltitude;
+    private double cruiseSpeed;
+    private double TSFC;
+    private double lapseRateFactor;
     
-    private RegimeRegister regimeRegister; //TODO: Delete
+    private double thrust_0;
+    private double thrustMaxSpeed;
+    private double maxSpeed;
     
     private double emptyWeight;
     private double MTOW;
-    private double MZFW; //TODO: Delete
     private double maxPayload;
     private double fuelCapacity;
     private double VMO;
     private double MMO;
     private double wingArea;
     private double wingSpan;
-    private double dragCoeficient; //TODO: Delete
-//    private double aspectRatio;
+    private double aspectRatio;
     private double e;
     
-    //    private CDragRegister cdragRegister;
+    private CDragRegister cdragRegister;
     
     public enum Type {
         PASSENGER,
@@ -61,7 +57,8 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
         ELECTRICPROPELER;
     }
 
-    public AircraftModel(String id, String description, String maker, Type type, double numberMotors, String motor, MotorType motorType, RegimeRegister regimeRegister, double emptyWeight, double MTOW, double MZFW, double maxPayload, double fuelCapacity, double VMO, double MMO, double wingArea, double wingSpan, double dragCoeficient, double e) {
+    
+    public AircraftModel(String id, String description, String maker, Type type, double numberMotors, String motor, MotorType motorType, double cruiseAltitude, double cruiseSpeed, double TSFC, double lapseRateFactor, double thrust_0, double thrustMaxSpeed, double maxSpeed, double emptyWeight, double MTOW, double maxPayload, double fuelCapacity, double VMO, double MMO, double wingArea, double wingSpan, double aspectRatio, double e, CDragRegister cdragRegister) {
         this.id = id;
         this.description = description;
         this.maker = maker;
@@ -69,20 +66,54 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
         this.numberMotors = numberMotors;
         this.motor = motor;
         this.motorType = motorType;
-        this.regimeRegister = regimeRegister;
+        this.cruiseAltitude = cruiseAltitude;
+        this.cruiseSpeed = cruiseSpeed;
+        this.TSFC = TSFC;
+        this.lapseRateFactor = lapseRateFactor;
+        this.thrust_0 = thrust_0;
+        this.thrustMaxSpeed = thrustMaxSpeed;
+        this.maxSpeed = maxSpeed;
         this.emptyWeight = emptyWeight;
         this.MTOW = MTOW;
-        this.MZFW = MZFW;
         this.maxPayload = maxPayload;
         this.fuelCapacity = fuelCapacity;
         this.VMO = VMO;
         this.MMO = MMO;
         this.wingArea = wingArea;
         this.wingSpan = wingSpan;
-        this.dragCoeficient = dragCoeficient;
+        this.aspectRatio = aspectRatio;
         this.e = e;
+        this.cdragRegister = cdragRegister;
     }
 
+    public AircraftModel(String id, String description, String maker, Type type, double numberMotors, String motor, MotorType motorType, double cruiseAltitude, double cruiseSpeed, double TSFC, double lapseRateFactor, double thrust_0, double thrustMaxSpeed, double maxSpeed, double emptyWeight, double MTOW, double maxPayload, double fuelCapacity, double VMO, double MMO, double wingArea, double wingSpan, double aspectRatio, double e) {
+        this.id = id;
+        this.description = description;
+        this.maker = maker;
+        this.type = type;
+        this.numberMotors = numberMotors;
+        this.motor = motor;
+        this.motorType = motorType;
+        this.cruiseAltitude = cruiseAltitude;
+        this.cruiseSpeed = cruiseSpeed;
+        this.TSFC = TSFC;
+        this.lapseRateFactor = lapseRateFactor;
+        this.thrust_0 = thrust_0;
+        this.thrustMaxSpeed = thrustMaxSpeed;
+        this.maxSpeed = maxSpeed;
+        this.emptyWeight = emptyWeight;
+        this.MTOW = MTOW;
+        this.maxPayload = maxPayload;
+        this.fuelCapacity = fuelCapacity;
+        this.VMO = VMO;
+        this.MMO = MMO;
+        this.wingArea = wingArea;
+        this.wingSpan = wingSpan;
+        this.aspectRatio = aspectRatio;
+        this.e = e;
+        this.cdragRegister = new CDragRegister();
+    }
+    
     public String getId() {
         return id;
     }
@@ -94,7 +125,7 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
     public String getMaker() {
         return maker;
     }
-    
+
     public Type getType() {
         return type;
     }
@@ -111,20 +142,40 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
         return motorType;
     }
 
-    public RegimeRegister getRegimeRegister() {
-        return regimeRegister;
+    public double getCruiseAltitude() {
+        return cruiseAltitude;
     }
-    
+
+    public double getCruiseSpeed() {
+        return cruiseSpeed;
+    }
+
+    public double getTSFC() {
+        return TSFC;
+    }
+
+    public double getLapseRateFactor() {
+        return lapseRateFactor;
+    }
+
+    public double getThrust_0() {
+        return thrust_0;
+    }
+
+    public double getThrustMaxSpeed() {
+        return thrustMaxSpeed;
+    }
+
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
     public double getEmptyWeight() {
         return emptyWeight;
     }
 
     public double getMTOW() {
         return MTOW;
-    }
-
-    public double getMZFW() {
-        return MZFW;
     }
 
     public double getMaxPayload() {
@@ -151,12 +202,16 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
         return wingSpan;
     }
 
-    public double getDragCoeficient() {
-        return dragCoeficient;
+    public double getAspectRatio() {
+        return aspectRatio;
     }
 
     public double getE() {
         return e;
+    }
+
+    public CDragRegister getCdragRegister() {
+        return cdragRegister;
     }
 
     @Override
@@ -180,7 +235,7 @@ public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
 
     @Override
     public String toString() {
-        return "AircraftModel{" + "id=" + id + ", description=" + description + ", maker=" + maker + ", type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", MZFW=" + MZFW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", dragCoeficient=" + dragCoeficient + ", e=" + e + ",\n regimeRegister=" + regimeRegister + '}';
+        return "AircraftModel{" + "id=" + id + ", description=" + description + ", maker=" + maker + ", type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", cruiseAltitude=" + cruiseAltitude + ", cruiseSpeed=" + cruiseSpeed + ", TSFC=" + TSFC + ", lapseRateFactor=" + lapseRateFactor + ", thrust_0=" + thrust_0 + ", thrustMaxSpeed=" + thrustMaxSpeed + ", maxSpeed=" + maxSpeed + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", aspectRatio=" + aspectRatio + ", e=" + e + ", \ncdragRegister=" + cdragRegister + '}';
     }
       
 }

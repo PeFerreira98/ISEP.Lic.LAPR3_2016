@@ -176,7 +176,7 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air){
         try {
-            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, emptyWeight, MTOW, MZFW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, dragCoeficient, e, project_id) "
+            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, cruiseAltitude, cruiseSpeed, TSFC, lapseRateFactor, thrust0, thrustMaxSpeed, maxSpeed, emptyWeight, MTOW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, aspectRatio, e, project_id) "
                     + "values ('" 
                     + air.getId() + "', '"
                     + air.getDescription() + "', '"
@@ -185,16 +185,22 @@ public class DatabaseModel {
                     + air.getNumberMotors() + "', '"
                     + air.getMotor() + "', '"
                     + air.getMotorType().toString() + "', '"
+                    + air.getCruiseAltitude() + "', '"
+                    + air.getCruiseSpeed() + "', '"
+                    + air.getTSFC() + "', '"
+                    + air.getLapseRateFactor() + "', '"
+                    + air.getThrust_0() + "', '"
+                    + air.getThrustMaxSpeed() + "', '"
+                    + air.getMaxSpeed() + "', '"
                     + air.getEmptyWeight() + "', '"
                     + air.getMTOW() + "', '"
-                    + air.getMZFW() + "', '"
                     + air.getMaxPayload() + "', '"
                     + air.getFuelCapacity() + "', '"
                     + air.getVMO() + "', '"
                     + air.getMMO() + "', '"
                     + air.getWingArea() + "', '"
                     + air.getWingSpan() + "', '"
-                    + air.getDragCoeficient() + "', '"
+                    + air.getAspectRatio() + "', '"
                     + air.getE() + "', '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {

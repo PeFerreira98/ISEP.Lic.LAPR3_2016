@@ -47,12 +47,10 @@ public class AircraftModelRegisterTest {
     public void testAddAircraftModel() {
         System.out.println("addAircraftModel");
         
-        
-        RegimeRegister regimeRegister = new RegimeRegister();
-        AircraftModel newAircraftModel = new AircraftModel("1", "2", "3", AircraftModel.Type.MIXED, 4, "exp", AircraftModel.MotorType.TURBOJET, regimeRegister, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+        AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
         AircraftModelRegister instance = new AircraftModelRegister();
         
-        AircraftModel expResult = new AircraftModel("1", "2", "3", AircraftModel.Type.MIXED, 4, "exp", AircraftModel.MotorType.TURBOJET, regimeRegister, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+        AircraftModel expResult = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
         AircraftModel result = instance.addAircraftModel(newAircraftModel);
         
         assertEquals(expResult, result);
@@ -65,8 +63,7 @@ public class AircraftModelRegisterTest {
     public void testGetAircraftModelMap() {
         System.out.println("getAircraftModelMap");
         
-        RegimeRegister regimeRegister = new RegimeRegister();
-        AircraftModel newAircraftModel = new AircraftModel("1", "2", "3", AircraftModel.Type.MIXED, 4, "exp", AircraftModel.MotorType.TURBOJET, regimeRegister, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+        AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
         AircraftModelRegister instance = new AircraftModelRegister();
         
         instance.addAircraftModel(newAircraftModel);
@@ -84,8 +81,7 @@ public class AircraftModelRegisterTest {
     public void testEquals() {
         System.out.println("equals");
         
-        RegimeRegister regimeRegister = new RegimeRegister();
-        AircraftModel newAircraftModel = new AircraftModel("1", "2", "3", AircraftModel.Type.MIXED, 4, "exp", AircraftModel.MotorType.TURBOJET, regimeRegister, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+        AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
         
         Object obj = new AircraftModelRegister();
         AircraftModelRegister instance = new AircraftModelRegister();
