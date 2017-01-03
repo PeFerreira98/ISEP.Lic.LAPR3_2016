@@ -6,7 +6,7 @@
 package lapr.project.utils;
 
 import lapr.project.model.Project;
-import lapr.project.model.network.AirNetwork;
+import lapr.project.model.register.AircraftModelRegister;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author zero_
  */
-public class NetworkStAXParserTest {
+public class AircraftStAXParser2Test {
     
-    public NetworkStAXParserTest() {
+    public AircraftStAXParser2Test() {
     }
     
     @BeforeClass
@@ -40,20 +40,20 @@ public class NetworkStAXParserTest {
     }
 
     /**
-     * Test of XMLReader method, of class NetworkStAXParser.
+     * Test of XMLReader method, of class AircraftStAXParser2.
      */
     @Test
     public void testXMLReader() {
         System.out.println("XMLReader");
-        String filePath = "inOutFiles/TestSet02_Network.xml";
+        String filePath = "inOutFiles/TestSet02_Aircraft.xml";
         
         Project expProject = new Project("Project0","Description0");
-        NetworkStAXParser instance = new NetworkStAXParser(expProject);
-       
-        AirNetwork result = instance.XMLReader(filePath);
-        AirNetwork expResult = expProject.getAirNetwork();
+        AircraftStAXParser2 instance = new AircraftStAXParser2(expProject);
         
-        assertEquals(expResult, result);        
+        AircraftModelRegister expResult = expProject.getAircraftModelRegister();
+        AircraftModelRegister result = instance.XMLReader(filePath);
+        
+        assertEquals(expResult, result);
     }
     
 }

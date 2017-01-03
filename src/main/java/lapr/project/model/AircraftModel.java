@@ -12,7 +12,7 @@ import lapr.project.model.register.RegimeRegister;
  *
  * @author João
  */
-public class AircraftModel {
+public class AircraftModel { //TODO: Delete marked stuff, add commented stuff
 
     private String id;
     private String description;
@@ -23,19 +23,31 @@ public class AircraftModel {
     private String motor;
     private MotorType motorType;
     
-    private RegimeRegister regimeRegister;
+//    private double cruiseAltitude;
+//    private double cruiseSpeed;
+//    private double TSFC;
+//    private double lapseRateFactor;
+//    
+//    private double thrust_0;
+//    private double thrustMaxSpeed;
+//    private double maxSpeed;
+    
+    private RegimeRegister regimeRegister; //TODO: Delete
     
     private double emptyWeight;
     private double MTOW;
-    private double MZFW;
+    private double MZFW; //TODO: Delete
     private double maxPayload;
     private double fuelCapacity;
     private double VMO;
     private double MMO;
     private double wingArea;
     private double wingSpan;
-    private double dragCoeficient;
+    private double dragCoeficient; //TODO: Delete
+//    private double aspectRatio;
     private double e;
+    
+    //    private CDragRegister cdragRegister;
     
     public enum Type {
         PASSENGER,
