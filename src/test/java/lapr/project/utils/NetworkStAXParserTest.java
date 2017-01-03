@@ -45,13 +45,15 @@ public class NetworkStAXParserTest {
     @Test
     public void testXMLReader() {
         System.out.println("XMLReader");
-        String filePath = "inOutFiles/TestSet01a_Network.xml";
+        String filePath = "inOutFiles/TestSet02_Network.xml";
         
         Project expProject = new Project("Project0","Description0");
         NetworkStAXParser instance = new NetworkStAXParser(expProject);
        
         AirNetwork result = instance.XMLReader(filePath);
         AirNetwork expResult = expProject.getAirNetwork();
+        
+        System.out.println(expProject.getAirNetwork().getMapSegment());
         
         assertEquals(expResult, result);        
     }

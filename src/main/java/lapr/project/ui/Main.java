@@ -71,7 +71,7 @@ class Main {
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);
 
-        network.XMLReader("inOutFiles/TestSet01a_Network.xml");
+        network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet01_Aircraft.xml");
 
         Aircraft a1 = new Aircraft(project.getAircraftModelRegister().getAircraftModel("Dummy 01"), "a1", "desc", 1, 1, 1);
@@ -101,8 +101,8 @@ class Main {
 //        double d=Physics.calculateSegmentDistanceInMiles(b);
 //        System.out.println((c/0.85)+(d/0.85));
 
-        double a = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT03"));
-        double b = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PT04"));
+        double a = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PTLS02"));
+        double b = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("LSMD01"));
         System.out.println(a);
         System.out.println(b);
         
