@@ -16,6 +16,7 @@ import lapr.project.model.Project;
 import lapr.project.model.network.AirNetwork;
 import lapr.project.model.network.Node;
 import lapr.project.utils.AircraftStAXParser;
+import lapr.project.utils.AirportStAXParser;
 import lapr.project.utils.NetworkStAXParser;
 
 /**
@@ -70,14 +71,18 @@ class Main {
 
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);
+        AirportStAXParser airports = new AirportStAXParser(project);
 
         network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
+        airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
+        
 
         Aircraft a1 = new Aircraft(project.getAircraftModelRegister().getAircraftModel("777-200ER"), "a1", "desc", 1, 1, 1);
 
         double expResult = 0.0;
         AirNetwork an = project.getAirNetwork();
+        
 
         Deque<Node> deque = new ArrayDeque<>();
 
@@ -105,6 +110,9 @@ class Main {
         double b = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("LSMD01"));
         System.out.println(a);
         System.out.println(b);
+        
+        
+        new ProjectMenuUI(project);
         
 //        System.out.println((a / Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed()))
 //                + (b /Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed())));
