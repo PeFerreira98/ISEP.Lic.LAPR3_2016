@@ -28,7 +28,7 @@ public class FlightRegister {
 
     public Flight addFlight(Flight newFlight) {
         return mapFlights.put(newFlight.getId(), newFlight);
-        
+
     }
 
     public boolean validateFlight(Flight flight) {
@@ -42,6 +42,16 @@ public class FlightRegister {
             return false;
         }
 
+        if (flight.getAircraft().getNumberFirstClass() < 0) {
+            return false;
+        }
+        if (flight.getAircraft().getNumberNormalClass() < 0) {
+            return false;
+        }
+        if (flight.getAircraft().getNumberElementsCrew() < 0) {
+            return false;
+        }
+
         for (Segment seg : flight.getFlight_plan()) {
             if (!regSegment.getSegmentsList().containsKey(seg.getId())) {
                 return false;
@@ -50,8 +60,8 @@ public class FlightRegister {
         }
         return true;
     }
-    
-    public HashMap<Integer, Flight> getFlightsList(){
+
+    public HashMap<Integer, Flight> getFlightsList() {
         return this.mapFlights;
     }
 }

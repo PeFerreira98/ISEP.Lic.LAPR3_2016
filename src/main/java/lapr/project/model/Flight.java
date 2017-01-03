@@ -114,6 +114,8 @@ public class Flight {
         Flight otherFlight = (Flight) otherObj;
         return this.id == otherFlight.id;
     }
+    
+
 
     @Override
     public String toString() {
