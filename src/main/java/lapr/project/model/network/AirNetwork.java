@@ -24,12 +24,12 @@ public class AirNetwork {
     private Graph<Node, Segment> airNetwork;
     private Map<String, Node> map_Nodes;
     private Map<String, Segment> map_Segment;
-    
+
     public AirNetwork() {
         this.airNetwork = new Graph<>(false);
         this.map_Nodes = new LinkedHashMap<>();
         this.map_Segment = new LinkedHashMap<>();
-        
+
     }
 
     /**
@@ -100,7 +100,27 @@ public class AirNetwork {
         }
         return true;
     }
+    
+        private static <V, E> void getPath(Graph<V, E> g, V voInf, V vdInf, int[] pathKeys, Deque<V> path) {
 
+        if (voInf != vdInf) {
+            path.push(vdInf);
+
+            Vertex<V, E> vert = g.getVertex(vdInf);
+            int vKey = vert.getKey();
+            int prevVKey = pathKeys[vKey];
+            vert = g.getVertex(prevVKey);
+            vdInf = vert.getElement();
+
+            getPath(g, voInf, vdInf, pathKeys, path);
+        } else {
+            path.push(voInf);
+        }
+    }
+    
+    
+    //___________________________________________________fastestPath_______________________________________________
+    
     public static <Node, Segment> double fastestPathLength(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
 
         Vertex<Node, Segment> vOrig = g.getVertex(voInf);
@@ -125,7 +145,7 @@ public class AirNetwork {
         double lengthPath = time[vDest.getKey()];
 
         if (lengthPath != Double.MAX_VALUE) {
-            getPathFastest(g, voInf, vdInf, pathKeys, shortPath);
+            getPath(g, voInf, vdInf, pathKeys, shortPath);
             return lengthPath;
         }
         return 0;
@@ -179,36 +199,176 @@ public class AirNetwork {
 
         }
     }
+    // para apagar
 
-    private static <V, E> void getPath(Graph<V, E> g, V voInf, V vdInf, int[] pathKeys, Deque<V> path) {
 
-        if (voInf != vdInf) {
-            path.push(vdInf);
-
-            Vertex<V, E> vert = g.getVertex(vdInf);
-            int vKey = vert.getKey();
-            int prevVKey = pathKeys[vKey];
-            vert = g.getVertex(prevVKey);
-            vdInf = vert.getElement();
-
-            getPath(g, voInf, vdInf, pathKeys, path);
-        } else {
-            path.push(voInf);
-        }
-    }
-    
-    public Map<Double, LinkedList<Node>> getFastestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft){
+    public Map<Double, LinkedList<Node>> getFastestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
         LinkedList<Node> path = new LinkedList<>();
         Map<Double, LinkedList<Node>> map = new LinkedHashMap<>();
-        
+
         double time = fastestPathLength(g, voInf, vdInf, shortPath, aircraft);
         for (Node a : shortPath) {
             path.add(a);
         }
-        map.put(time, path);
-        
+        map.put(time * 60, path);
+
         System.out.println(map);
         return map;
     }
 
+    //__________________________________________Shortest Path_____________________________________________________
+    public Map<Double, LinkedList<Node>> getShortestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
+        LinkedList<Node> path = new LinkedList<>();
+        Map<Double, LinkedList<Node>> map = new LinkedHashMap<>();
+
+        double distance = shortestPathLength(g, voInf, vdInf, shortPath, aircraft);
+        for (Node a : shortPath) {
+            path.add(a);
+        }
+        map.put(distance, path);
+
+        System.out.println(map);
+        return map;
+    }
+
+    private static <V, E> void shortestPathLength(Graph<V, E> g, Vertex<V, E> vOrig,
+            boolean[] visited, int[] pathKeys, double[] distance, Aircraft aircraft) {
+
+        int vkeyOrig = vOrig.getKey();
+        distance[vkeyOrig] = 0;
+        while (vkeyOrig != -1) {
+            visited[vkeyOrig] = true;
+            vOrig = g.getVertex(vkeyOrig);
+            for (Edge<V, E> edge : g.outgoingEdges(vOrig)) {
+                Vertex<V, E> vAdj = g.opposite(vOrig, edge);
+                int vkeyAdj = vAdj.getKey();
+                if (!visited[vkeyAdj] && distance[vkeyAdj] > distance[vkeyOrig] + Physics.calculateSegmentDistance(aircraft, (Segment) edge.getElement())) {
+                    distance[vkeyAdj] = distance[vkeyOrig] + Physics.calculateSegmentDistance(aircraft, (Segment) edge.getElement());
+                    pathKeys[vkeyAdj] = vkeyOrig;
+                }
+            }
+            double minDistance = Double.MAX_VALUE;
+            vkeyOrig = -1;
+            for (int i = 0; i < g.numVertices(); i++) {
+                if (!visited[i] && distance[i] < minDistance) {
+                    minDistance = distance[i];
+                    vkeyOrig = i;
+                }
+            }
+            if (minDistance == Double.MAX_VALUE) {
+                vkeyOrig = -1;
+            }
+        }
+    }
+
+    public static <Node, Segment> double shortestPathLength(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
+
+        Vertex<Node, Segment> vOrig = g.getVertex(voInf);
+        Vertex<Node, Segment> vDest = g.getVertex(vdInf);
+
+        if (vOrig == null || vDest == null) {
+            return 0;
+        }
+
+        int nverts = g.numVertices();
+        boolean[] visited = new boolean[nverts]; //default value: false
+        int[] pathKeys = new int[nverts];
+        double[] time = new double[nverts];
+
+        for (int i = 0; i < nverts; i++) {
+            time[i] = Double.MAX_VALUE;
+            pathKeys[i] = -1;
+        }
+
+        shortestPathLength(g, vOrig, visited, pathKeys, time, aircraft);
+
+        double lengthPath = time[vDest.getKey()];
+
+        if (lengthPath != Double.MAX_VALUE) {
+            getPath(g, voInf, vdInf, pathKeys, shortPath);
+            return lengthPath;
+        }
+        return 0;
+
+    }
+    
+    //__________________________________________Best Path_____________________________________________________
+    public Map<Double, LinkedList<Node>> getBestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
+        LinkedList<Node> path = new LinkedList<>();
+        Map<Double, LinkedList<Node>> map = new LinkedHashMap<>();
+
+        double distance = shortestPathLength(g, voInf, vdInf, shortPath, aircraft);
+        for (Node a : shortPath) {
+            path.add(a);
+        }
+        map.put(distance, path);
+
+        System.out.println(map);
+        return map;
+    }
+
+    private static <V, E> void bestPathLength(Graph<V, E> g, Vertex<V, E> vOrig,
+            boolean[] visited, int[] pathKeys, double[] fuelComsuption, Aircraft aircraft) {
+
+        int vkeyOrig = vOrig.getKey();
+        fuelComsuption[vkeyOrig] = 0;
+        while (vkeyOrig != -1) {
+            visited[vkeyOrig] = true;
+            vOrig = g.getVertex(vkeyOrig);
+            for (Edge<V, E> edge : g.outgoingEdges(vOrig)) {
+                Vertex<V, E> vAdj = g.opposite(vOrig, edge);
+                int vkeyAdj = vAdj.getKey();
+                if (!visited[vkeyAdj] && fuelComsuption[vkeyAdj] > fuelComsuption[vkeyOrig] + Physics.calculateFuelComsuptionEachSegment(aircraft, (Segment) edge.getElement())) {
+                    fuelComsuption[vkeyAdj] = fuelComsuption[vkeyOrig] + Physics.calculateFuelComsuptionEachSegment(aircraft, (Segment) edge.getElement());
+                    pathKeys[vkeyAdj] = vkeyOrig;
+                }
+            }
+            double minFuelC= Double.MAX_VALUE;
+            vkeyOrig = -1;
+            for (int i = 0; i < g.numVertices(); i++) {
+                if (!visited[i] && fuelComsuption[i] < minFuelC) {
+                    minFuelC = fuelComsuption[i];
+                    vkeyOrig = i;
+                }
+            }
+            if (minFuelC == Double.MAX_VALUE) {
+                vkeyOrig = -1;
+            }
+        }
+    }
+
+    public static <Node, Segment> double bestPathLength(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
+
+        Vertex<Node, Segment> vOrig = g.getVertex(voInf);
+        Vertex<Node, Segment> vDest = g.getVertex(vdInf);
+
+        if (vOrig == null || vDest == null) {
+            return 0;
+        }
+
+        int nverts = g.numVertices();
+        boolean[] visited = new boolean[nverts]; //default value: false
+        int[] pathKeys = new int[nverts];
+        double[] time = new double[nverts];
+
+        for (int i = 0; i < nverts; i++) {
+            time[i] = Double.MAX_VALUE;
+            pathKeys[i] = -1;
+        }
+
+        bestPathLength(g, vOrig, visited, pathKeys, time, aircraft);
+
+        double lengthPath = time[vDest.getKey()];
+
+        if (lengthPath != Double.MAX_VALUE) {
+            getPath(g, voInf, vdInf, pathKeys, shortPath);
+            return lengthPath;
+        }
+        return 0;
+
+    }
+    
+    
+    
+    
 }

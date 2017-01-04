@@ -56,6 +56,7 @@ public class Physics {
                 * (calculateLiftCoeficient(aircraft, segment) / calculateDragCoeficient(aircraft, segment)
                 * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
     }
+    
 
     public static double calculateTravelTimeInASegment(Aircraft aircraft, Segment segment) {
         double distance = calculateSegmentDistance(aircraft, segment);
@@ -80,6 +81,11 @@ public class Physics {
 
         return r * d;
     }
+    
+    public static double calculateFuelComsuptionEachSegment(Aircraft aircraft,Segment segment){
+        
+        return 0;
+    }
 
     public static double calculateSegmentDistanceInMiles(double distance) {
         return 0.62 * distance;
@@ -101,7 +107,6 @@ public class Physics {
 //        
 //        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC()
 //    }
-    
     public static double altitudeConverterFeetToMeters(Aircraft aircraft) {
         return aircraft.getModel().getCruiseAltitude() * 0.3048;
     }
@@ -120,5 +125,77 @@ public class Physics {
 
     public static void setsToAircraftValues(Aircraft aircraft) {
 
+    }
+
+    public static double calculateAircraftTrueAirspeed(Aircraft aircraft) {
+        double p;
+        double t = 15; //(ºC) falta converter na formula
+
+        if (aircraft.getModel().getCruiseAltitude() > 0 && aircraft.getModel().getCruiseAltitude() <= 1000) {
+            p = 12.25;
+            t = 15;
+        } else if (aircraft.getModel().getCruiseAltitude() > 1000 && aircraft.getModel().getCruiseAltitude() <= 2000) {
+            p = 11.12;
+            t = 8.5;
+        } else if (aircraft.getModel().getCruiseAltitude() > 2000 && aircraft.getModel().getCruiseAltitude() <= 3000) {
+            p = 10.07;
+            t = 2.00;
+        } else if (aircraft.getModel().getCruiseAltitude() > 3000 && aircraft.getModel().getCruiseAltitude() <= 4000) {
+            p = 9.093;
+            t = -4.49;
+        } else if (aircraft.getModel().getCruiseAltitude() > 4000 && aircraft.getModel().getCruiseAltitude() <= 5000) {
+            p = 8.194;
+            t = -10.98;
+        } else if (aircraft.getModel().getCruiseAltitude() > 5000 && aircraft.getModel().getCruiseAltitude() <= 6000) {
+            p = 7.634;
+            t = -17.47;
+        } else if (aircraft.getModel().getCruiseAltitude() > 6000 && aircraft.getModel().getCruiseAltitude() <= 7000) {
+            p = 6.601;
+            t = -23.96;
+        }
+
+        return 661.47 * aircraft.getModel().getMaxSpeed() * Math.sqrt(t / 288.15);
+        
+        //TAS=a0*M*Sqrt(T/T0)
+        //a0=speed of sound(knot)
+        //M=Mach number
+        //T= temperature in kelvin
+        //T0=temperature at standard sea level in kelvin
+    }
+
+    public static double calculateThrust(Aircraft aircraft, Segment segment) {
+        double p;
+        if (aircraft.getModel().getCruiseAltitude() > 0 && aircraft.getModel().getCruiseAltitude() <= 1000) {
+            p = 12.25;
+        } else if (aircraft.getModel().getCruiseAltitude() > 1000 && aircraft.getModel().getCruiseAltitude() <= 2000) {
+            p = 11.12;
+        } else if (aircraft.getModel().getCruiseAltitude() > 2000 && aircraft.getModel().getCruiseAltitude() <= 3000) {
+            p = 10.07;
+        } else if (aircraft.getModel().getCruiseAltitude() > 3000 && aircraft.getModel().getCruiseAltitude() <= 4000) {
+            p = 9.093;
+        } else if (aircraft.getModel().getCruiseAltitude() > 4000 && aircraft.getModel().getCruiseAltitude() <= 5000) {
+            p = 8.194;
+        } else if (aircraft.getModel().getCruiseAltitude() > 5000 && aircraft.getModel().getCruiseAltitude() <= 6000) {
+            p = 7.634;
+        } else if (aircraft.getModel().getCruiseAltitude() > 6000 && aircraft.getModel().getCruiseAltitude() <= 7000) {
+            p = 6.601;
+        }
+
+        return 0;
+
+    }
+
+    public static double calculateThrustAltitude(Aircraft aircraft, Segment segment) {
+
+        return 0;
+
+    }
+
+    public static double aircraftClimb(Aircraft aircraft, Segment segment) {
+
+        double liftForce = calculateLiftForceInASegment(aircraft, segment);
+        double dragCoeficient = calculateDragForceInASegment(aircraft, segment); //???????????
+
+        return 0;
     }
 }
