@@ -69,8 +69,8 @@ public class AircraftRegisterTest {
         Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
 
         AircraftRegister instance = new AircraftRegister();
-        boolean result = false;
-        boolean expResult = instance.addAircraft(a1);
+        boolean expResult = false;
+        boolean result = instance.addAircraft(a1);
         assertEquals(expResult, result);
     }
 
@@ -87,6 +87,39 @@ public class AircraftRegisterTest {
         boolean result = true;
         assertEquals(expResult, result);
 
+    }
+
+    /**
+     * Test of aircraftDuplicationName method, of class AircraftRegister.
+     */
+    @Test
+    public void testAircraftDuplicationName() {
+        System.out.println("aircraftDuplicationName");
+        AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
+        Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+        Aircraft a2 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+        AircraftRegister instance = new AircraftRegister();
+        instance.addAircraft(a1);
+        instance.aircraftDuplicationName(a2, 1);
+        assertEquals(a2.getDescription(),"description(1)");
+        
+        
+    }
+
+    /**
+     * Test of aircraftCheckDuplicate method, of class AircraftRegister.
+     */
+    @Test
+    public void testAircraftCheckDuplicate() {
+        System.out.println("aircraftCheckDuplicate");
+        AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
+        Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+        Aircraft a2 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+        AircraftRegister instance = new AircraftRegister();
+        instance.addAircraft(a1);
+        instance.aircraftDuplicationName(a2, 1);
+    
+        
     }
 
 }

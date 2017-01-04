@@ -5,11 +5,15 @@
  */
 package lapr.project.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.chart.PieChart;
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
+import lapr.project.model.Airport;
 import lapr.project.model.Flight;
+import lapr.project.model.FlightPlan;
 import lapr.project.model.Location;
 import lapr.project.model.Project;
 
@@ -25,7 +29,7 @@ public class CreateFlightController {
 
     public CreateFlightController(Project proj) {
         this.proj = proj;
-        this.db = new DatabaseModel(proj);
+        //this.db = new DatabaseModel(proj);
     }
     
     //Falta o flightPath
@@ -34,13 +38,14 @@ public class CreateFlightController {
         this.aircraftType.getType();
 
     }
+    public ArrayList<Airport> getAirports(){
+        //FIX_ME getListAirports incompleto, falta a location
+        ArrayList<Airport> lstAirports = db.getListAirports();
+        return lstAirports;
+    }
 
-    public boolean confirmFlight(Flight flight) {
-        if (proj.confirmFlight(flight)) {
-            db.addFlight(flight);
-            return true;
-        }
-        return false;
+    public void saveFlightPlan(FlightPlan flightP) {
+            db.addFlightPlan(flightP);
     }
 
 }
