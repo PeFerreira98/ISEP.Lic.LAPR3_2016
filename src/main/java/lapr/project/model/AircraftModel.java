@@ -214,6 +214,108 @@ public class AircraftModel {
         return cdragRegister;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMaker(String maker) {
+        this.maker = maker;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setNumberMotors(double numberMotors) {
+        this.numberMotors = numberMotors;
+    }
+
+    public void setMotor(String motor) {
+        this.motor = motor;
+    }
+
+    public void setMotorType(MotorType motorType) {
+        this.motorType = motorType;
+    }
+
+    public void setCruiseAltitude(double cruiseAltitude) {
+        this.cruiseAltitude = cruiseAltitude;
+    }
+
+    public void setCruiseSpeed(double cruiseSpeed) {
+        this.cruiseSpeed = cruiseSpeed;
+    }
+
+    public void setTSFC(double TSFC) {
+        this.TSFC = TSFC;
+    }
+
+    public void setLapseRateFactor(double lapseRateFactor) {
+        this.lapseRateFactor = lapseRateFactor;
+    }
+
+    public void setThrust_0(double thrust_0) {
+        this.thrust_0 = thrust_0;
+    }
+
+    public void setThrustMaxSpeed(double thrustMaxSpeed) {
+        this.thrustMaxSpeed = thrustMaxSpeed;
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public void setEmptyWeight(double emptyWeight) {
+        this.emptyWeight = emptyWeight;
+    }
+
+    public void setMTOW(double MTOW) {
+        this.MTOW = MTOW;
+    }
+
+    public void setMaxPayload(double maxPayload) {
+        this.maxPayload = maxPayload;
+    }
+
+    public void setFuelCapacity(double fuelCapacity) {
+        this.fuelCapacity = fuelCapacity;
+    }
+
+    public void setVMO(double VMO) {
+        this.VMO = VMO;
+    }
+
+    public void setMMO(double MMO) {
+        this.MMO = MMO;
+    }
+
+    public void setWingArea(double wingArea) {
+        this.wingArea = wingArea;
+    }
+
+    public void setWingSpan(double wingSpan) {
+        this.wingSpan = wingSpan;
+    }
+
+    public void setAspectRatio(double aspectRatio) {
+        this.aspectRatio = aspectRatio;
+    }
+
+    public void setE(double e) {
+        this.e = e;
+    }
+
+    public void setCdragRegister(CDragRegister cdragRegister) {
+        this.cdragRegister = cdragRegister;
+    }
+    
+    
+
     @Override
     public int hashCode() {
         int hash = 3;
