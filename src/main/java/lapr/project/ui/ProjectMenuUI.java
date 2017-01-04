@@ -21,6 +21,7 @@ public class ProjectMenuUI extends javax.swing.JFrame {
     
     private Project project;
     private ProjectMenuController ctr_pMenu;
+    
     /**
      * Creates new form ProjectMenuUI
      */
