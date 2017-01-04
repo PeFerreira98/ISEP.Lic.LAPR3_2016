@@ -50,7 +50,7 @@ public class MainUI extends javax.swing.JFrame {
         int tam = lst_p.size();
         final String[] a = new String[tam];
         for (int i = 0; i < tam; i++) {
-            a[i] = lst_p.get(i).toString();
+            a[i] = lst_p.get(i).getName();
         }
 
         DefaultListModel lm = new DefaultListModel() {

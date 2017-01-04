@@ -45,9 +45,8 @@ public class DatabaseModel {
      */
     public void openDB(){
         // LER O DRIVER Oracle JDBC E CONECTAR À BASE DE DADOS ORACLE
-        
-        //DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
         try {
+            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             this.con = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
             this.st = con.createStatement();
         } catch (SQLException ex) {
@@ -77,7 +76,7 @@ public class DatabaseModel {
         List<Project> list_projects = new ArrayList<>();
         
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM PROJECT");
+            this.rs = this.st.executeQuery("Select * From PROJECT");
             while (rs.next()) {
                 Project p = new Project(rs.getString("NAME"),rs.getString("DESCRIPTION"));
                 list_projects.add(p);
