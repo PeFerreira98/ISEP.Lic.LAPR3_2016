@@ -85,7 +85,6 @@ public class AircraftStAXParser {
     //aircraft cont.
     private double d_EWeight;
     private double d_MTOW;
-    private double d_MZFW;
     private double d_maxPayload;
     private double d_fuelCapacity;
     private double d_VMO;

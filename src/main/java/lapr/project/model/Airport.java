@@ -26,6 +26,13 @@ public class Airport {
         this.IATAcode = IATAcode;
         this.location = location;
     }
+    
+    public Airport(String name, String town, String country, String IATAcode) {
+        this.name = name;
+        this.town = town;
+        this.country = country;
+        this.IATAcode = IATAcode;
+    }
 
     public String getName() {
         return name;

@@ -111,8 +111,9 @@ class Main {
         System.out.println(a);
         System.out.println(b);
         
-        
-        new ProjectMenuUI(project);
+        System.out.println(project.getAirportHashMap().values().size());
+        //new ProjectMenuUI(project);
+        new CreateFlightUI(project);
         
 //        System.out.println((a / Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed()))
 //                + (b /Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed())));
