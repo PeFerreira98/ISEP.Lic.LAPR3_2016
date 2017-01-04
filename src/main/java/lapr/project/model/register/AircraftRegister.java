@@ -35,8 +35,8 @@ public class AircraftRegister {
         aircraftCheckDuplicate(newAircraft);
         if (validateAircraft(newAircraft)) {
             this.aircraftRegister.put(newAircraft.getId(), newAircraft);
-
             return false;
+           
         }
         return true;
     }

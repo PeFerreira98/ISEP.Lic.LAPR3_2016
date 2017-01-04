@@ -69,8 +69,8 @@ public class AircraftRegisterTest {
         Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
 
         AircraftRegister instance = new AircraftRegister();
-        boolean result = false;
-        boolean expResult = instance.addAircraft(a1);
+        boolean expResult = false;
+        boolean result = instance.addAircraft(a1);
         assertEquals(expResult, result);
     }
 
