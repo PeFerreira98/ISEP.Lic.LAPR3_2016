@@ -14,7 +14,7 @@ import lapr.project.model.*;
 import lapr.project.model.Flight.*;
 import lapr.project.model.network.*;
 
-//import oracle.jdbc.OracleTypes;
+import oracle.jdbc.OracleTypes;
 /**
  *
  * @author zero_

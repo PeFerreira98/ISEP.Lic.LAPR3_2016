@@ -18,7 +18,7 @@ import lapr.project.model.network.Segment;
  */
 public class SimulationResultsUI extends javax.swing.JFrame {
 
-    private Map<Double, LinkedList<Node>> path;    
+    private LinkedList<Node> path;    
     private double time;
     private double energy;
     
@@ -28,7 +28,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
      * @param travelingTime
      * @param energy
      */
-    public SimulationResultsUI( Map<Double, LinkedList<Node>> path, double travelingTime, double energy) {
+    public SimulationResultsUI( LinkedList<Node> path, double travelingTime, double energy) {
         this.path = path;
         this.time= travelingTime;
         this.energy = energy;

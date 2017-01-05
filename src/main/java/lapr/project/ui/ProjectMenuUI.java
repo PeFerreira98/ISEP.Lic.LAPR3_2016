@@ -265,10 +265,15 @@ public class ProjectMenuUI extends javax.swing.JFrame {
         });
 
         jButton2.setText("Simulate Flight");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Description:");
 
-        lbl_proj_name1.setText("<Desc Code>");
+        lbl_proj_name1.setText(this.project.getDescription());
 
         jMenu1.setText("File");
 
@@ -360,8 +365,12 @@ public class ProjectMenuUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+       new CreateFlightUI(project);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        new SimulateFlightUI(project);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

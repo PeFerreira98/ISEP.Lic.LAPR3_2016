@@ -8,6 +8,7 @@ package lapr.project.controller;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
@@ -24,19 +25,30 @@ public class SimulateFlightController {
         this.project = p;
     }
     
-    public Map<Double, LinkedList<Node>> getPathByAlgorithm(String algorithm){
-        if(algorithm.equalsIgnoreCase("fastest")){
-            //TODO metodo de pesquisa
-        }else if(algorithm.equalsIgnoreCase("shortest")){
-            //TODO metodo de pesquisa
-        }else if(algorithm.equalsIgnoreCase("lessEnergy")){
-            //TODO metodo de pesquisa
-        }     
+    public Map<Double, LinkedList<Node>> getPathByAlgorithm(FlightPlan fp, int algorithm){
+        switch (algorithm) {
+        //TODO metodo de pesquisa
+            case 1:
+                break;
+        //TODO metodo de pesquisa
+            case 2:
+                break;     
+        //TODO metodo de pesquisa
+            case 3:
+                break;
+        }
         return null;
     }
     
     public double getEnergyByPath(LinkedList<Node> path){
         //TODO metodo calcular energia
         return 0.0;
+    }
+    
+    public boolean checkMax(FlightPlan fp, double nNormal, double nFirst, double nCrew){
+        
+        return !(fp.getnNormalClass() < nNormal ||
+                fp.getnFirstClass() < nFirst ||
+                fp.getnCrew() < nCrew);
     }
 }

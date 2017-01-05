@@ -6,13 +6,17 @@
 package lapr.project.ui;
 
 import static java.lang.Integer.parseInt;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.SimulateFlightController;
 import lapr.project.model.Airport;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
+import lapr.project.model.network.Node;
 
 /**
  *
@@ -29,6 +33,7 @@ public class SimulateFlightUI extends javax.swing.JFrame {
      * @param p
      */
     public SimulateFlightUI(Project p) {
+        this.project = p;
         this.ctrlSimulation = new SimulateFlightController(p);
         this.flightPlansList = new ArrayList<>();
         initComponents();
@@ -37,21 +42,17 @@ public class SimulateFlightUI extends javax.swing.JFrame {
     }
     
     private void initFlightPlansList(){
-        //ArrayList<Airport> lstAirports = this.ctrlFlightPlan.getAirports();
         
-        //Outra maneira, local
-       
-        for(FlightPlan fp : this.project.getFlightPlanRegister().getFlightPlansList().values()){
-            this.flightPlansList.add(fp);
-        }
-        
-        if (this.flightPlansList == null) {
+        if (this.project.getFlightPlanRegister().getFlightPlansList().isEmpty()) {
             this.lstFlightPlans.setModel(new DefaultListModel());
             JOptionPane.showMessageDialog(this, "There are no existing airports.");
 
             return;
         }
-
+        
+        for(FlightPlan fp : this.project.getFlightPlanRegister().getFlightPlansList().values()){
+                    this.flightPlansList.add(fp);
+        }
         int tam = flightPlansList.size();
         final String[] a = new String[tam];
         for (int i = 0; i < tam; i++) {
@@ -167,15 +168,13 @@ public class SimulateFlightUI extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtFuel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(106, Short.MAX_VALUE))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtFuel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(95, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel11)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -289,25 +288,46 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    
+    private void callResultsUI(double numberNormal, double numberFirst, double numberCrew){
+        if(!this.lstFlightPlans.isSelectionEmpty()){
+                
+            FlightPlan fp = this.flightPlansList.get(this.lstFlightPlans.getSelectedIndex());
+                
+            if(!this.ctrlSimulation.checkMax(fp, numberNormal, numberFirst, numberCrew)){
+                JOptionPane.showMessageDialog(this, "Limit reached: \n"
+                            + " Max normal class: " + fp.getnNormalClass()
+                    + "\nMax first class: " + fp.getnFirstClass()
+                    + "\nMax crew: " + fp.getnCrew());
+            }else{
+                int option = this.jComboBox1.getSelectedIndex();
+                
+                Map<Double, LinkedList<Node>> res = this.ctrlSimulation.getPathByAlgorithm(fp, option);
+
+                LinkedList<Node> path = res.entrySet().iterator().next().getValue();
+                double energy = this.ctrlSimulation.getEnergyByPath(res.entrySet().iterator().next().getValue());
+                double travelingTime = res.entrySet().iterator().next().getKey();
+
+                 new SimulationResultsUI(path, travelingTime, energy);
+            }
+       }else{
+                JOptionPane.showMessageDialog(this, "Select a plan!","Error",1);
+            }
+    }
+    
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        
-        //FIX_ME falta validações
-        
-        int numberNormalCrew = parseInt(txtNormal.getText());
-        int numberFirstCrew = parseInt(txtFirst.getText());
-        int numberCrew = parseInt(txtCrew.getText());
-        
-        int fuel = parseInt(txtFuel.getText());
-        int cargo = parseInt(txtCargo.getText());
-        
-        String algorithm = this.jComboBox1.toString();
-        
-        FlightPlan fp = this.flightPlansList.get(this.lstFlightPlans.getSelectedIndex());
-        
-        //TODO metodo de pesquisa consoante o que o utilizador quis (algorithm)
-        
-        //new SimulationResultsUI(path, travelingTime, energy);
-        
+        try{
+            int numberNormal = parseInt(txtNormal.getText());
+            int numberFirst = parseInt(txtFirst.getText());
+            int numberCrew = parseInt(txtCrew.getText());
+            int fuel = parseInt(txtFuel.getText());
+            int cargo = parseInt(txtCargo.getText());
+            
+            callResultsUI(numberNormal, numberFirst, numberCrew);
+            
+        }catch(NumberFormatException ex){
+             JOptionPane.showMessageDialog(this, "Insert only positive numbers","Error",1);
+        }
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed

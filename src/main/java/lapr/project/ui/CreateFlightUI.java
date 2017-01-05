@@ -44,18 +44,18 @@ public class CreateFlightUI extends javax.swing.JFrame {
         
         //Outra maneira, local
        
-        for(Airport a : this.project.getAirportHashMap().values()){
-            lstAirports.add(a);
-        }
-        
-        if (lstAirports == null) {
+        if (this.project.getAirportHashMap().values().isEmpty()) {
             this.lstOrigin.setModel(new DefaultListModel());
             this.lstDest.setModel(new DefaultListModel());
             JOptionPane.showMessageDialog(this, "There are no existing airports.");
 
             return;
         }
-
+        
+        for(Airport a : this.project.getAirportHashMap().values()){
+            lstAirports.add(a);
+        }
+        
         int tam = lstAirports.size();
         final String[] a = new String[tam];
         for (int i = 0; i < tam; i++) {

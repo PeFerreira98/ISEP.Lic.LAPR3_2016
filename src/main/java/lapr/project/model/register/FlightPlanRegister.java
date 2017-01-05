@@ -20,10 +20,10 @@ public class FlightPlanRegister {
     private SegmentsRegister regSegment;
 
     public FlightPlanRegister() {
-        mapFlightPlans = new HashMap<>();
+        this.mapFlightPlans = new HashMap<>();
     }
 
-    public FlightPlan newFlight() {
+    public FlightPlan newFlightPlan() {
         return new FlightPlan();
     }
 
@@ -31,8 +31,6 @@ public class FlightPlanRegister {
         return mapFlightPlans.put(newFlight.getId(), newFlight);
 
     }
-
-   
 
     public HashMap<Integer, FlightPlan> getFlightPlansList() {
         return this.mapFlightPlans;

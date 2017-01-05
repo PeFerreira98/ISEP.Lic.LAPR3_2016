@@ -286,6 +286,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Simulate Flight"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
@@ -294,7 +297,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lbl_proj_name1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&lt;Desc Code&gt;"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="this.project.getDescription()" type="code"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>
