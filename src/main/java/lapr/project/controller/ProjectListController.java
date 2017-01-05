@@ -5,11 +5,15 @@
  */
 package lapr.project.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Project;
 import lapr.project.ui.CopyProjectUI;
 import lapr.project.ui.ProjectMenuUI;
+import lapr.project.utils.AircraftStAXParser;
+import lapr.project.utils.AirportStAXParser;
+import lapr.project.utils.NetworkStAXParser;
 
 /**
  *
@@ -19,7 +23,8 @@ public class ProjectListController {
     private List<Project> listProjects;
 
     public ProjectListController(){
-        this.loadAllProjects();
+        listProjects = new LinkedList<>();
+        defaultProject();
     }
 
     public List<Project> getListProjects() {
@@ -34,11 +39,8 @@ public class ProjectListController {
      * Carrega os Projects guardados.
      */
     public void loadAllProjects() {
-
         DatabaseModel db = new DatabaseModel();
-
         this.setListProjects(db.getProjects());
-
     }
     
     public void openProject(Project p){
@@ -47,5 +49,19 @@ public class ProjectListController {
     
     public void copyProject(Project proj){
         new CopyProjectUI(proj);
+    }
+    
+    private void defaultProject(){
+        Project project = new Project(0, "proj0", "proj");
+
+        NetworkStAXParser network = new NetworkStAXParser(project);
+        AircraftStAXParser instance = new AircraftStAXParser(project);
+        AirportStAXParser airports = new AirportStAXParser(project);
+
+        network.XMLReader("inOutFiles/TestSet02_Network.xml");
+        instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
+        airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
+        
+        listProjects.add(project);
     }
 }

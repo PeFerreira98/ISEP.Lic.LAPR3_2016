@@ -31,9 +31,10 @@ public class MainUI extends javax.swing.JFrame {
 
         super.setTitle("Load Project");
         initComponents();
+        inicializar();
         super.setVisible(true);
         
-        inicializar();
+        
     }
     
     private void inicializar() {
@@ -81,19 +82,10 @@ public class MainUI extends javax.swing.JFrame {
         btn_Open = new javax.swing.JButton();
         btn_CreateProject = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem_Open = new javax.swing.JMenuItem();
-        jMenuItem_Create = new javax.swing.JMenuItem();
-        jMenuItem_Edit = new javax.swing.JMenuItem();
+        dbLoad = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lst_projects.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(lst_projects);
 
         jLabel1.setText("Project list");
@@ -105,7 +97,7 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
-        btn_CreateProject.setText("Load XML");
+        btn_CreateProject.setText("Create");
         btn_CreateProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_CreateProjectActionPerformed(evt);
@@ -119,20 +111,12 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
-        jMenu1.setText("File");
-
-        jMenuItem_Open.setText("Open Project");
-        jMenu1.add(jMenuItem_Open);
-
-        jMenuItem_Create.setText("Create Project");
-        jMenu1.add(jMenuItem_Create);
-
-        jMenuItem_Edit.setText("Edit ");
-        jMenu1.add(jMenuItem_Edit);
-
-        jMenuBar1.add(jMenu1);
-
-        setJMenuBar(jMenuBar1);
+        dbLoad.setText("Load from Database");
+        dbLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dbLoadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -140,16 +124,17 @@ public class MainUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(57, 57, 57)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dbLoad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btn_Open, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_CreateProject, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btn_Open)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(66, Short.MAX_VALUE))
+                        .addComponent(btn_CreateProject)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(57, 57, 57))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,14 +142,15 @@ public class MainUI extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                .addGap(5, 5, 5)
+                .addComponent(dbLoad)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Open)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_CreateProject)
-                .addContainerGap(52, Short.MAX_VALUE))
+                    .addComponent(jButton1)
+                    .addComponent(btn_CreateProject))
+                .addGap(40, 40, 40))
         );
 
         pack();
@@ -192,6 +178,11 @@ public class MainUI extends javax.swing.JFrame {
             this.ctrl_projList.copyProject(proj);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void dbLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbLoadActionPerformed
+        this.ctrl_projList.loadAllProjects();
+        inicializar();
+    }//GEN-LAST:event_dbLoadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -231,13 +222,9 @@ public class MainUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_CreateProject;
     private javax.swing.JButton btn_Open;
+    private javax.swing.JButton dbLoad;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem_Create;
-    private javax.swing.JMenuItem jMenuItem_Edit;
-    private javax.swing.JMenuItem jMenuItem_Open;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> lst_projects;
     // End of variables declaration//GEN-END:variables
