@@ -45,6 +45,12 @@ class Main {
 //        CalculatorExample calculatorExample = new CalculatorExample();
 //        int value = calculatorExample.sum(3, 5);
 //        LOGGER.log(Level.INFO, String.valueOf(value));
+
+        new MainUI();
+
+    }
+
+    private void physicsTest() {
 //        
 //
 //        AirNetwork air = new AirNetwork();
@@ -76,13 +82,11 @@ class Main {
         network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
-        
 
         Aircraft a1 = new Aircraft(project.getAircraftModelRegister().getAircraftModel("777-200ER"), "a1", "desc", 1, 1, 1);
 
         double expResult = 0.0;
         AirNetwork an = project.getAirNetwork();
-        
 
         Deque<Node> deque = new ArrayDeque<>();
 
@@ -93,7 +97,7 @@ class Main {
 
         System.out.println(a1);
 
-        Map<Double, LinkedList<Node>> result = an.getFastestPath(an.getNetwork(), an.getNode("PT02"), an.getNode("ES01"), deque, a1);
+        Map<Double, LinkedList<Node>> result = an.getFastestPath(an.getNetwork(), an.getNode("PT02"), an.getNode("ES02"), deque, a1);
 
 //        Map<Double, LinkedList<Node>> expResult = expected;
         System.out.println(result);
@@ -105,16 +109,13 @@ class Main {
 //        double c=Physics.calculateSegmentDistanceInMiles(a);
 //        double d=Physics.calculateSegmentDistanceInMiles(b);
 //        System.out.println((c/0.85)+(d/0.85));
-
         double a = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("PTLS02"));
         double b = Physics.calculateSegmentDistance(a1, an.getMapSegment().get("LSMD01"));
         System.out.println(a);
         System.out.println(b);
-        
-        System.out.println(project.getAirportHashMap().values().size());
-        //new ProjectMenuUI(project);
-        new CreateFlightUI(project);
-        
+
+        System.out.println(result.entrySet().iterator().next().getValue());
+
 //        System.out.println((a / Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed()))
 //                + (b /Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed())));
     }

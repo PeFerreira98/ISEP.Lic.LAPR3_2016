@@ -15,7 +15,7 @@ import lapr.project.model.network.Segment;
  */
 public class FlightPlan {
     private int id;
-    private FlightType type;
+    private String type;
     private String name;
     private Airport origin;
     private Airport dest;
@@ -44,7 +44,7 @@ public class FlightPlan {
 //        this.nCrew = nCrew;
 //    }
     
-    public FlightPlan(String name, FlightType type, double nNormalClass, double nFirstClass, double nCrew, Airport origin, Airport dest){
+    public FlightPlan(String name, String type, double nNormalClass, double nFirstClass, double nCrew, Airport origin, Airport dest){
         this.name = name;
         this.type = type;
         this.nNormalClass = nNormalClass;
@@ -65,14 +65,11 @@ public class FlightPlan {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getFlightType() {
-        return type.toString();
+    
+    public String getFlightType(){
+        return this.type;
     }
-
-    public void setType(FlightType type) {
-        this.type = type;
-    }
+    
     /**
      * @return the name
      */

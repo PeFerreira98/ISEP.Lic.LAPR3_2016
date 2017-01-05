@@ -8,7 +8,7 @@ package lapr.project.model;
 import java.util.LinkedHashMap;
 import lapr.project.model.network.AirNetwork;
 import lapr.project.model.register.AircraftModelRegister;
-import lapr.project.model.register.AircraftRegister;
+import lapr.project.model.register.FlightPlanRegister;
 import lapr.project.model.register.FlightRegister;
 
 /**
@@ -20,9 +20,10 @@ public class Project {
     private String name;
     private String description;
     private AirNetwork AirNetwork;
+    
     private AircraftModelRegister aircraftModelRegister;
-    private AircraftRegister aircraftRegister;
     private FlightRegister flightRegister;
+    private FlightPlanRegister flightPlanRegister;
 
     private LinkedHashMap<String, Aircraft> aircraftHashMap; //TODO: change to aircraftRegister
     private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister
@@ -37,9 +38,10 @@ public class Project {
         this.description = description;
 
         this.AirNetwork = new AirNetwork();
+        
         this.aircraftModelRegister = new AircraftModelRegister();
-        this.aircraftRegister = new AircraftRegister();
         this.flightRegister = new FlightRegister();
+        this.flightPlanRegister = new FlightPlanRegister();
 
         this.aircraftHashMap = new LinkedHashMap<>();
         this.airportHashMap = new LinkedHashMap<>();
@@ -51,33 +53,33 @@ public class Project {
         this.description = description;
 
         this.AirNetwork = new AirNetwork();
+        
         this.aircraftModelRegister = new AircraftModelRegister();
-        this.aircraftRegister = new AircraftRegister();
         this.flightRegister = new FlightRegister();
+        this.flightPlanRegister = new FlightPlanRegister();
 
         this.aircraftHashMap = new LinkedHashMap<>();
         this.airportHashMap = new LinkedHashMap<>();
         this.flightsList = new LinkedHashMap<>();
     }
 
-    public Project(String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, AircraftRegister aircraftRegister, FlightRegister flightRegister, LinkedHashMap<String, Aircraft> aircraftHashMap, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
+    public Project(String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, FlightRegister flightRegister, FlightPlanRegister flightPlanRegister, LinkedHashMap<String, Aircraft> aircraftHashMap, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
         this.name = name;
         this.description = description;
         this.AirNetwork = AirNetwork;
+        
         this.aircraftModelRegister = aircraftModelRegister;
-        this.aircraftRegister = aircraftRegister;
         this.flightRegister = flightRegister;
+        this.flightPlanRegister = flightPlanRegister;
+        
         this.aircraftHashMap = aircraftHashMap;
         this.airportHashMap = airportHashMap;
+        
         this.flightsList = flightsList;
     }
 
     public AircraftModel addAircraftModel(AircraftModel newAircraftModel) {
         return this.aircraftModelRegister.addAircraftModel(newAircraftModel);
-    }
-    
-    public boolean addAircraft(Aircraft aircraft){
-        return this.aircraftRegister.addAircraft(aircraft);
     }
 
     public Airport addAirport(Airport newAirport) {
@@ -136,6 +138,10 @@ public class Project {
         return aircraftModelRegister;
     }
 
+    public FlightPlanRegister getFlightPlanRegister() {
+        return flightPlanRegister;
+    }
+    
     public LinkedHashMap<String, Aircraft> getAircraftHashMap() {
         return aircraftHashMap;
     }
