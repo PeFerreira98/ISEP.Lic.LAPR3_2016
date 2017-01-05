@@ -19,11 +19,11 @@ import lapr.project.model.network.Segment;
  *
  * @author Marcos
  */
-public class ProjectMenuController {
+public class OpenProjectController {
     Project p;
  
     
-    public ProjectMenuController(Project p){
+    public OpenProjectController(Project p){
         this.p = p;
     }
     

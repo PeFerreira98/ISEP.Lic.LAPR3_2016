@@ -17,17 +17,15 @@ import lapr.project.model.Project;
  *
  * @author Marcos
  */
-public class MainUI extends javax.swing.JFrame {
+public class ProjectListUI extends javax.swing.JFrame {
 
     
     private ProjectListController ctrl_projList;
-    private CreateProjectController ctrl_createProj;
     /**
      * Creates new form MainUI
      */
-    public MainUI() {
+    public ProjectListUI() {
         this.ctrl_projList = new ProjectListController();
-        this.ctrl_createProj = new CreateProjectController();
 
         super.setTitle("Load Project");
         initComponents();
@@ -157,25 +155,28 @@ public class MainUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_OpenActionPerformed
-        Project proj = this.ctrl_projList.getListProjects().get(this.lst_projects.getSelectedIndex());
-        if(proj == null){
+        int selectedIndex = -1;
+        selectedIndex = this.lst_projects.getSelectedIndex();
+        if(selectedIndex == -1){
             JOptionPane.showMessageDialog(this, "Select one project");
         }else{
-            this.ctrl_projList.openProject(proj);
+            Project proj = this.ctrl_projList.getListProjects().get(selectedIndex);
+            new OpenProjectUI(proj);
         }
     }//GEN-LAST:event_btn_OpenActionPerformed
 
     private void btn_CreateProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CreateProjectActionPerformed
-        this.ctrl_createProj.LoadProject();
-        dispose();
+        new CreateProjectUI();
     }//GEN-LAST:event_btn_CreateProjectActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Project proj = this.ctrl_projList.getListProjects().get(this.lst_projects.getSelectedIndex());
-        if(proj == null){
+        int selectedIndex = -1;
+        selectedIndex = this.lst_projects.getSelectedIndex();
+        if(selectedIndex == -1){
             JOptionPane.showMessageDialog(this, "Select one project");
         }else{
-            this.ctrl_projList.copyProject(proj);
+            Project proj = this.ctrl_projList.getListProjects().get(selectedIndex);
+            new CopyProjectUI(proj);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -201,20 +202,21 @@ public class MainUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProjectListUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProjectListUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProjectListUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProjectListUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainUI().setVisible(true);
+                new ProjectListUI().setVisible(true);
             }
         });
     }

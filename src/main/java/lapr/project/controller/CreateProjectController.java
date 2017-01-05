@@ -7,7 +7,7 @@ package lapr.project.controller;
 
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Project;
-import lapr.project.ui.LoadProjectUI;
+import lapr.project.ui.CreateProjectUI;
 import lapr.project.utils.*;
 
 /**
@@ -16,7 +16,6 @@ import lapr.project.utils.*;
  */
 public class CreateProjectController {
     
-    private DatabaseModel db;
     private NetworkStAXParser networkParser;
     private AirportStAXParser airportParser;
     private AircraftStAXParser aircraftParser;
@@ -24,19 +23,15 @@ public class CreateProjectController {
     
     public CreateProjectController(){
         this.proj = new Project();
-        db = new DatabaseModel();
     }
     
     public boolean validateProjectNameAndDescription(String name, String description){
+        DatabaseModel db = new DatabaseModel();
         if(db.validateName(name)){
             proj = new Project(name, description);
             return true;
         }
         return false;
-    }
-    
-    public void LoadProject(){
-        new LoadProjectUI();
     }
     
     public void addNetwork(String path){
@@ -55,6 +50,7 @@ public class CreateProjectController {
     }
         
     public void saveInDataBase(){
+        DatabaseModel db = new DatabaseModel();
         db.addProject(proj);
     }
 }

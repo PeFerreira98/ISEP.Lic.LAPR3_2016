@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import lapr.project.model.*;
 import lapr.project.model.Flight.*;
 import lapr.project.model.network.*;
-
 import oracle.jdbc.OracleTypes;
 /**
  *
@@ -90,7 +89,7 @@ public class DatabaseModel {
 
     public void addProject(Project project) {
         try {
-            this.st.execute("insert into Project(name, description) "
+            this.rs = this.st.executeQuery("insert into Project(name, description) "
                     + "values ('"
                     + project.getName() + "', '"
                     + project.getDescription() + "')");
@@ -101,23 +100,23 @@ public class DatabaseModel {
             addSegment(s);
         });
         project.getAirNetwork().getMapNodes().values().stream().forEach((n) -> {
-            openDB();
+            //openDB();
             addNode(n);
         });
         project.getAirportHashMap().values().stream().forEach((airport) -> {
-            openDB();
+            //openDB();
             addAirport(airport);
         });
         project.getAircraftHashMap().values().stream().forEach((aircraft) -> {
-            openDB();
+            //openDB();
             addAircraft(aircraft);
         });
         project.getAircraftModelRegister().getAircraftModelMap().values().stream().forEach((airModel) -> {
-            openDB();
+            //openDB();
             addAircraftModel(airModel);
         });
         project.getFlightsList().values().stream().forEach((f) -> {
-            openDB();
+            //openDB();
             addFlight(f);
         });
         closeDB();
@@ -138,7 +137,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        //closeDB();
         //return getLastInsertedProjectCod();
     }
 
@@ -205,7 +204,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        //closeDB();
         //return getLastInsertedProjectCod();
     }
 
@@ -227,7 +226,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        //closeDB();
         //return getLastInsertedProjectCod();
     }
 
@@ -264,7 +263,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        //closeDB();
         //return getLastInsertedProjectCod();
     }
 
@@ -284,7 +283,7 @@ public class DatabaseModel {
         }catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        //closeDB();
     }
 
     public ArrayList<Airport> getListAirports() {
@@ -365,7 +364,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        //closeDB();
     }
 
     public void addFlight(Flight f) {

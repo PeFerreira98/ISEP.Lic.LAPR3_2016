@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import lapr.project.controller.ProjectMenuController;
+import lapr.project.controller.OpenProjectController;
 import lapr.project.model.Airport;
 import lapr.project.model.Project;
 
@@ -17,24 +17,24 @@ import lapr.project.model.Project;
  *
  * @author Marcos
  */
-public class ProjectMenuUI extends javax.swing.JFrame {
+public class OpenProjectUI extends javax.swing.JFrame {
     
     private Project project;
-    private ProjectMenuController ctr_pMenu;
+    private OpenProjectController ctr_OpenP;
     
     /**
      * Creates new form ProjectMenuUI
      */
-    public ProjectMenuUI(Project proj) {
+    public OpenProjectUI(Project proj) {
         this.project = proj;
-        this.ctr_pMenu = new ProjectMenuController(proj);
+        this.ctr_OpenP = new OpenProjectController(proj);
         initComponents();
         inicializar();
         super.setVisible(true);
     }
     
     private void initAirportsList(){
-        List lst_a = this.ctr_pMenu.getAirportsNames();
+        List lst_a = this.ctr_OpenP.getAirportsNames();
         
         
         if (lst_a == null) {
@@ -65,7 +65,7 @@ public class ProjectMenuUI extends javax.swing.JFrame {
     }
     
     private void initAircraftsList(){
-        List lst_a = this.ctr_pMenu.getAircraftModelNames();
+        List lst_a = this.ctr_OpenP.getAircraftModelNames();
         
         
         if (lst_a == null) {
@@ -96,7 +96,7 @@ public class ProjectMenuUI extends javax.swing.JFrame {
     }
     
     private void initFlightsList(){
-        List lst_a = this.ctr_pMenu.getFlightsNames();
+        List lst_a = this.ctr_OpenP.getFlightsNames();
         
         if (lst_a == null) {
             this.lst_flights.setModel(new DefaultListModel());
@@ -126,7 +126,7 @@ public class ProjectMenuUI extends javax.swing.JFrame {
     }
     
     private void initNodeList(){
-        List lst_a = this.ctr_pMenu.getNodesNames();
+        List lst_a = this.ctr_OpenP.getNodesNames();
         
         if (lst_a == null) {
             this.lst_Nodes.setModel(new DefaultListModel());
@@ -156,7 +156,7 @@ public class ProjectMenuUI extends javax.swing.JFrame {
     }
     
     private void initSegmentsList(){
-        List lst_a = this.ctr_pMenu.getSegmentNames();
+        List lst_a = this.ctr_OpenP.getSegmentNames();
         
         if (lst_a == null) {
             this.lst_Se6ments.setModel(new DefaultListModel());
@@ -228,7 +228,7 @@ public class ProjectMenuUI extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jLabel1.setText("Project: ");

@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Project;
-import lapr.project.ui.CopyProjectUI;
-import lapr.project.ui.ProjectMenuUI;
 import lapr.project.utils.AircraftStAXParser;
 import lapr.project.utils.AirportStAXParser;
 import lapr.project.utils.NetworkStAXParser;
@@ -20,9 +18,10 @@ import lapr.project.utils.NetworkStAXParser;
  * @author Marcos
  */
 public class ProjectListController {
+
     private List<Project> listProjects;
 
-    public ProjectListController(){
+    public ProjectListController() {
         listProjects = new LinkedList<>();
         defaultProject();
     }
@@ -42,16 +41,8 @@ public class ProjectListController {
         DatabaseModel db = new DatabaseModel();
         this.setListProjects(db.getProjects());
     }
-    
-    public void openProject(Project p){
-        new ProjectMenuUI(p);
-    }
-    
-    public void copyProject(Project proj){
-        new CopyProjectUI(proj);
-    }
-    
-    private void defaultProject(){
+
+    private void defaultProject() {
         Project project = new Project(0, "proj0", "proj");
 
         NetworkStAXParser network = new NetworkStAXParser(project);
@@ -61,7 +52,7 @@ public class ProjectListController {
         network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
-        
-        listProjects.add(project);
+
+        this.listProjects.add(project);
     }
 }
