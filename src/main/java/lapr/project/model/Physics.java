@@ -42,6 +42,55 @@ public class Physics {
         }
     }
 
+    public static void calculateSpeedDueAltitudeClimbing(Aircraft aircraft, double altitude, double speed) {
+        if (altitude > 0 && altitude <= 1000) {
+            speed = 210 * 1.852;
+        }
+        if (altitude > 1000 && altitude <= 2000) {
+            speed = 210 * 1.852;
+        }
+        if (altitude > 2000 && altitude <= 3000) {
+            speed = 220 * 1.852;
+        }
+        if (altitude > 3000 && altitude <= 4000) {
+            speed = 230 * 1.852;
+        }
+        if (altitude > 4000 && altitude <= 5000) {
+            speed = 250 * 1.852;
+        }
+        if (altitude > 5000 && altitude <= 6000) {
+            speed = 260 * 1.852;
+        }
+        if (altitude > 6000 && altitude <= 7000) {
+            speed = 290 * 1.852;
+        }
+        if (altitude > 7000 && altitude <= 8000) {
+            speed = 290 * 1.852;
+        }
+        if (altitude > 8000 && altitude <= 9000) {
+            speed = 290 * 1.852;
+        }
+        if (altitude > 9000 && altitude <= 10000) {
+            speed = 290 * 1.852;
+        }
+        if (altitude > 10000 && altitude <= 11000) {
+            speed = 290 * 1.852;
+        }
+        if (altitude > 11000 && altitude <= 12000) {
+            speed = 300 * 1.852;
+        }
+        if (altitude > 12000 && altitude <= 13000) {
+            speed = 300 * 1.852;
+        }
+        if (altitude > 13000 && altitude <= 14000) {
+            speed = 300 * 1.852;
+        }
+        if (altitude > 14000) {
+            speed = 300 * 1.852;
+        }
+
+    }
+
     public static double calculateLiftForceInASegment(Aircraft aircraft, Segment segment, double altitude) {
         double AirDensity = 0;
         if (altitude == -1) {
@@ -182,25 +231,38 @@ public class Physics {
         //T0=temperature at standard sea level in kelvin
     }
 
-    public static double calculateThrust(Aircraft aircraft, Segment segment, double altitude) {
+    public static double calculateTrueMachNumber(Aircraft aircraft, double altitude, double speedVIAS) {
+        double p = 0;
+        calculateAirDensityTemperatureDueAltitude(altitude, p, 0);
+        double a = Math.pow((1 + 0.2 * Math.pow((speedVIAS / 661.5), 2)), 3.5) - 1;
+        return Math.sqrt(5 * (Math.pow((12.25 / p) * (a) + 1, 0.286) - 1));
+    }
+
+    public static double calculateThrust(Aircraft aircraft, double altitude, double trueMachNumber) {
         double p = 0;
         double t = 0;
-
         calculateAirDensityTemperatureDueAltitude(altitude, p, t);
+        double thrustSeaLevelMach0 = 338000; // em newtons
+        double thrustChangeRate = (thrustSeaLevelMach0 - 180000) / 0.9;
 
-        return 0;
+        return thrustSeaLevelMach0 - thrustChangeRate * trueMachNumber;
 
     }
 
-    public static double calculateThrustAltitude(Aircraft aircraft, Segment segment, double altitude) {
+    public static double calculateThrustAltitude(Aircraft aircraft, Segment segment, double altitude, double trueMachNumber) {
         double AirDensity = 0;
         calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
+        double thrust = calculateThrust(aircraft, altitude, trueMachNumber);
+        return thrust * Math.pow((AirDensity / 12.25), 0.96); //0.96, valor dado pelo prof
 
-        return aircraft.getModel().getThrust_0() * Math.pow((AirDensity / 12.25), 0.96); //0.96, valor dado pelo prof
+    }
 
+    public static double calculateTrueAirSpeed(double trueMachNumber, double speedOfSound) {
+        return trueMachNumber * speedOfSound;
     }
 
     public static double aircraftClimb(Aircraft aircraft, Segment segment) {
+
         double liftForce = 0;
         double dragForce = 0;
         double thrustAltitude = 0;
@@ -210,219 +272,49 @@ public class Physics {
         double time = 0;
         double fuelBurned = 0;
         double distanceTraveled = 0;
+        double distance=0;
         double altitudeVariation = 0;
         double speed = 0;
         double speedVariationWithTime = 0;
+        double trueMachNumber = 0;
+        double trueAirSpeed = 0;
+        double speedOfSound = 0;
+        double climbAngle = 0;
+        double dWdT = 0;
 
         while (altitude <= aircraft.getModel().getCruiseAltitude()) {
 
-            if (altitude >= 0 && altitude < 914.0) {
-
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-                //falta calcular a distancia e fazer o update
-                //duvida em como calcular a distancia, e a parte do TrueAirSpeed e descolagem(inicio dos slides)
-                //duvida em relação à velocidade do aviao, consoante a altitude(preciso de alterá-la consoante a altitude)
-            }
-            if (altitude >= 914.0 && altitude < 914.0 * 2) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 2 && altitude < 914.0 * 3) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 3 && altitude < 914.0 * 4) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 4 && altitude < 914.0 * 5) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 5 && altitude < 914.0 * 6) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 6 && altitude < 914.0 * 7) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 7 && altitude < 914.0 * 8) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 8 && altitude < 914.0 * 9) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 9 && altitude < 914.0 * 10) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 10 && altitude < 914.0 * 11) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 11 && altitude < 914.0 * 12) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 12 && altitude < 914.0 * 13) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude >= 914.0 * 13 && altitude < 914.0 * 14) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-            if (altitude < 914.0 * 14) {
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude);
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * calculateThrustAltitude(aircraft, segment, altitude);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight);
-                fuelBurned = calculateFuelBurned(aircraft, dragForce);
-                altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-
-                maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
-                altitude = altitude + altitudeVariation;
-            }
-
+            //falta speed
+            calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
+            trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
+            //falta SpeedOfSound
+            trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
+            liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
+            dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
+            thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude, trueMachNumber);
+            thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
+            maxWeight = calculateAircraftFinalWeight(aircraft);
+            climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
+            climbAngle = calculateClimbingAngle(trueAirSpeed, climbRate);
+            dWdT = calculatedWdT(aircraft, time, altitude);
+            distance = calculateDistanceTraveledWhileClimbing(trueAirSpeed, climbAngle, time);
+            fuelBurned = calculateFuelBurned(aircraft, dragForce); //fuel burned ou o dw/dt ? é o mesmo?
+            altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
+            maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
+            altitude = altitude + altitudeVariation;
+            distanceTraveled=distanceTraveled+distance;
+            time = time+120;
+            
+            //duvida em como calcular a distancia, e a parte do TrueAirSpeed e descolagem(inicio dos slides)
+            //duvida em relação à velocidade do aviao, consoante a altitude(preciso de alterá-la consoante a altitude)
         }
+
         return 0;
     }
 
-    public static double calculateAircraftClimbRate(Aircraft aircraft, Segment segment, double thrustTotal, double dragForce, double maxWeight) {
+    public static double calculateAircraftClimbRate(Aircraft aircraft, Segment segment, double thrustTotal, double dragForce, double maxWeight, double trueAirSpeed) {
 
-        return ((thrustTotal - dragForce) * aircraft.getModel().getCruiseSpeed() / maxWeight * 9.81);
+        return ((thrustTotal - dragForce) * trueAirSpeed / maxWeight / 9.81); // dividir por gravidade ou multiplicar?
 
     }
 
@@ -434,6 +326,21 @@ public class Physics {
     public static double calculateAltitudeVariation(double speed, double thrustAltitude, double dragForce, double SpeedVariationWithTime, double maxWeight) {
 
         return (((thrustAltitude - dragForce) * speed / maxWeight * 9.81) - (speed / 9.81) * SpeedVariationWithTime);
+    }
+
+    public static double calculateClimbingAngle(double trueAirSpeed, double climbRate) {
+
+        return Math.sin(climbRate / trueAirSpeed);
+    }
+
+    public static double calculatedWdT(Aircraft aircraft, double time, double totalThrust) {
+
+        return totalThrust * time * aircraft.getModel().getTSFC() / 9.81;
+    }
+
+    public static double calculateDistanceTraveledWhileClimbing(double trueAirspeed, double climbAngle, double time) {
+
+        return trueAirspeed * Math.cos(climbAngle) * time;
     }
 
 }
