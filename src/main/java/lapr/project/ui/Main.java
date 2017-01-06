@@ -118,5 +118,7 @@ class Main {
 
 //        System.out.println((a / Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed()))
 //                + (b /Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed())));
+        System.out.println(project.getAircraftHashMap().values().toString());
     }
+    
 }

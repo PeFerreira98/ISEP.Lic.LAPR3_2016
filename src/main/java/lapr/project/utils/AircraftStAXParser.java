@@ -74,7 +74,7 @@ public class AircraftStAXParser {
     private String s_motorType;
     private double d_cruiseAltitude;
     private double d_cruiseSpeed;
-    private double d_TSFC;
+    private double d_TSFC = 0.00016;
     private double d_lapseRateFactor;
 
     //thrust
@@ -352,6 +352,7 @@ public class AircraftStAXParser {
                             
                             if (characters.getData().endsWith("US")) {
                                 d_maxPayload = Double.parseDouble(characters.getData().replace(" US", ""));
+                                d_maxPayload = PhysicsConverters.aicraftWeightConverterPoundsToKg(d_maxPayload);
                             } 
                             else{
                                 d_maxPayload = Double.parseDouble(characters.getData().replace(" SI", ""));
@@ -365,6 +366,8 @@ public class AircraftStAXParser {
                             
                             if (characters.getData().endsWith("US")) {
                                 d_fuelCapacity = Double.parseDouble(characters.getData().replace(" US", ""));
+                                d_fuelCapacity = PhysicsConverters.aicraftWeightConverterPoundsToKg(d_fuelCapacity);
+                                
                             } 
                             else{
                                 d_fuelCapacity = Double.parseDouble(characters.getData().replace(" SI", ""));

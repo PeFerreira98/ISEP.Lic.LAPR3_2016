@@ -8,6 +8,7 @@ package lapr.project.model;
 import lapr.project.model.network.Segment;
 import lapr.project.model.register.AircraftModelRegister;
 import java.lang.Math;
+import lapr.project.model.PhysicsConverters;
 
 /**
  *
@@ -113,12 +114,8 @@ public class Physics {
         }
 
     }
-    
-    
-    
-    
+
     //__________________________________________Variations with altitude formulas___________________________
-    
     public static double calculateTemperatureDueAltitude(double altitude) {
         double temperatureLapseRate = -0.0065;
         if (altitude < 14000) {
@@ -134,22 +131,19 @@ public class Physics {
 
     public static double calculateSpeedOfSoundDueAltitude(double altitude) {
         double t = 0;
-        calculateAirDensityTemperatureDueAltitude(altitude, 0, t);
-        t = t + 273.15;
+        calculateDensityDueAltitude(altitude, 0, t); //temp fica em kelvins
         double gamma = 1.4;
         double universalGasConstant = 287;
-        return Math.sqrt(gamma * universalGasConstant * t);
+        return Math.sqrt(gamma * universalGasConstant * t); //valor em metros por segundo
     }
 
     public static double calculatePressureDueAltitude(double altitude) {
 
         return 101325 * Math.pow(1 - 0.0065 * altitude / 288.2, 5.2561); //288.2-Temp kelvin sea level
+        //return a temperatura em kelvins
+        //primeiro valor é a pressao ao nivel do mar
     }
-    
-    
-    
-    
-    
+
     //___________________________________Forces and aircraft related formulas_____________________________________
     public static double calculateLiftForceInASegment(Aircraft aircraft, Segment segment, double altitude) {
         double AirDensity = 0;
@@ -170,12 +164,18 @@ public class Physics {
         if (altitude == -1) {
             altitude = aircraft.getModel().getCruiseAltitude();
         }
+
         double temperature = calculateTemperatureDueAltitude(altitude);
         double pressure = calculatePressureDueAltitude(altitude);
         AirDensity = calculateDensityDueAltitude(altitude, pressure, temperature);
+        double machNumber = calculateTrueMachNumber(aircraft, altitude, pressure);
+        double speedVIAS = 0;
+        double speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
+        calculateSpeedDueAltitudeClimbing(aircraft, altitude, speedVIAS);
+        double TAS = calculateTrueAirSpeed(machNumber, speedOfSound);
 
         //calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
-        return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() * (AirDensity * Math.pow(aircraft.getModel().getCruiseSpeed(), 2) / 2)
+        return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() * (AirDensity * Math.pow(TAS, 2) / 2)
                 * aircraft.getModel().getWingArea();
     }
 
@@ -187,9 +187,14 @@ public class Physics {
         double temperature = calculateTemperatureDueAltitude(altitude);
         double pressure = calculatePressureDueAltitude(altitude);
         AirDensity = calculateDensityDueAltitude(altitude, pressure, temperature);
+        double machNumber = calculateTrueMachNumber(aircraft, altitude, pressure);
+        double speedVIAS = 0;
+        double speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
+        calculateSpeedDueAltitudeClimbing(aircraft, altitude, speedVIAS);
+        double TAS = calculateTrueAirSpeed(machNumber, speedOfSound);
         //calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
 
-        return (2 * calculateAircraftFinalWeight(aircraft) * 9.8) / (AirDensity * aircraft.getModel().getWingArea() * Math.pow(aircraft.getModel().getCruiseSpeed(), 2));
+        return (2 * calculateAircraftFinalWeight(aircraft) * 9.8) / (AirDensity * aircraft.getModel().getWingArea() * Math.pow(TAS, 2));
     }
 
     public static double calculateDragCoeficient(Aircraft aircraft, Segment segment, Double altitude) {
@@ -202,7 +207,9 @@ public class Physics {
         AirDensity = calculateDensityDueAltitude(altitude, pressure, temperature);
 
         //calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
-        return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() + (Math.pow(calculateLiftCoeficient(aircraft, segment, altitude), 2)) / (Math.PI * (Math.pow(aircraft.getModel().getWingSpan(), 2) / aircraft.getModel().getWingArea()) * Math.exp(1));
+        //return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() + (Math.pow(calculateLiftCoeficient(aircraft, segment, altitude), 2)) / (Math.PI * (Math.pow(aircraft.getModel().getWingSpan(), 2) / aircraft.getModel().getWingArea()) * aircraft.getModel().getE());
+        return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() + (Math.pow(calculateLiftCoeficient(aircraft, segment, altitude), 2)) / (Math.PI * aircraft.getModel().getAspectRatio() * aircraft.getModel().getE());
+        //Cdrag 0 varia consoante a velocidade, falta depois compor, no excel o drag é sempre o mesmo
     }
 
     public static double calculateRangeEachSegment(Aircraft aircraft, Segment segment, double altitude) {
@@ -225,7 +232,7 @@ public class Physics {
     public static double calculateTravelTimeInASegment(Aircraft aircraft, Segment segment) {
         double distance = calculateSegmentDistance(aircraft, segment);
         //calculateSegmentDistanceInMiles(distance) / speedAndMMOConverterMachToKmsHour(aircraft.getModel().getRegimeRegister().getRegime("Cruise").getSpeed());
-        return distance / speedAndMMOConverterMachToKmsHour(aircraft.getModel().getCruiseSpeed()); //tempo(s)=distance(m)/speed(miles/sec?)
+        return distance / PhysicsConverters.speedAndMMOConverterMachToKmsHour(aircraft.getModel().getCruiseSpeed()); //tempo(s)=distance(m)/speed(miles/sec?)
     }
 
     public static double calculateSegmentDistance(Aircraft aircraft, Segment segment) {
@@ -254,28 +261,21 @@ public class Physics {
     public static void setsToAircraftValues(Aircraft aircraft) {
 
     }
-    
-    
-    
-    
-    
-    
+
     //__________________________________________Trip related formulas_______________________________________________
-    
-    public static double calculateAircraftTrueAirspeed(Aircraft aircraft, Double altitude) {
-        double p = 0;
-        double t = 0;
-        calculateAirDensityTemperatureDueAltitude(altitude, p, t);
-
-        return 661.47 * aircraft.getModel().getMaxSpeed() * Math.sqrt(t / 288.15);
-
-        //TAS=a0*M*Sqrt(T/T0)
-        //a0=speed of sound(knot)
-        //M=Mach number
-        //T= temperature in kelvin
-        //T0=temperature at standard sea level in kelvin
-    }
-
+//    public static double calculateAircraftTrueAirspeed(Aircraft aircraft, Double altitude) {
+//        double p = 0;
+//        double t = 0;
+//        calculateAirDensityTemperatureDueAltitude(altitude, p, t);
+//
+//        return 661.47 * aircraft.getModel().getMaxSpeed() * Math.sqrt(t / 288.15);
+//
+//        //TAS=a0*M*Sqrt(T/T0)
+//        //a0=speed of sound(knot)
+//        //M=Mach number
+//        //T= temperature in kelvin
+//        //T0=temperature at standard sea level in kelvin
+//    }
     public static double calculateTrueMachNumber(Aircraft aircraft, double altitude, double speedVIAS) {
         double p = 0;
         calculateAirDensityTemperatureDueAltitude(altitude, p, 0);
@@ -288,7 +288,7 @@ public class Physics {
         double t = 0;
         calculateAirDensityTemperatureDueAltitude(altitude, p, t);
         double thrustSeaLevelMach0 = 338000; // em newtons
-        double thrustChangeRate = (thrustSeaLevelMach0 - 180000) / 0.9; //duvida no Lapse Rate
+        double thrustChangeRate = (thrustSeaLevelMach0 - 176000) / 0.9; //duvida no Lapse Rate
 
         return thrustSeaLevelMach0 - thrustChangeRate * trueMachNumber;
 
@@ -298,12 +298,16 @@ public class Physics {
         double AirDensity = 0;
         calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
         double thrust = calculateThrust(aircraft, altitude, trueMachNumber);
-        return thrust * Math.pow((AirDensity / 12.25), 0.96); //0.96, valor dado pelo prof
+        return thrust * Math.pow((AirDensity / 1.225), 0.96); //0.96, valor dado pelo prof
 
     }
 
+    public static double calculateTotalThrust(Aircraft aircraft, double thrust) {
+        return aircraft.getModel().getNumberMotors() * thrust;
+    }
+
     public static double calculateTrueAirSpeed(double trueMachNumber, double speedOfSound) {
-        return trueMachNumber * speedOfSound;
+        return trueMachNumber * speedOfSound; //valor em metros por segundo
     }
 
     public static double calculateAircraftClimbRate(Aircraft aircraft, Segment segment, double thrustTotal, double dragForce, double maxWeight, double trueAirSpeed) {
@@ -317,14 +321,14 @@ public class Physics {
         return -aircraft.getModel().getTSFC() * dragForce;
     }
 
-    public static double calculateAltitudeVariation(double speed, double thrustAltitude, double dragForce, double SpeedVariationWithTime, double maxWeight) {
+    public static double calculateAltitudeVariation(double trueAirSpeed, double totalThrust, double dragForce, double SpeedVariationWithTime, double maxWeight) {
 
-        return (((thrustAltitude - dragForce) * speed / maxWeight * 9.81) - (speed / 9.81) * SpeedVariationWithTime);
+        return (((totalThrust - dragForce) * trueAirSpeed / maxWeight / 9.81));
     }
 
     public static double calculateClimbingAngle(double trueAirSpeed, double climbRate) {
 
-        return Math.sin(climbRate / trueAirSpeed);
+        return Math.asin(climbRate / trueAirSpeed);
     }
 
     public static double calculatedWdT(Aircraft aircraft, double time, double totalThrust) {
@@ -336,9 +340,15 @@ public class Physics {
 
         return trueAirspeed * Math.cos(climbAngle) * time;
     }
-    
-    public static void aircraftClimb(Aircraft aircraft, Segment segment) {
 
+    public static double calculateAircraftFinalWeight(Aircraft aircraft) {
+        // return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity() + aircraft.getModel().getEmptyWeight();
+        return aircraft.getModel().getEmptyWeight() + aircraft.getModel().getMaxPayload()+aircraft.getModel().getFuelCapacity();
+    }
+
+    public static double[] aircraftClimb(Aircraft aircraft, Segment segment) {
+
+        // falta ver o aeroporto (node inicial do segmento e tirar a altitude, que vai ser a altitude inicial
         double liftForce = 0;
         double dragForce = 0;
         double thrustAltitude = 0;
@@ -347,6 +357,7 @@ public class Physics {
         double altitude = 0;
         double time = 0;
         double fuelBurned = 0;
+        double totalFuelBurned = 0;
         double distanceTraveled = 0;
         double distance = 0;
         double altitudeVariation = 0;
@@ -358,7 +369,7 @@ public class Physics {
         double climbAngle = 0;
         double dWdT = 0;
 
-        while (altitude <= aircraft.getModel().getCruiseAltitude()) {
+        while (time <= 3600) {//altitude <= aircraft.getModel().getCruiseAltitude()) {
 
             calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
             trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
@@ -373,9 +384,11 @@ public class Physics {
             climbAngle = calculateClimbingAngle(trueAirSpeed, climbRate);
             dWdT = calculatedWdT(aircraft, time, altitude);
             distance = calculateDistanceTraveledWhileClimbing(trueAirSpeed, climbAngle, time);
-            fuelBurned = calculateFuelBurned(aircraft, dragForce); //fuel burned ou o dw/dt ? é o mesmo?
+            //fuelBurned = calculateFuelBurned(aircraft, dragForce); //fuel burned ou o dw/dt ? é o mesmo?
+            fuelBurned = calculatedWdT(aircraft, time, altitude);
             altitudeVariation = calculateAltitudeVariation(speed, thrustAltitude, dragForce, speedVariationWithTime, maxWeight);
-            maxWeight = maxWeight + fuelBurned; //fuelBurned já está negativo
+            maxWeight = maxWeight - fuelBurned;
+            totalFuelBurned = totalFuelBurned - fuelBurned;
             altitude = altitude + altitudeVariation;
             distanceTraveled = distanceTraveled + distance;
             time = time + 120;
@@ -383,52 +396,16 @@ public class Physics {
             //duvida em como calcular a distancia, e a parte do TrueAirSpeed e descolagem(inicio dos slides)
             //duvida em relação à velocidade do aviao, consoante a altitude(preciso de alterá-la consoante a altitude)
         }
-    }
-    
-    
-    
-    
-    
-    
-    //__________________________________________________Converters_______________________________________________
-    public static double calculateSegmentDistanceInMiles(double distance) {
-        return 0.62 * distance;
+
+        double[] vec = new double[1];
+        vec[0] = altitude;
+//        vec[1]=maxWeight;
+//        vec[2]=distanceTraveled;
+//        vec[3]=totalFuelBurned;
+//        vec[4]=speedOfSound;
+//        vec[5]=speed;
+
+        return vec;
     }
 
-    public static double calculateAircraftFinalWeight(Aircraft aircraft) {
-        return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity() + aircraft.getModel().getEmptyWeight();
-    }
-
-    public static double speedAndMMOConverterMachToKmsHour(Double aircraftSpeedORMmoValue) {
-        return aircraftSpeedORMmoValue * 1225.04;
-    }
-
-    public static double tsfcConverter(Aircraft aircraft) {
-        return aircraft.getModel().getTSFC() / 3600 * 101972;
-    }
-
-//    public static double thrustConversor(Aircraft aircraft){
-//        
-//        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC()
-//    }
-    public static double altitudeConverterFeetToMeters(Aircraft aircraft) {
-        return aircraft.getModel().getCruiseAltitude() * 0.3048;
-    }
-
-    public static double aicraftWeightConverterPoundsToKg(double anyAircraftWeightValue) {
-        return anyAircraftWeightValue * 0.45359237;
-    }
-
-    public static double aircraftVMOConverterKnotToKmsHour(Aircraft aircraft) {
-        return aircraft.getModel().getVMO() * 1.852;
-    }
-
-    public static double aircraftFuelCapacityConverterGallonsToLiter(Aircraft aircraft) {
-        return (aircraft.getModel().getFuelCapacity() * 0.82) / 0.2642;       //Fuel density = 0,82 fuel (1kg water = 0,82 fuel(petrol)
-    }
-
-    public static double temperatudeConverterKelvinToCelsius(double temperature) {
-
-        return temperature - 273.15;
-    }
 }
