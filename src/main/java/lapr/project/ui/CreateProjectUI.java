@@ -46,7 +46,7 @@ public class CreateProjectUI extends javax.swing.JFrame {
         txt_desc = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btn_network.setText("Load network");
         btn_network.setEnabled(false);
@@ -190,7 +190,6 @@ public class CreateProjectUI extends javax.swing.JFrame {
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         this.ctrl_createProj.saveInDataBase();
-        new ProjectListUI();
         dispose();
     }//GEN-LAST:event_btn_saveActionPerformed
 

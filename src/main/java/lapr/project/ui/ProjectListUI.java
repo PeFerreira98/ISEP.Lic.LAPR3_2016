@@ -19,8 +19,8 @@ import lapr.project.model.Project;
  */
 public class ProjectListUI extends javax.swing.JFrame {
 
-    
     private ProjectListController ctrl_projList;
+
     /**
      * Creates new form MainUI
      */
@@ -31,10 +31,9 @@ public class ProjectListUI extends javax.swing.JFrame {
         initComponents();
         inicializar();
         super.setVisible(true);
-        
-        
+
     }
-    
+
     private void inicializar() {
         List<Project> lst_p = this.ctrl_projList.getListProjects();
 
@@ -155,13 +154,11 @@ public class ProjectListUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_OpenActionPerformed
-        int selectedIndex = -1;
-        selectedIndex = this.lst_projects.getSelectedIndex();
-        if(selectedIndex == -1){
+        int selectedIndex = this.lst_projects.getSelectedIndex();
+        if (selectedIndex == -1) {
             JOptionPane.showMessageDialog(this, "Select one project");
-        }else{
-            Project proj = this.ctrl_projList.getListProjects().get(selectedIndex);
-            new OpenProjectUI(proj);
+        } else {
+            new OpenProjectUI(this.ctrl_projList.getListProjects().get(selectedIndex));
         }
     }//GEN-LAST:event_btn_OpenActionPerformed
 
@@ -170,13 +167,11 @@ public class ProjectListUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_CreateProjectActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int selectedIndex = -1;
-        selectedIndex = this.lst_projects.getSelectedIndex();
-        if(selectedIndex == -1){
+        int selectedIndex = this.lst_projects.getSelectedIndex();
+        if (selectedIndex == -1) {
             JOptionPane.showMessageDialog(this, "Select one project");
-        }else{
-            Project proj = this.ctrl_projList.getListProjects().get(selectedIndex);
-            new CopyProjectUI(proj);
+        } else {
+            new CopyProjectUI(this.ctrl_projList.getListProjects().get(selectedIndex));
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

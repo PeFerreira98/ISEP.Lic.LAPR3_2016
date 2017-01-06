@@ -20,46 +20,46 @@ import lapr.project.model.network.Segment;
  * @author Marcos
  */
 public class OpenProjectController {
+
     Project p;
- 
-    
-    public OpenProjectController(Project p){
+
+    public OpenProjectController(Project p) {
         this.p = p;
     }
-    
-    public List<String> getAirportsNames(){
+
+    public List<String> getAirportsNames() {
         List<String> lst = new ArrayList<>();
-        for(Airport airport : this.p.getAirportHashMap().values()){
+        for (Airport airport : this.p.getAirportHashMap().values()) {
             lst.add(airport.getIATAcode());
         }
         return lst;
     }
-    
-    public List<String> getAircraftModelNames(){
+
+    public List<String> getAircraftModelNames() {
         List<String> lst = new ArrayList<>();
-        for(AircraftModel aircraftModel : this.p.getAircraftModelRegister().getAircraftModelMap().values()){
+        for (AircraftModel aircraftModel : this.p.getAircraftModelRegister().getAircraftModelMap().values()) {
             lst.add(aircraftModel.getId());
         }
         return lst;
     }
-    
-    public List<String> getFlightsNames(){
+
+    public List<String> getFlightsNames() {
         List<String> lst = new ArrayList<>();
         for (Flight flight : this.p.getFlightsList().values()) {
             lst.add(String.valueOf(flight.getId()));
         }
         return lst;
     }
-    
-    public List<String> getNodesNames(){
+
+    public List<String> getNodesNames() {
         List<String> lst = new ArrayList<>();
         for (Node node : this.p.getAirNetwork().getMapNodes().values()) {
             lst.add(node.getName());
         }
         return lst;
     }
-    
-    public List<String> getSegmentNames(){
+
+    public List<String> getSegmentNames() {
         List<String> lst = new ArrayList<>();
         for (Segment segment : this.p.getAirNetwork().getMapSegment().values()) {
             lst.add(segment.getId());

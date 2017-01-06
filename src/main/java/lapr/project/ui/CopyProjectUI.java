@@ -5,27 +5,25 @@
  */
 package lapr.project.ui;
 
-import lapr.project.controller.CreateProjectController;
-import lapr.project.controller.ProjectListController;
-import lapr.project.model.Airport;
+import javax.swing.JOptionPane;
+import lapr.project.controller.CopyProjectController;
 import lapr.project.model.Project;
 
 /**
  *
- * @author Marcos
+ * @author zero_
  */
 public class CopyProjectUI extends javax.swing.JFrame {
 
-    Project project;
-    CreateProjectController ctrl_create;
+    private CopyProjectController copyProjectController;
     
     /**
      * Creates new form CopyProjectUI
      */
-    public CopyProjectUI(Project p) {
-        this.project = p;
-        ctrl_create = new CreateProjectController();
+    public CopyProjectUI(Project project) {
+        this.copyProjectController = new CopyProjectController(project);
         initComponents();
+        super.setVisible(true);
     }
 
     /**
@@ -39,24 +37,30 @@ public class CopyProjectUI extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txt_name = new javax.swing.JTextField();
-        txt_desc = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        nameJText = new javax.swing.JTextField();
+        descJText = new javax.swing.JTextField();
+        saveJButton = new javax.swing.JButton();
+        verifyJButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
-        jLabel1.setText("Insert a new name:");
+        jLabel1.setText("Insert New Name");
 
-        jLabel2.setText("Insert a new description:");
+        jLabel2.setText("Insert New Description");
 
-        txt_name.setText("jTextField1");
-
-        txt_desc.setText("jTextField2");
-
-        jButton1.setText("Save");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveJButton.setText("Save");
+        saveJButton.setEnabled(false);
+        saveJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveJButtonActionPerformed(evt);
+            }
+        });
+
+        verifyJButton.setText("Verify");
+        verifyJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifyJButtonActionPerformed(evt);
             }
         });
 
@@ -65,45 +69,69 @@ public class CopyProjectUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel1)
-                        .addComponent(txt_name, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .addComponent(txt_desc)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2)))
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nameJText, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                    .addComponent(descJText))
+                .addContainerGap())
+            .addComponent(saveJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(verifyJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameJText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(descJText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(verifyJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_desc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addComponent(saveJButton)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJButtonActionPerformed
+        if (copyProjectController.createProject(nameJText.getText(), descJText.getText())) {
+            if (copyProjectController.saveInDataBase()) {
+                JOptionPane.showMessageDialog(this, "Project Saved!");
+                dispose();
+            }
+        }
+        JOptionPane.showMessageDialog(this, "Error Creating Project!");
+    }//GEN-LAST:event_saveJButtonActionPerformed
 
+    private void verifyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyJButtonActionPerformed
+        if(nameJText.getText().isEmpty() || descJText.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Invalid information");
+        }else if(!this.copyProjectController.validateProjectNameAndDescription(nameJText.getText(), descJText.getText())){
+            JOptionPane.showMessageDialog(this, "Project name already exists");
+        }else{
+             JOptionPane.showMessageDialog(this, "Project Validated, You can Save");
+             saveJButton.setEnabled(true);
+        }
+    }//GEN-LAST:event_verifyJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTextField descJText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField txt_desc;
-    private javax.swing.JTextField txt_name;
+    private javax.swing.JTextField nameJText;
+    private javax.swing.JButton saveJButton;
+    private javax.swing.JButton verifyJButton;
     // End of variables declaration//GEN-END:variables
 }

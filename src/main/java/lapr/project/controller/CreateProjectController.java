@@ -7,7 +7,6 @@ package lapr.project.controller;
 
 import lapr.project.database.DatabaseModel;
 import lapr.project.model.Project;
-import lapr.project.ui.CreateProjectUI;
 import lapr.project.utils.*;
 
 /**

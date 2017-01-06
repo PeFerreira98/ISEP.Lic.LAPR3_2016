@@ -154,4 +154,8 @@ public class Project {
         return flightsList;
     }
 
+    public FlightRegister getFlightRegister() {
+        return flightRegister;
+    }
+    
 }
