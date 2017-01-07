@@ -46,7 +46,7 @@ class Main {
 //        int value = calculatorExample.sum(3, 5);
 //        LOGGER.log(Level.INFO, String.valueOf(value));
 
-        new MainUI();
+        new ProjectListUI();
 
     }
 
@@ -73,7 +73,7 @@ class Main {
 //            if(air.a.containsKey(2))
 //            System.out.println(a.toString());
 //        }
-        Project project = new Project(0, "proj0", "proj");
+        Project project = new Project("proj0", "proj");
 
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);
@@ -118,7 +118,7 @@ class Main {
 
 //        System.out.println((a / Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed()))
 //                + (b /Physics.speedAndMMOConverterMachToKmsHour(a1.getModel().getRegimeRegister().getRegime("cruise").getSpeed())));
-        System.out.println(project.getAircraftHashMap().values().toString());
+        System.out.println(project.getAircraftRegister().getAircraftRegister().values().toString());
     }
     
 }
