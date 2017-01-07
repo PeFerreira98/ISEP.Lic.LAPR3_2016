@@ -37,12 +37,11 @@ public class PhysicsTest {
         network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
-        
+
         this.listProjects.add(project);
         //System.out.println(listProjects.get(0).getAircraftHashMap().values().toString());
     }
-    
-    
+
 //    /**
 //     * Test of calculateAirDensityTemperatureDueAltitude method, of class Physics.
 //     */
@@ -449,19 +448,27 @@ public class PhysicsTest {
     @Test
     public void testAircraftClimb() {
         System.out.println("aircraftClimb");
-        
-        Project project =listProjects.get(0);
+
+        Project project = listProjects.get(0);
         System.out.println(project.getDescription());
         Aircraft aircraft = new Aircraft();
+        aircraft.setDescription("aaa");
+        aircraft.setNumberElementsCrew(0);
+        aircraft.setNumberFirstClass(0);
+        aircraft.setNumberNormalClass(0);
+        aircraft.setModel(project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+        
+        project.getAircraftHashMap().put(aircraft.getId(), aircraft);
         System.out.print(project.getAircraftHashMap().values().toString());
-        aircraft =project.getAircraftHashMap().get("Aibus A380");
-        
+
         Segment segment = null;
-        
-        double[] expResult = new double[1];
-        expResult[0]=9972.28;
-        double[] result = Physics.aircraftClimb(aircraft, segment);
-        assertEquals(expResult, result);
+
+        double expResult = 0;
+        expResult = 8499;
+        System.out.println("\n"+expResult);
+        double result = Physics.aircraftClimb(aircraft, segment);
+        System.out.println("\naaaa:" +result);
+        assertEquals(expResult, result, 500);
 
     }
 

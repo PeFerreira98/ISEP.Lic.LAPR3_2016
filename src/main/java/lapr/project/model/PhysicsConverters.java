@@ -15,7 +15,6 @@ public class PhysicsConverters {
         return 0.62 * distance;
     }
 
-
     public static double speedAndMMOConverterMachToKmsHour(Double aircraftSpeedORMmoValue) {
         return aircraftSpeedORMmoValue * 1225.04;
     }
@@ -47,5 +46,10 @@ public class PhysicsConverters {
     public static double temperatudeConverterKelvinToCelsius(double temperature) {
 
         return temperature - 273.15;
+    }
+
+    public static double litersToKgConverter(double liters) {
+
+        return liters * 0.804;
     }
 }
