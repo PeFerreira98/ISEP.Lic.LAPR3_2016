@@ -11,6 +11,7 @@ import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.Flight;
+import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
@@ -29,7 +30,7 @@ public class OpenProjectController {
 
     public List<String> getAirportsNames() {
         List<String> lst = new ArrayList<>();
-        for (Airport airport : this.p.getAirportHashMap().values()) {
+        for (Airport airport : this.p.getAirportRegister().getAirportRegister().values()) {
             lst.add(airport.getIATAcode());
         }
         return lst;
@@ -43,10 +44,10 @@ public class OpenProjectController {
         return lst;
     }
 
-    public List<String> getFlightsNames() {
+    public List<String> getFlightPlansNames() {
         List<String> lst = new ArrayList<>();
-        for (Flight flight : this.p.getFlightsList().values()) {
-            lst.add(String.valueOf(flight.getId()));
+        for (FlightPlan flightplan : this.p.getFlightPlanRegister().getFlightPlansList().values()) {
+            lst.add(String.valueOf(flightplan.getId()));
         }
         return lst;
     }

@@ -7,14 +7,10 @@ package lapr.project.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.chart.PieChart;
 import lapr.project.database.DatabaseModel;
-import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
-import lapr.project.model.Flight;
 import lapr.project.model.FlightPlan;
-import lapr.project.model.Location;
 import lapr.project.model.Project;
 
 /**
@@ -23,29 +19,48 @@ import lapr.project.model.Project;
  */
 public class CreateFlightController {
 
-    private Project proj;
-    private DatabaseModel db;
+    private Project project;
+    private FlightPlan flightPlan;
     private AircraftModel aircraftType;
 
     public CreateFlightController(Project proj) {
-        this.proj = proj;
-        //this.db = new DatabaseModel(proj);
+        this.project = proj;
     }
-    
-    //Falta o flightPath
 
+    //Falta o flightPath
     public void showAircraftType(AircraftModel aircraftType) {
         this.aircraftType.getType();
-
-    }
-    public ArrayList<Airport> getAirports(){
-        //FIX_ME getListAirports incompleto, falta a location
-        ArrayList<Airport> lstAirports = db.getListAirports();
-        return lstAirports;
     }
 
-    public void saveFlightPlan(FlightPlan flightP) {
-            db.addFlightPlan(flightP);
+    public List<Airport> getAirports() {
+        List<Airport> lst = new ArrayList<>();
+        for (Airport airport : this.project.getAirportRegister().getAirportRegister().values()) {
+            lst.add(airport);
+        }
+        return lst;
+    }
+
+    public boolean saveFlightPlan(String name, String aircraftModel, 
+            Airport originAeroport, Airport destinationAeroport, 
+            double normalClass, double firstClass, double crew) {
+        
+        try {
+            this.flightPlan = new FlightPlan(name, AircraftModel.Type.valueOf(aircraftModel), 
+                originAeroport, destinationAeroport, normalClass, firstClass, crew);
+            
+            this.project.addFlightPlan(flightPlan);
+            return true;
+        } catch (NullPointerException e) {
+            System.out.println("Error Creating New FlightPlan");
+        }
+        
+        
+        return true;
+    }
+
+    public void saveFlightPlanToDatabase() {
+        DatabaseModel db = new DatabaseModel();
+        db.addFlightPlan(flightPlan);
     }
 
 }

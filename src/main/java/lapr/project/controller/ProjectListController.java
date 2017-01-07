@@ -43,7 +43,7 @@ public class ProjectListController {
     }
 
     private void defaultProject() {
-        Project project = new Project(0, "proj0", "proj");
+        Project project = new Project("proj0", "proj");
 
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);

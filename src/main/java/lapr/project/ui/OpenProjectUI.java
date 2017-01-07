@@ -5,12 +5,10 @@
  */
 package lapr.project.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.OpenProjectController;
-import lapr.project.model.Airport;
 import lapr.project.model.Project;
 
 /**
@@ -95,11 +93,11 @@ public class OpenProjectUI extends javax.swing.JFrame {
         this.lst_aircraftModels.setModel(lm);
     }
     
-    private void initFlightsList(){
-        List lst_a = this.ctr_OpenP.getFlightsNames();
+    private void initFlightPlansList(){
+        List lst_a = this.ctr_OpenP.getFlightPlansNames();
         
         if (lst_a == null) {
-            this.lst_flights.setModel(new DefaultListModel());
+            this.lst_flightplans.setModel(new DefaultListModel());
 
             JOptionPane.showMessageDialog(this, "There are no existing fli6ts.");
 
@@ -122,7 +120,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
             }
         };
 
-        this.lst_flights.setModel(lm);
+        this.lst_flightplans.setModel(lm);
     }
     
     private void initNodeList(){
@@ -188,7 +186,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     private void inicializar() {
        initAirportsList();
        initAircraftsList();
-       initFlightsList();
+       initFlightPlansList();
        initNodeList();
        initSegmentsList();
     }
@@ -207,7 +205,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lst_aircraftModels = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        lst_flights = new javax.swing.JList<>();
+        lst_flightplans = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         lst_airports = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
@@ -223,6 +221,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         lbl_proj_name1 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -238,7 +237,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
         lst_aircraftModels.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(lst_aircraftModels);
 
-        jScrollPane2.setViewportView(lst_flights);
+        jScrollPane2.setViewportView(lst_flightplans);
 
         lst_airports.setRequestFocusEnabled(false);
         jScrollPane3.setViewportView(lst_airports);
@@ -247,7 +246,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
         jLabel3.setText("Aircraft Models");
 
-        jLabel4.setText("Flights");
+        jLabel4.setText("Flight Plans");
 
         jScrollPane4.setViewportView(lst_Nodes);
 
@@ -274,6 +273,13 @@ public class OpenProjectUI extends javax.swing.JFrame {
         jLabel7.setText("Description:");
 
         lbl_proj_name1.setText(this.project.getDescription());
+
+        jButton3.setText("Update");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -309,7 +315,10 @@ public class OpenProjectUI extends javax.swing.JFrame {
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel7)))
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -356,7 +365,9 @@ public class OpenProjectUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton3))
                     .addComponent(jButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -372,9 +383,14 @@ public class OpenProjectUI extends javax.swing.JFrame {
         new SimulateFlightUI(project);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        inicializar();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -397,6 +413,6 @@ public class OpenProjectUI extends javax.swing.JFrame {
     private javax.swing.JList<String> lst_Se6ments;
     private javax.swing.JList<String> lst_aircraftModels;
     private javax.swing.JList<String> lst_airports;
-    private javax.swing.JList<String> lst_flights;
+    private javax.swing.JList<String> lst_flightplans;
     // End of variables declaration//GEN-END:variables
 }

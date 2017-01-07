@@ -30,10 +30,9 @@ public class CopyProjectController {
     public boolean createProject(String name, String description){
         try {
             this.newProject = new Project(name, description, 
-                    oldProject.getAirNetwork(), oldProject.getAircraftModelRegister(), 
-                    oldProject.getFlightRegister(), oldProject.getFlightPlanRegister(), 
-                    oldProject.getAircraftHashMap(), oldProject.getAirportHashMap(), 
-                    oldProject.getFlightsList());
+                    oldProject.getAirNetwork(), oldProject.getAircraftModelRegister(),
+                    oldProject.getAirportRegister(), oldProject.getAircraftRegister(), 
+                    oldProject.getFlightPlanRegister());
             return true;
         } catch (NullPointerException e) {
             System.out.println("Error Creating New Project");

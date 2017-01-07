@@ -7,12 +7,10 @@ package lapr.project.ui;
 
 import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.CreateFlightController;
 import lapr.project.model.Airport;
-import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
 
 /**
@@ -23,8 +21,8 @@ public class CreateFlightUI extends javax.swing.JFrame {
 
     private CreateFlightController ctrlFlightPlan;
     private Project project;
-    
     private ArrayList<Airport> lstAirports = new ArrayList<>();
+    
     /**
      * Creates new form CreateFlightUI
      * @param p
@@ -44,7 +42,7 @@ public class CreateFlightUI extends javax.swing.JFrame {
         
         //Outra maneira, local
        
-        if (this.project.getAirportHashMap().values().isEmpty()) {
+        if (this.project.getAirportRegister().getAirportRegister().values().isEmpty()) {
             this.lstOrigin.setModel(new DefaultListModel());
             this.lstDest.setModel(new DefaultListModel());
             JOptionPane.showMessageDialog(this, "There are no existing airports.");
@@ -52,7 +50,7 @@ public class CreateFlightUI extends javax.swing.JFrame {
             return;
         }
         
-        for(Airport a : this.project.getAirportHashMap().values()){
+        for(Airport a : this.project.getAirportRegister().getAirportRegister().values()){
             lstAirports.add(a);
         }
         
@@ -104,7 +102,7 @@ public class CreateFlightUI extends javax.swing.JFrame {
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
-        cmbAircraftType = new javax.swing.JComboBox<>();
+        cmbAircraftModelType = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -154,9 +152,9 @@ public class CreateFlightUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel12.setText("Aircraft Type:");
+        jLabel12.setText("Aircraft Model Type:");
 
-        cmbAircraftType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "regular", "charter" }));
+        cmbAircraftModelType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PASSENGER", "CARGO", "MIXED" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,7 +187,7 @@ public class CreateFlightUI extends javax.swing.JFrame {
                                                     .addComponent(jLabel7))
                                                 .addGap(32, 32, 32)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(cmbAircraftType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(cmbAircraftModelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                         .addComponent(txtNormal, javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(txtCrew)
@@ -226,7 +224,7 @@ public class CreateFlightUI extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(cmbAircraftType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbAircraftModelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -272,22 +270,20 @@ public class CreateFlightUI extends javax.swing.JFrame {
         int nNormalClass = parseInt(txtNormal.getText());
         int nFirstClass = parseInt(txtFirst.getText());
         int nCrew = parseInt(txtCrew.getText());
-        String type = cmbAircraftType.toString();
-        
-        FlightPlan flightP = new FlightPlan(name, type, nNormalClass, nFirstClass, nCrew, origin, dest);
+        String type = cmbAircraftModelType.getName();
         
         if(origin.equals(dest)){
             JOptionPane.showMessageDialog(this, "The origin must be diferent of destination");
         }else{
             //FIX_ME falta aqui o metodo de adicionar à base de dados
-            this.ctrlFlightPlan.saveFlightPlan(flightP);
+            this.ctrlFlightPlan.saveFlightPlan(name, type, origin, dest, nNormalClass, nFirstClass, nCrew);
             JOptionPane.showMessageDialog(this, "Flight saved");
             dispose();
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Want to exit?");
+        int option = JOptionPane.showConfirmDialog(this, "Want to exit?", "Confirm", 0);
         
         if(option == 0)
                 dispose();
@@ -298,7 +294,7 @@ public class CreateFlightUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox<String> cmbAircraftType;
+    private javax.swing.JComboBox<String> cmbAircraftModelType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;

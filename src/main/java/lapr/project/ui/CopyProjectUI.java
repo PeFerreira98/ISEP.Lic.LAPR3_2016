@@ -110,9 +110,12 @@ public class CopyProjectUI extends javax.swing.JFrame {
             if (copyProjectController.saveInDataBase()) {
                 JOptionPane.showMessageDialog(this, "Project Saved!");
                 dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error Adding Project to database!");
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Error Creating Project!");
         }
-        JOptionPane.showMessageDialog(this, "Error Creating Project!");
     }//GEN-LAST:event_saveJButtonActionPerformed
 
     private void verifyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyJButtonActionPerformed
