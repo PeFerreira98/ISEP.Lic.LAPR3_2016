@@ -26,7 +26,6 @@ public class AirportRegister {
             if (newAirport.equals(airport)) {
                 return false;
             }
-
         }
         return true;
     }
@@ -37,7 +36,6 @@ public class AirportRegister {
                 return this.airportRegister.get(airport.getIATAcode());
 
             }
-
         }
         return null;
     }
@@ -48,6 +46,10 @@ public class AirportRegister {
             return this.airportRegister.get(newAirport.getIATAcode());
         }
         return null;
+    }
+
+    public HashMap<String, Airport> getAirportRegister() {
+        return airportRegister;
     }
 
 }

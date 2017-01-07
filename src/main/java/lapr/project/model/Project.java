@@ -5,11 +5,8 @@
  */
 package lapr.project.model;
 
-import java.util.LinkedHashMap;
 import lapr.project.model.network.AirNetwork;
-import lapr.project.model.register.AircraftModelRegister;
-import lapr.project.model.register.FlightPlanRegister;
-import lapr.project.model.register.FlightRegister;
+import lapr.project.model.register.*;
 
 /**
  *
@@ -19,15 +16,14 @@ public class Project {
 
     private String name;
     private String description;
-    private AirNetwork AirNetwork;
-    
-    private AircraftModelRegister aircraftModelRegister;
-    private FlightRegister flightRegister;
-    private FlightPlanRegister flightPlanRegister;
+    private AirNetwork airNetwork;
 
-    private LinkedHashMap<String, Aircraft> aircraftHashMap; //TODO: change to aircraftRegister
-    private LinkedHashMap<String, Airport> airportHashMap; //TODO: change to airportregister
-    private LinkedHashMap<Integer, Flight> flightsList; //TODO: change to flightregister
+    private AircraftModelRegister aircraftModelRegister;
+    private AirportRegister airportRegister;
+    private AircraftRegister aircraftRegister;
+
+    private FlightPlanRegister flightPlanRegister;
+    private FlightRegister flightRegister;
 
     public Project() {
 
@@ -37,45 +33,35 @@ public class Project {
         this.name = name;
         this.description = description;
 
-        this.AirNetwork = new AirNetwork();
-        
-        this.aircraftModelRegister = new AircraftModelRegister();
-        this.flightRegister = new FlightRegister();
-        this.flightPlanRegister = new FlightPlanRegister();
+        this.airNetwork = new AirNetwork();
 
-        this.aircraftHashMap = new LinkedHashMap<>();
-        this.airportHashMap = new LinkedHashMap<>();
-        this.flightsList = new LinkedHashMap<>();
+        this.aircraftModelRegister = new AircraftModelRegister();
+        this.airportRegister = new AirportRegister();
+        this.aircraftRegister = new AircraftRegister();
+
+        this.flightPlanRegister = new FlightPlanRegister();
+        this.flightRegister = new FlightRegister();
     }
 
-    public Project(int id, String name, String description) {
+    public Project(String name, String description, AirNetwork airNetwork, AircraftModelRegister aircraftModelRegister, AirportRegister airportRegister, AircraftRegister aircraftRegister, FlightPlanRegister flightPlanRegister) {
         this.name = name;
         this.description = description;
 
-        this.AirNetwork = new AirNetwork();
-        
-        this.aircraftModelRegister = new AircraftModelRegister();
-        this.flightRegister = new FlightRegister();
-        this.flightPlanRegister = new FlightPlanRegister();
-
-        this.aircraftHashMap = new LinkedHashMap<>();
-        this.airportHashMap = new LinkedHashMap<>();
-        this.flightsList = new LinkedHashMap<>();
-    }
-
-    public Project(String name, String description, AirNetwork AirNetwork, AircraftModelRegister aircraftModelRegister, FlightRegister flightRegister, FlightPlanRegister flightPlanRegister, LinkedHashMap<String, Aircraft> aircraftHashMap, LinkedHashMap<String, Airport> airportHashMap, LinkedHashMap<Integer, Flight> flightsList) {
-        this.name = name;
-        this.description = description;
-        this.AirNetwork = AirNetwork;
-        
+        this.airNetwork = airNetwork;
         this.aircraftModelRegister = aircraftModelRegister;
-        this.flightRegister = flightRegister;
+        this.airportRegister = airportRegister;
+        this.aircraftRegister = aircraftRegister;
+
         this.flightPlanRegister = flightPlanRegister;
-        
-        this.aircraftHashMap = aircraftHashMap;
-        this.airportHashMap = airportHashMap;
-        
-        this.flightsList = flightsList;
+        this.flightRegister = new FlightRegister();
+    }
+    
+    public boolean addAircraft(Aircraft newAircraft){
+        return this.aircraftRegister.addAircraft(newAircraft);
+    }
+    
+    public FlightPlan addFlightPlan(FlightPlan newFlightPlan){
+        return this.flightPlanRegister.addFlightPlan(newFlightPlan);
     }
 
     public AircraftModel addAircraftModel(AircraftModel newAircraftModel) {
@@ -83,43 +69,15 @@ public class Project {
     }
 
     public Airport addAirport(Airport newAirport) {
-
-        for (Airport airport : this.airportHashMap.values()) {
-            if (newAirport.equals(airport)) {
-                return null;
-            }
-        }
-
-        return this.airportHashMap.put(newAirport.getIATAcode(), newAirport);
-    }
-
-    public void confirmAirport(Airport newAirport) {
-        this.airportHashMap.put(newAirport.getIATAcode(), newAirport);
+        return this.airportRegister.addAirport(newAirport);
     }
 
     public Flight addFlight(Flight newFlight) {
-
-        for (Flight flight : this.flightsList.values()) {
-            if (newFlight.equals(flight)) {
-                return null;
-            }
-        }
-        return this.flightsList.put(newFlight.getId(), newFlight);
+        return this.flightRegister.addFlight(newFlight);
     }
 
     public boolean confirmFlight(Flight newFlight) {
-        if (flightRegister.validateFlight(newFlight)) {
-
-            this.flightsList.put(newFlight.getId(), newFlight);
-            return true;
-        }
-        return false;
-
-    }
-
-    public Project duplicate() {
-        Project p = new Project(getName() + " - Copia", getDescription());
-        return p;
+        return this.flightRegister.confirmFlight(newFlight);
     }
 
     public String getName() {
@@ -131,31 +89,27 @@ public class Project {
     }
 
     public AirNetwork getAirNetwork() {
-        return AirNetwork;
+        return airNetwork;
     }
 
     public AircraftModelRegister getAircraftModelRegister() {
         return aircraftModelRegister;
     }
 
+    public AirportRegister getAirportRegister() {
+        return airportRegister;
+    }
+
+    public AircraftRegister getAircraftRegister() {
+        return aircraftRegister;
+    }
+
     public FlightPlanRegister getFlightPlanRegister() {
         return flightPlanRegister;
-    }
-    
-    public LinkedHashMap<String, Aircraft> getAircraftHashMap() {
-        return aircraftHashMap;
-    }
-
-    public LinkedHashMap<String, Airport> getAirportHashMap() {
-        return airportHashMap;
-    }
-
-    public LinkedHashMap<Integer, Flight> getFlightsList() {
-        return flightsList;
     }
 
     public FlightRegister getFlightRegister() {
         return flightRegister;
     }
-    
+
 }

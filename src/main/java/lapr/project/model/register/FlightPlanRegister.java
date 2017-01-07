@@ -6,6 +6,7 @@
 package lapr.project.model.register;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import lapr.project.model.Flight;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.network.Segment;
@@ -17,18 +18,13 @@ import lapr.project.model.network.Segment;
 public class FlightPlanRegister {
 
     private HashMap<Integer, FlightPlan> mapFlightPlans;
-    private SegmentsRegister regSegment;
 
     public FlightPlanRegister() {
-        this.mapFlightPlans = new HashMap<>();
+        this.mapFlightPlans = new LinkedHashMap<>();
     }
 
-    public FlightPlan newFlightPlan() {
-        return new FlightPlan();
-    }
-
-    public FlightPlan addFlightPlan(FlightPlan newFlight) {
-        return mapFlightPlans.put(newFlight.getId(), newFlight);
+    public FlightPlan addFlightPlan(FlightPlan newFlightPlan) {
+        return mapFlightPlans.put(newFlightPlan.getId(), newFlightPlan);
 
     }
 

@@ -40,7 +40,7 @@ public class AircraftModelRegister {
 
         return true;
     }
-    
+
     public AircraftModel getAircraftModel(String aircraftModelId) {
         for (AircraftModel aircraftModel : this.aircraftModelMap.values()) {
             if (aircraftModelId.equals(aircraftModel.getId())) {

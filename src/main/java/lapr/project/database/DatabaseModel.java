@@ -103,11 +103,11 @@ public class DatabaseModel {
             //openDB();
             addNode(n);
         });
-        project.getAirportHashMap().values().stream().forEach((airport) -> {
+        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
             //openDB();
             addAirport(airport);
         });
-        project.getAircraftHashMap().values().stream().forEach((aircraft) -> {
+        project.getAircraftRegister().getAircraftRegister().values().stream().forEach((aircraft) -> {
             //openDB();
             addAircraft(aircraft);
         });
@@ -115,7 +115,7 @@ public class DatabaseModel {
             //openDB();
             addAircraftModel(airModel);
         });
-        project.getFlightsList().values().stream().forEach((f) -> {
+        project.getFlightRegister().getFlightsList().values().stream().forEach((f) -> {
             //openDB();
             addFlight(f);
         });
@@ -268,12 +268,12 @@ public class DatabaseModel {
     }
 
     
-    //FIX_ME falta adicionar esta tabela à base de dados
+    //FIX_ME falta adicionar esta tabela à base de dados (falta add FK project)
     public void addFlightPlan(FlightPlan fp) {
         try {
             this.st.execute("insert into FlightPlan(name, flightType, id_origion, id_dest, numberFirstClass, numberNormalClass, numberCrew)"
                     + "values ('" + fp.getName() + "', '"
-                    + fp.getFlightType() + "', '"
+                    + fp.getAircraftType().toString() + "', '"
                     + fp.getOrigin().getIATAcode() + "', '"
                     + fp.getDest().getIATAcode()+ "', '"
                     + fp.getnNormalClass() + "', '"
@@ -433,7 +433,7 @@ public class DatabaseModel {
                 String aircraft_name = rs.getString("description");
 
                 //ArrayList<Segment> lst_s = getListSegmentByFlight(id_flight);
-                Aircraft aircraft = this.project.getAircraftHashMap().get(aircraft_name);
+                Aircraft aircraft = this.project.getAircraftRegister().getAircraftByID(aircraft_name);
                 Flight f = new Flight(id_flight, type, departure_day, minimun_stop, shedule_arrival, aircraft);
                 lst_Flight.add(f);
             }

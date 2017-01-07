@@ -28,7 +28,7 @@ public class PhysicsTest {
     }
 
     private void defaultProject() {
-        Project project = new Project(0, "proj0", "proj");
+        Project project = new Project("proj0", "proj");
 
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);
@@ -458,8 +458,8 @@ public class PhysicsTest {
         aircraft.setNumberNormalClass(0);
         aircraft.setModel(project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
         
-        project.getAircraftHashMap().put(aircraft.getId(), aircraft);
-        System.out.print(project.getAircraftHashMap().values().toString());
+        project.getAircraftRegister().addAircraft(aircraft);
+        System.out.print(project.getAircraftRegister().getAircraftRegister().values().toString());
 
         Segment segment = null;
 
@@ -468,6 +468,7 @@ public class PhysicsTest {
         System.out.println("\n"+expResult);
         double result = Physics.aircraftClimb(aircraft, segment);
         System.out.println("\naaaa:" +result);
+        
         assertEquals(expResult, result, 500);
 
     }

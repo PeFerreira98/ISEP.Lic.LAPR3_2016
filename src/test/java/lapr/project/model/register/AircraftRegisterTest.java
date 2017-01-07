@@ -74,21 +74,6 @@ public class AircraftRegisterTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of getAircraftByID method, of class AircraftRegister.
-     */
-    @Test
-    public void testGetAircraftByID() {
-        System.out.println("getAircraftByID");
-        AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
-        Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
-        AircraftRegister instance = new AircraftRegister();
-        boolean expResult = instance.getAircraftByID("1A");
-        boolean result = true;
-        assertEquals(expResult, result);
-
-    }
-
 //    /**
 //     * Test of aircraftDuplicationName method, of class AircraftRegister.
 //     */

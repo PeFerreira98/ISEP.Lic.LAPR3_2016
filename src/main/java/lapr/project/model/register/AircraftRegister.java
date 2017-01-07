@@ -36,33 +36,29 @@ public class AircraftRegister {
         if (validateAircraft(newAircraft)) {
             this.aircraftRegister.put(newAircraft.getId(), newAircraft);
             return false;
-           
+
         }
         return true;
     }
 
-    public boolean getAircraftByID(String ID) {
+    public Aircraft getAircraftByID(String ID) {
         for (Aircraft aircraft : this.aircraftRegister.values()) {
             if (aircraft.getId().equals(ID)) {
-                this.aircraftRegister.get(aircraft.getId());
+                return this.aircraftRegister.get(aircraft.getId());
             }
-            return false;
         }
-        return true;
+        return null;
     }
 
     public void aircraftDuplicationName(Aircraft aircraft, int p) {
         aircraft.setDescription(String.format("%s(%d)", aircraft.getDescription(), p));
         p++;
         for (Aircraft aircraft1 : this.aircraftRegister.values()) {
-
             if (aircraft.getDescription().equalsIgnoreCase(aircraft1.getDescription())) {
                 aircraftDuplicationName(aircraft, p);
 
             }
-
         }
-
     }
 
     public void aircraftCheckDuplicate(Aircraft aircraft) {
@@ -72,4 +68,9 @@ public class AircraftRegister {
             }
         }
     }
+
+    public HashMap<String, Aircraft> getAircraftRegister() {
+        return aircraftRegister;
+    }
+
 }

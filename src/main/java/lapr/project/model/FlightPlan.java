@@ -14,24 +14,20 @@ import lapr.project.model.network.Segment;
  * @author zero_
  */
 public class FlightPlan {
+
     private int id;
-    private String type;
     private String name;
+    private AircraftModel.Type aircraftType;
     private Airport origin;
     private Airport dest;
-    
+
     private double nNormalClass, nFirstClass, nCrew;
-    
+
     //Option Stuff
 //    private Date departure_day;
 //    private double minimun_stop;
 //    private Date scheduled_arrival;
     //private ArrayList<Segment> flight_plan;
-    public enum FlightType {
-        regular,
-        charter;
-    }
-    
 //    public FlightPlan(int id, FlightType type, Date d, double ms, Date sa, ArrayList<Segment> fp, double nNormalClass,double nCrew, double nFirstClass, double fuel, double load){
 //        this.id = id;
 //        this.type = type;
@@ -43,21 +39,17 @@ public class FlightPlan {
 //        this.nFirstClass = nFirstClass;
 //        this.nCrew = nCrew;
 //    }
-    
-    public FlightPlan(String name, String type, double nNormalClass, double nFirstClass, double nCrew, Airport origin, Airport dest){
+
+    public FlightPlan(String name, AircraftModel.Type aircraftType, Airport origin, Airport dest, double nNormalClass, double nFirstClass, double nCrew) {
         this.name = name;
-        this.type = type;
+        this.aircraftType = aircraftType;
+        this.origin = origin;
+        this.dest = dest;
         this.nNormalClass = nNormalClass;
         this.nFirstClass = nFirstClass;
         this.nCrew = nCrew;
-        this.origin = origin;
-        this.dest = dest;
     }
-    
-        
-    public FlightPlan(){
-        
-    }
+
     public int getId() {
         return id;
     }
@@ -65,73 +57,49 @@ public class FlightPlan {
     public void setId(int id) {
         this.id = id;
     }
-    
-    public String getFlightType(){
-        return this.type;
-    }
-    
-    /**
-     * @return the name
-     */
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the origin
-     */
+    public AircraftModel.Type getAircraftType() {
+        return aircraftType;
+    }
+
     public Airport getOrigin() {
         return origin;
     }
 
-    /**
-     * @return the dest
-     */
     public Airport getDest() {
         return dest;
     }
 
-    /**
-     * @return the nNormalClass
-     */
     public double getnNormalClass() {
         return nNormalClass;
     }
 
-    /**
-     * @return the nFirstClass
-     */
     public double getnFirstClass() {
         return nFirstClass;
     }
 
-    /**
-     * @return the nCrew
-     */
     public double getnCrew() {
         return nCrew;
     }
 
-    
     public boolean equals(Object otherObj) {
         if (this == otherObj) {
             return true;
         }
-        if (otherObj == null || this.getClass() != otherObj.getClass()){
+        if (otherObj == null || this.getClass() != otherObj.getClass()) {
             return false;
         }
         FlightPlan otherFlight = (FlightPlan) otherObj;
         return this.id == otherFlight.id;
     }
-    
-
 
     @Override
     public String toString() {
-        return "Flight{" + "id=" + id + ", type=" + type +'}';
+        return "Flight{" + "id=" + id + ", name=" + name + '}';
     }
 
-    
-    
-    
 }
