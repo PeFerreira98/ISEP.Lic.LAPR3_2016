@@ -94,6 +94,7 @@ public class DatabaseModel {
                     + "values ('"
                     + project.getName() + "', '"
                     + project.getDescription() + "')");
+            this.project = project;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -104,22 +105,22 @@ public class DatabaseModel {
             //openDB();
             addNode(n);
         });
-        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
-            //openDB();
-            addAirport(airport);
-        });
-        project.getAircraftRegister().getAircraftRegister().values().stream().forEach((aircraft) -> {
-            //openDB();
-            addAircraft(aircraft);
-        });
-        project.getAircraftModelRegister().getAircraftModelMap().values().stream().forEach((airModel) -> {
-            //openDB();
-            addAircraftModel(airModel);
-        });
-        project.getFlightRegister().getFlightsList().values().stream().forEach((f) -> {
-            //openDB();
-            addFlight(f);
-        });
+//        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
+//            //openDB();
+//            addAirport(airport);
+//        });
+//        project.getAircraftRegister().getAircraftRegister().values().stream().forEach((aircraft) -> {
+//            //openDB();
+//            addAircraft(aircraft);
+//        });
+//        project.getAircraftModelRegister().getAircraftModelMap().values().stream().forEach((airModel) -> {
+//            //openDB();
+//            addAircraftModel(airModel);
+//        });
+//        project.getFlightRegister().getFlightsList().values().stream().forEach((f) -> {
+//            //openDB();
+//            addFlight(f);
+//        });
         closeDB();
         //return getLastInsertedProjectCod();
     }
@@ -129,20 +130,18 @@ public class DatabaseModel {
 
             this.st.execute("insert into Segment(name, direction, wind_intensity, wind_Direction, node_start, node_end, project_name) "
                     + "values ('"
-                    + segment.getId() + "', '"
-                    + segment.getDirection() + "', "
+                    + segment.getId() + "', "
+                    + 2 + ", "
                     + segment.getWind_speed() + ", "
-                    + segment.getWind_direction() + ", '"
+                    + /*segment.getWind_direction()*/ 2 + ", '"
                     + segment.getBeginningNode().getName() + "', '"
                     + segment.getEndNode().getName() + "', '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //closeDB();
-        //return getLastInsertedProjectCod();
     }
-
+    
     public List<Segment> getSegments(/*Project p*/) {
         List<Segment> lst_seg = new ArrayList<>();
 
@@ -266,8 +265,6 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //closeDB();
-        //return getLastInsertedProjectCod();
     }
 
     //FIX_ME falta adicionar esta tabela à base de dados (falta add FK project)
@@ -285,7 +282,6 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //closeDB();
     }
 
     public ArrayList<Airport> getListAirports() {
@@ -318,7 +314,7 @@ public class DatabaseModel {
         try {
             this.rs = this.st.executeQuery("SELECT * FROM NODE WHERE project_name = '" + p.getName() + "'");
             while (rs.next()) {
-                Node n = new Node(rs.getString("node_name"),
+                Node n = new Node(rs.getString("name"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude"));
                 lst_nodes.add(n);
@@ -483,5 +479,47 @@ public class DatabaseModel {
             }
         }
         return true;
+    }
+    
+    
+    
+    public void deleteNodesByProject(String projectID){
+        try{
+            this.st.executeQuery("DELETE FROM NODE"
+                + "WHERE project_name = '" + projectID + "'");
+        }catch(Exception ex){
+            System.out.println("Error: deleting nodes");
+        }
+    }
+    
+    public void deleteSegmentsByProject(String projectID){
+        try{
+          this.st.executeQuery("DELETE FROM SEgMENT"
+                + "WHERE project_name = '" + projectID + "'");  
+        }catch(Exception ex){
+            System.out.println("Error: deleting segments");
+        }
+    }
+    
+    public void deleteAirportsByProject(String projectID){
+        try{
+            this.st.executeQuery("DELETE FROM AIRPORT"
+                + "WHERE project_name = '" + projectID + "'");
+        }catch(Exception ex){
+            System.out.println("Error: deleting Airports");
+        }
+    }
+    
+    public void deleteProject(String projectID){
+        deleteNodesByProject(projectID);
+        deleteSegmentsByProject(projectID);
+        deleteAirportsByProject(projectID);
+        try{
+            this.st.executeQuery("DELETE FROM POJECT"
+                + "WHERE project_name = '" + projectID + "'");
+        }catch(Exception ex){
+            System.out.println("Error: deleting Project");
+        }
+        
     }
 }

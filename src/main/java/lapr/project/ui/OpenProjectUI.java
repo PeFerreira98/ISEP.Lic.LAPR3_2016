@@ -32,7 +32,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }
     private void initAirportsList() {
         try {
-            List lst_a = this.ctr_OpenP.getAirportsNames();
+            List lst_a = this.ctr_OpenP.getAirportsDB();
 
             int tam = lst_a.size();
             final String[] a = new String[tam];
@@ -62,7 +62,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
     private void initAircraftsList() {
         try {
-            List lst_a = this.ctr_OpenP.getAircraftModelNames();
+            List lst_a = this.ctr_OpenP.getAircraftModelDB();
 
             int tam = lst_a.size();
             final String[] a = new String[tam];
@@ -93,7 +93,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     private void initNodeList() {
 
         try {
-            List lst_a = this.ctr_OpenP.getNodesNames();
+            List lst_a = this.ctr_OpenP.getNodesDB();
 
             int tam = lst_a.size();
             final String[] a = new String[tam];
@@ -123,7 +123,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     private void initSegmentsList() {
 
         try {
-            List lst_a = this.ctr_OpenP.getSegmentNames();
+            List lst_a = this.ctr_OpenP.getSegmentDB();
 
             int tam = lst_a.size();
             final String[] a = new String[tam];
@@ -151,7 +151,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }
     
     private void initFlightPlansList(){
-        List lst_a = this.ctr_OpenP.getFlightPlansNames();
+        List lst_a = this.ctr_OpenP.getFlightPlansDB();
         
         if (lst_a == null) {
             this.lst_flightplans.setModel(new DefaultListModel());
@@ -183,10 +183,10 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
     private void inicializar() {
        initAirportsList();
-       initAircraftsList();
-       initFlightPlansList();
+       //initAircraftsList();
+       //initFlightPlansList();
        initNodeList();
-       initSegmentsList();
+       //initSegmentsList();
     }
 
     /**
@@ -374,7 +374,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       new CreateFlighPlantUI(project);
+       new CreateFlightPlanUI(project);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
