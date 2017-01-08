@@ -8,6 +8,8 @@ package lapr.project.controller;
 import java.util.LinkedList;
 import java.util.List;
 import lapr.project.database.DatabaseModel;
+import lapr.project.model.AircraftModel;
+import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
 import lapr.project.utils.AircraftStAXParser;
 import lapr.project.utils.AirportStAXParser;
@@ -52,6 +54,13 @@ public class ProjectListController {
         network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
+        
+        FlightPlan flightplan = new FlightPlan("FP1", AircraftModel.Type.PASSENGER, 
+                project.getAirportRegister().getAirportByIATACode("OPO"),
+                project.getAirportRegister().getAirportByIATACode("LIS"), 
+                10, 10, 10);
+        
+        project.addFlightPlan(flightplan);
 
         this.listProjects.add(project);
     }

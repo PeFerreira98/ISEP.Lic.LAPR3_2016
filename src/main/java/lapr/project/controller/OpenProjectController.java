@@ -48,7 +48,7 @@ public class OpenProjectController {
     public List<String> getFlightPlansNames() {
         List<String> lst = new ArrayList<>();
         for (FlightPlan flightplan : this.p.getFlightPlanRegister().getFlightPlansList().values()) {
-            lst.add(String.valueOf(flightplan.getId()));
+            lst.add(String.valueOf(flightplan.getName()));
         }
         return lst;
     }

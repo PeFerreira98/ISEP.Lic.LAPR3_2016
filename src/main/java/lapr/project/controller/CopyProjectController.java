@@ -35,7 +35,7 @@ public class CopyProjectController {
                     oldProject.getFlightPlanRegister());
             return true;
         } catch (NullPointerException e) {
-            System.out.println("Error Creating New Project");
+            System.out.println("Error Creating New Project > " + e);
             return false;
         }
     }
@@ -46,7 +46,7 @@ public class CopyProjectController {
             db.addProject(newProject);
             return true;
         } catch (Exception e) {
-            System.out.println("Error adding to database");
+            System.out.println("Error adding to database > " + e);
             return false;
         }
         
