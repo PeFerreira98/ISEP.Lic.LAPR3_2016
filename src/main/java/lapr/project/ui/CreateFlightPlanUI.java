@@ -29,26 +29,26 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
     private CreateFlightPlanController ctrlFlightPlan;
     private Project project;
     private ArrayList<Airport> lstAirports = new ArrayList<>();
-    
+
     /**
      * Creates new form CreateFlightUI
+     *
      * @param p
      */
     public CreateFlightPlanUI(Project p) {
-        
+
         this.project = p;
         this.ctrlFlightPlan = new CreateFlightPlanController(p);
         initComponents();
         initLstAirports();
         super.setVisible(true);
-        
+
     }
 
-    private void initLstAirports(){
+    private void initLstAirports() {
         //ArrayList<Airport> lstAirports = this.ctrlFlightPlan.getAirports();
-        
+
         //Outra maneira, local
-       
         if (this.project.getAirportRegister().getAirportRegister().values().isEmpty()) {
             this.lstOrigin.setModel(new DefaultListModel());
             this.lstDest.setModel(new DefaultListModel());
@@ -56,11 +56,11 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
 
             return;
         }
-        
-        for(Airport a : this.project.getAirportRegister().getAirportRegister().values()){
+
+        for (Airport a : this.project.getAirportRegister().getAirportRegister().values()) {
             lstAirports.add(a);
         }
-        
+
         int tam = lstAirports.size();
         final String[] a = new String[tam];
         for (int i = 0; i < tam; i++) {
@@ -80,7 +80,7 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         this.lstDest.setModel(lm);
         this.lstOrigin.setModel(lm);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,6 +162,11 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         jLabel12.setText("Aircraft Model Type:");
 
         cmbAircraftModelType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PASSENGER", "CARGO", "MIXED" }));
+        cmbAircraftModelType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbAircraftModelTypeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -272,30 +277,40 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         //FIX_ME falta as validações
         Airport origin = this.lstAirports.get(lstOrigin.getSelectedIndex());
         Airport dest = this.lstAirports.get(lstDest.getSelectedIndex());
-        
+
         String name = txtName.getText();
         int nNormalClass = parseInt(txtNormal.getText());
         int nFirstClass = parseInt(txtFirst.getText());
         int nCrew = parseInt(txtCrew.getText());
-        String type = cmbAircraftModelType.getName();
-        
-        if(origin.equals(dest)){
+        String type = cmbAircraftModelType.getSelectedItem().toString();
+
+        if (origin.equals(dest)) {
             JOptionPane.showMessageDialog(this, "The origin must be diferent of destination");
-        }else{
-            //FIX_ME falta aqui o metodo de adicionar à base de dados
-            this.ctrlFlightPlan.saveFlightPlan(name, type, origin, dest, nNormalClass, nFirstClass, nCrew);
-            JOptionPane.showMessageDialog(this, "Flight saved");
-            dispose();
+        } else {
+            if (this.ctrlFlightPlan.saveFlightPlan(name, type, origin, dest, nNormalClass, nFirstClass, nCrew)) {
+                if (this.ctrlFlightPlan.saveFlightPlanToDatabase()) {
+                    JOptionPane.showMessageDialog(this, "FlightPlan saved");
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error Adding FlightPlan to database!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Error Creating FlightPlan!");
+            }
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Want to exit?", "Confirm", 0);
-        
-        if(option == 0)
-                dispose();
+
+        if (option == 0) {
+            dispose();
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
+    private void cmbAircraftModelTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAircraftModelTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbAircraftModelTypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

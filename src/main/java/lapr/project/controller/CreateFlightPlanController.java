@@ -21,15 +21,9 @@ public class CreateFlightPlanController {
 
     private Project project;
     private FlightPlan flightPlan;
-    private AircraftModel aircraftType;
 
     public CreateFlightPlanController(Project proj) {
         this.project = proj;
-    }
-
-    //Falta o flightPath
-    public void showAircraftType(AircraftModel aircraftType) {
-        this.aircraftType.getType();
     }
 
     public List<Airport> getAirports() {
@@ -40,27 +34,32 @@ public class CreateFlightPlanController {
         return lst;
     }
 
-    public boolean saveFlightPlan(String name, String aircraftModel, 
-            Airport originAeroport, Airport destinationAeroport, 
+    public boolean saveFlightPlan(String name, String aircraftModel,
+            Airport originAeroport, Airport destinationAeroport,
             double normalClass, double firstClass, double crew) {
-        
+
         try {
-            this.flightPlan = new FlightPlan(name, AircraftModel.Type.valueOf(aircraftModel), 
-                originAeroport, destinationAeroport, normalClass, firstClass, crew);
-            
+            this.flightPlan = new FlightPlan(name, AircraftModel.Type.valueOf(aircraftModel),
+                    originAeroport, destinationAeroport, normalClass, firstClass, crew);
+
             this.project.addFlightPlan(flightPlan);
             return true;
         } catch (NullPointerException e) {
-            System.out.println("Error Creating New FlightPlan");
+            System.out.println("Error Creating New FlightPlan > " + e);
         }
-        
-        
+
         return true;
     }
 
-    public void saveFlightPlanToDatabase() {
+    public boolean saveFlightPlanToDatabase() {
         DatabaseModel db = new DatabaseModel();
-        db.addFlightPlan(flightPlan);
+        try {
+            db.addFlightPlan(flightPlan);
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error adding to database > " + e);
+            return false;
+        }
     }
 
 }
