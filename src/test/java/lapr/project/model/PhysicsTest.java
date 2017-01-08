@@ -442,34 +442,34 @@ public class PhysicsTest {
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
-    /**
-     * Test of aircraftClimb method, of class Physics.
-     */
-    @Test
-    public void testAircraftClimb() {
-        System.out.println("aircraftClimb");
-
-        Project project = listProjects.get(0);
-        System.out.println(project.getDescription());
-        Aircraft aircraft = new Aircraft();
-        aircraft.setDescription("aaa");
-        aircraft.setNumberElementsCrew(0);
-        aircraft.setNumberFirstClass(0);
-        aircraft.setNumberNormalClass(0);
-        aircraft.setModel(project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
-        
-        project.getAircraftRegister().addAircraft(aircraft);
-        System.out.print(project.getAircraftRegister().getAircraftRegister().values().toString());
-
-        Segment segment = null;
-
-        double expResult = 0;
-        expResult = 8499;
-        System.out.println("\n"+expResult);
-        double result = Physics.aircraftClimb(aircraft, segment);
-        System.out.println("\naaaa:" +result);
-        
-        assertEquals(expResult, result, 500);
+//    /**
+//     * Test of aircraftClimb method, of class Physics.
+//     */
+//    @Test
+//    public void testAircraftClimb() {
+//        System.out.println("aircraftClimb");
+//
+//        Project project = listProjects.get(0);
+//        System.out.println(project.getDescription());
+//        Aircraft aircraft = new Aircraft();
+//        aircraft.setDescription("aaa");
+//        aircraft.setNumberElementsCrew(0);
+//        aircraft.setNumberFirstClass(0);
+//        aircraft.setNumberNormalClass(0);
+//        aircraft.setModel(project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+//        
+//        project.getAircraftRegister().addAircraft(aircraft);
+//        System.out.print(project.getAircraftRegister().getAircraftRegister().values().toString());
+//
+//        Segment segment = null;
+//
+//        double expResult = 0;
+//        expResult = 8499;
+//        System.out.println("\n"+expResult);
+//        double result = Physics.aircraftClimb(aircraft, segment);
+//        System.out.println("\naaaa:" +result);
+//        
+//        assertEquals(expResult, result, 500);
 
     }
 
@@ -599,4 +599,4 @@ public class PhysicsTest {
 //        fail("The test case is a prototype.");
 //    }
 
-}
+

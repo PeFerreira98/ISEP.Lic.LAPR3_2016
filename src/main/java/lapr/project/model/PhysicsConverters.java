@@ -52,4 +52,9 @@ public class PhysicsConverters {
 
         return liters * 0.804;
     }
+    
+    public static double knotToKmsPerHourConverter(double speed){
+       return speed*1.852;
+    }
+    
 }
