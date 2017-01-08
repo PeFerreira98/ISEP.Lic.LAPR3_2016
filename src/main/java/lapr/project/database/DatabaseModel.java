@@ -14,6 +14,7 @@ import lapr.project.model.*;
 import lapr.project.model.Flight.*;
 import lapr.project.model.network.*;
 import oracle.jdbc.OracleTypes;
+
 /**
  *
  * @author zero_
@@ -125,15 +126,16 @@ public class DatabaseModel {
 
     public void addSegment(Segment segment) {
         try {
-            this.st.execute("insert into Segment(id, bNode, eNode, direction, windDirection, windSpeed, distance, project_name) "
+
+            this.st.execute("insert into Segment(name, direction, wind_intensity, wind_Direction, node_start, node_end, project_name) "
                     + "values ('"
                     + segment.getId() + "', '"
-                    + segment.getBeginningNode() + "', '"
-                    + segment.getEndNode() + "', '"
-                    + segment.getDirection() + "', '"
-                    + segment.getWind_speed() + "', '"
-                    + segment.getDistance() + "', '"
-                    + this.project.getName() + "')'");
+                    + segment.getDirection() + "', "
+                    + segment.getWind_speed() + ", "
+                    + segment.getWind_direction() + ", '"
+                    + segment.getBeginningNode().getName() + "', '"
+                    + segment.getEndNode().getName() + "', '"
+                    + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -145,7 +147,7 @@ public class DatabaseModel {
         List<Segment> lst_seg = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_name= " + this.project.getName());
+            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_name= '" + this.project.getName() + "'");
 
             while (rs.next()) {
                 Node n1 = getNode(rs.getInt("Node_Id_Start"));
@@ -179,27 +181,27 @@ public class DatabaseModel {
                     + air.getId() + "', '"
                     + air.getDescription() + "', '"
                     + air.getMaker() + "', '"
-                    + air.getType().toString() + "', '"
-                    + air.getNumberMotors() + "', '"
+                    + air.getType().toString() + "', "
+                    + air.getNumberMotors() + ", '"
                     + air.getMotor() + "', '"
-                    + air.getMotorType().toString() + "', '"
-                    + air.getCruiseAltitude() + "', '"
-                    + air.getCruiseSpeed() + "', '"
-                    + air.getTSFC() + "', '"
-                    + air.getLapseRateFactor() + "', '"
-                    + air.getThrust_0() + "', '"
-                    + air.getThrustMaxSpeed() + "', '"
-                    + air.getMaxSpeed() + "', '"
-                    + air.getEmptyWeight() + "', '"
-                    + air.getMTOW() + "', '"
-                    + air.getMaxPayload() + "', '"
-                    + air.getFuelCapacity() + "', '"
-                    + air.getVMO() + "', '"
-                    + air.getMMO() + "', '"
-                    + air.getWingArea() + "', '"
-                    + air.getWingSpan() + "', '"
-                    + air.getAspectRatio() + "', '"
-                    + air.getE() + "', '"
+                    + air.getMotorType().toString() + "', "
+                    + air.getCruiseAltitude() + ", "
+                    + air.getCruiseSpeed() + ", "
+                    + air.getTSFC() + ", "
+                    + air.getLapseRateFactor() + ", "
+                    + air.getThrust_0() + ", "
+                    + air.getThrustMaxSpeed() + ", "
+                    + air.getMaxSpeed() + ", "
+                    + air.getEmptyWeight() + ", "
+                    + air.getMTOW() + ", "
+                    + air.getMaxPayload() + ", "
+                    + air.getFuelCapacity() + ", "
+                    + air.getVMO() + ", "
+                    + air.getMMO() + ", "
+                    + air.getWingArea() + ", "
+                    + air.getWingSpan() + ", "
+                    + air.getAspectRatio() + ", "
+                    + air.getE() + ", '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -218,10 +220,10 @@ public class DatabaseModel {
             this.st.execute("insert into Aircraft(id, model, company, numberFirstClass, numberNormalClass, numberElementsCrew, project_id) "
                     + "values ('"
                     + air.getId() + "', '"
-                    + air.getModel().getId() + "', '"
-                    + air.getNumberFirstClass() + "', '"
-                    + air.getNumberNormalClass() + "', '"
-                    + air.getNumberElementsCrew() + "','"
+                    + air.getModel().getId() + "', "
+                    + air.getNumberFirstClass() + ", "
+                    + air.getNumberNormalClass() + ", "
+                    + air.getNumberElementsCrew() + ", '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -233,11 +235,11 @@ public class DatabaseModel {
     public void editAircraft(Aircraft air, String company, int nrFirstClass, int nrNormalClass, int nrElementsCrew) {
         String idAircraft = air.getId();
         try {
-            this.st.execute("UPDATE Aircraft set company = " + company
-                    + " && numberFirstClass = " + nrFirstClass
+            this.st.execute("UPDATE Aircraft set company = '" + company
+                    + "' && numberFirstClass = " + nrFirstClass
                     + " && numberNormalClass = " + nrNormalClass
                     + " && numberElements = " + nrElementsCrew
-                    + " where id = " + idAircraft);
+                    + " where id = '" + idAircraft + "'");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -251,14 +253,15 @@ public class DatabaseModel {
      */
     public void addAirport(Airport ap) {
         try {
-            this.st.execute("insert into Airport(IATAcode, name, town, country, latitude, longitude, altitude, project_name) "
-                    + "values ('" + ap.getIATAcode() + "', '"
+            this.st.execute("insert into Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name)"
+                    + "values ('" 
+                    + ap.getIATAcode() + "', '"
                     + ap.getName() + "', '"
                     + ap.getTown() + "', '"
-                    + ap.getCountry() + "', '"
-                    + ap.getLocation().getLatitude() + "', '"
-                    + ap.getLocation().getLongitude() + "', '"
-                    + ap.getLocation().getAltitude() + "', '"
+                    + ap.getCountry() + "', "
+                    + ap.getLocation().getLatitude() + ", "
+                    + ap.getLocation().getLongitude() + ", "
+                    + ap.getLocation().getAltitude() + ", '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,7 +270,6 @@ public class DatabaseModel {
         //return getLastInsertedProjectCod();
     }
 
-    
     //FIX_ME falta adicionar esta tabela à base de dados (falta add FK project)
     public void addFlightPlan(FlightPlan fp) {
         try {
@@ -275,12 +277,12 @@ public class DatabaseModel {
                     + "values ('" + fp.getName() + "', '"
                     + fp.getAircraftType().toString() + "', '"
                     + fp.getOrigin().getIATAcode() + "', '"
-                    + fp.getDest().getIATAcode()+ "', '"
+                    + fp.getDest().getIATAcode() + "', '"
                     + fp.getnNormalClass() + "', '"
                     + fp.getnFirstClass() + "', '"
                     + fp.getnCrew() + "', '"
             );
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         //closeDB();
@@ -290,7 +292,7 @@ public class DatabaseModel {
         List<Airport> lst_airports = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM AIRPORT WHERE project_name =" + this.project.getName());
+            this.rs = this.st.executeQuery("SELECT * FROM AIRPORT WHERE project_name = '" + this.project.getName() + "'");
             while (rs.next()) {
                 //FIX_ME falta saber o que fazer com Location
 //                Airport a = new Airport ();
@@ -314,7 +316,7 @@ public class DatabaseModel {
         List<Node> lst_nodes = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM NODE WHERE project_name =" + p.getName());
+            this.rs = this.st.executeQuery("SELECT * FROM NODE WHERE project_name = '" + p.getName() + "'");
             while (rs.next()) {
                 Node n = new Node(rs.getString("node_name"),
                         rs.getDouble("latitude"),
@@ -338,7 +340,7 @@ public class DatabaseModel {
             st2 = con.createStatement();
             rs2 = st2.executeQuery("SELECT * FROM NODE "
                     + "WHERE name = " + id_node
-                    + " AND project_name = " + this.project.getName());
+                    + " AND project_name = '" + this.project.getName() + "'");
 
             n = new Node(rs2.getString("name"),
                     rs2.getDouble("latitude"),
@@ -353,12 +355,12 @@ public class DatabaseModel {
 
     public void addNode(Node n) {
         try {
-            this.st.execute("inser into Node(id, latitude, longitude, project_name)"
+            this.st.execute("insert into Node(name, latitude, longitude, project_name)"
                     + "values ('"
-                    + n.getName() + "', '"
-                    + n.getLatitude() + "', '"
-                    + n.getLongitude() + "', '"
-                    + this.project.getName() + "')'");
+                    + n.getName() + "', "
+                    + n.getLatitude() + ","
+                    + n.getLongitude() + ", '"
+                    + this.project.getName() + "')");
 //            "')'"
 //            + "WHERE project_id = " + p.getId());
         } catch (SQLException ex) {
@@ -371,15 +373,15 @@ public class DatabaseModel {
         if (f != null) {
             try {
                 this.st.execute("inser into Flight(Type, Departure_day,Minimun_stop,Scheduled_arrival, Flight_plan,Project_name,Airport_id_Start,Airport_id_End, Aircraft_id) "
-                        + "values (" + f.getType() + "', '"
-                        + f.getDeparture_day() + "', '"
-                        + f.getMinimun_stop() + "', '"
-                        + f.getScheduled_arrival() + "', '"
-                        + f.getFlight_plan() + "', '"
+                        + "values ('" + f.getType() + "', "
+                        + f.getDeparture_day() + ", "
+                        + f.getMinimun_stop() + ", "
+                        + f.getScheduled_arrival() + ", "
+                        + f.getFlight_plan() + ", '"
                         + this.project.getName() + "', '"
                         + f.getFlight_plan().get(0).getBeginningNode() + "', '"
                         + f.getFlight_plan().get(f.getFlight_plan().size()).getEndNode() + "', '"
-                        + f.getAircraft().getId() + "')'");
+                        + f.getAircraft().getId() + "')");
             } catch (SQLException ex) {
                 Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -421,8 +423,8 @@ public class DatabaseModel {
         List<Flight> lst_Flight = new ArrayList<>();
         try {
             this.rs = this.st.executeQuery("SELECT F.*, A.description FROM FLIgHT F, Aircraft A "
-                    + "WHERE Fliht.project_name = " + this.project.getName()
-                    + " And F.aircraft_id = A.aircraft_id");
+                    + "WHERE Fliht.project_name = '" + this.project.getName()
+                    + "' And F.aircraft_id = A.aircraft_id");
 
             while (rs.next()) {
                 int id_flight = rs.getInt("id_flight");
