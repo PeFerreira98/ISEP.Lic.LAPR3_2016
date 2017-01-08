@@ -30,67 +30,124 @@ public class OpenProjectUI extends javax.swing.JFrame {
         inicializar();
         super.setVisible(true);
     }
-    
-    private void initAirportsList(){
-        List lst_a = this.ctr_OpenP.getAirportsNames();
-        
-        
-        if (lst_a == null) {
+    private void initAirportsList() {
+        try {
+            List lst_a = this.ctr_OpenP.getAirportsNames();
+
+            int tam = lst_a.size();
+            final String[] a = new String[tam];
+            for (int i = 0; i < tam; i++) {
+                a[i] = lst_a.get(i).toString();
+            }
+
+            DefaultListModel lm = new DefaultListModel() {
+                public int getSize() {
+                    return a.length;
+                }
+
+                public Object getElementAt(int i) {
+                    return a[i];
+                }
+            };
+
+            this.lst_airports.setModel(lm);
+
+        } catch (NullPointerException ex) {
             this.lst_airports.setModel(new DefaultListModel());
 
             JOptionPane.showMessageDialog(this, "There are no existing airports.");
-
-            return;
         }
 
-        int tam = lst_a.size();
-        final String[] a = new String[tam];
-        for (int i = 0; i < tam; i++) {
-            a[i] = lst_a.get(i).toString();
-        }
-
-        DefaultListModel lm = new DefaultListModel() {
-            public int getSize() {
-                return a.length;
-            }
-
-            public Object getElementAt(int i) {
-                return a[i];
-            }
-        };
-
-        this.lst_airports.setModel(lm);
     }
-    
-    private void initAircraftsList(){
-        List lst_a = this.ctr_OpenP.getAircraftModelNames();
-        
-        
-        if (lst_a == null) {
+
+    private void initAircraftsList() {
+        try {
+            List lst_a = this.ctr_OpenP.getAircraftModelNames();
+
+            int tam = lst_a.size();
+            final String[] a = new String[tam];
+            for (int i = 0; i < tam; i++) {
+                a[i] = lst_a.get(i).toString();
+            }
+
+            DefaultListModel lm = new DefaultListModel() {
+                public int getSize() {
+                    return a.length;
+                }
+
+                public Object getElementAt(int i) {
+                    return a[i];
+                }
+            };
+
+            this.lst_aircraftModels.setModel(lm);
+
+        } catch (NullPointerException ex) {
             this.lst_aircraftModels.setModel(new DefaultListModel());
 
-            JOptionPane.showMessageDialog(this, "There are no existing aircraft Models.");
-
-            return;
+            //JOptionPane.showMessageDialog(this, "There are no existing aircraft Models.");
         }
 
-        int tam = lst_a.size();
-        final String[] a = new String[tam];
-        for (int i = 0; i < tam; i++) {
-            a[i] = lst_a.get(i).toString();
+    }
+
+    private void initNodeList() {
+
+        try {
+            List lst_a = this.ctr_OpenP.getNodesNames();
+
+            int tam = lst_a.size();
+            final String[] a = new String[tam];
+            for (int i = 0; i < tam; i++) {
+                a[i] = lst_a.get(i).toString();
+            }
+
+            DefaultListModel lm = new DefaultListModel() {
+                public int getSize() {
+                    return a.length;
+                }
+
+                public Object getElementAt(int i) {
+                    return a[i];
+                }
+            };
+
+            this.lst_Nodes.setModel(lm);
+
+        } catch (NullPointerException ex) {
+            this.lst_Nodes.setModel(new DefaultListModel());
+
+            //JOptionPane.showMessageDialog(this, "There are no existing nodes.");
         }
+    }
 
-        DefaultListModel lm = new DefaultListModel() {
-            public int getSize() {
-                return a.length;
+    private void initSegmentsList() {
+
+        try {
+            List lst_a = this.ctr_OpenP.getSegmentNames();
+
+            int tam = lst_a.size();
+            final String[] a = new String[tam];
+            for (int i = 0; i < tam; i++) {
+                a[i] = lst_a.get(i).toString();
             }
 
-            public Object getElementAt(int i) {
-                return a[i];
-            }
-        };
+            DefaultListModel lm = new DefaultListModel() {
+                public int getSize() {
+                    return a.length;
+                }
 
-        this.lst_aircraftModels.setModel(lm);
+                public Object getElementAt(int i) {
+                    return a[i];
+                }
+            };
+
+            this.lst_Se6ments.setModel(lm);
+
+        } catch (NullPointerException ex) {
+            this.lst_Se6ments.setModel(new DefaultListModel());
+
+            //JOptionPane.showMessageDialog(this, "There are no existing segments.");
+        }
     }
     
     private void initFlightPlansList(){
@@ -123,66 +180,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
         this.lst_flightplans.setModel(lm);
     }
     
-    private void initNodeList(){
-        List lst_a = this.ctr_OpenP.getNodesNames();
-        
-        if (lst_a == null) {
-            this.lst_Nodes.setModel(new DefaultListModel());
 
-            JOptionPane.showMessageDialog(this, "There are no existing nodes.");
-
-            return;
-        }
-
-        int tam = lst_a.size();
-        final String[] a = new String[tam];
-        for (int i = 0; i < tam; i++) {
-            a[i] = lst_a.get(i).toString();
-        }
-
-        DefaultListModel lm = new DefaultListModel() {
-            public int getSize() {
-                return a.length;
-            }
-
-            public Object getElementAt(int i) {
-                return a[i];
-            }
-        };
-
-        this.lst_Nodes.setModel(lm);
-    }
-    
-    private void initSegmentsList(){
-        List lst_a = this.ctr_OpenP.getSegmentNames();
-        
-        if (lst_a == null) {
-            this.lst_Se6ments.setModel(new DefaultListModel());
-
-            JOptionPane.showMessageDialog(this, "There are no existing segments.");
-
-            return;
-        }
-
-        int tam = lst_a.size();
-        final String[] a = new String[tam];
-        for (int i = 0; i < tam; i++) {
-            a[i] = lst_a.get(i).toString();
-        }
-
-        DefaultListModel lm = new DefaultListModel() {
-            public int getSize() {
-                return a.length;
-            }
-
-            public Object getElementAt(int i) {
-                return a[i];
-            }
-        };
-
-        this.lst_Se6ments.setModel(lm);
-    }
-    
     private void inicializar() {
        initAirportsList();
        initAircraftsList();
@@ -376,7 +374,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       new CreateFlightUI(project);
+       new CreateFlighPlantUI(project);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

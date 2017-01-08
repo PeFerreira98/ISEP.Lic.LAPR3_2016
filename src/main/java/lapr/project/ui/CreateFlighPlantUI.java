@@ -9,17 +9,20 @@ import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import lapr.project.controller.CreateFlightController;
+import lapr.project.controller.CreateFlightPlanController;
 import lapr.project.model.Airport;
 import lapr.project.model.Project;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
 
 /**
  *
  * @author Tiago
  */
-public class CreateFlightUI extends javax.swing.JFrame {
+public class CreateFlighPlantUI extends javax.swing.JFrame {
 
-    private CreateFlightController ctrlFlightPlan;
+    private CreateFlightPlanController ctrlFlightPlan;
     private Project project;
     private ArrayList<Airport> lstAirports = new ArrayList<>();
     
@@ -27,10 +30,10 @@ public class CreateFlightUI extends javax.swing.JFrame {
      * Creates new form CreateFlightUI
      * @param p
      */
-    public CreateFlightUI(Project p) {
+    public CreateFlighPlantUI(Project p) {
         
         this.project = p;
-        this.ctrlFlightPlan = new CreateFlightController(p);
+        this.ctrlFlightPlan = new CreateFlightPlanController(p);
         initComponents();
         initLstAirports();
         super.setVisible(true);

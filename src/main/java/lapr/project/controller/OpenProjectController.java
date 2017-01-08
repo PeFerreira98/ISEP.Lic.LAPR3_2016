@@ -7,6 +7,7 @@ package lapr.project.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import lapr.project.database.DatabaseModel;
 import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
@@ -61,6 +62,46 @@ public class OpenProjectController {
     }
 
     public List<String> getSegmentNames() {
+        List<String> lst = new ArrayList<>();
+        for (Segment segment : this.p.getAirNetwork().getMapSegment().values()) {
+            lst.add(segment.getId());
+        }
+        return lst;
+    }
+    
+    
+    
+    public List<Airport> getAirportsDB(){
+        List<Airport> lst = new ArrayList<>();
+        DatabaseModel db = new DatabaseModel(this.p);
+        lst = db.getListAirports();
+        return lst;
+    }
+    
+    public List<String> getAircraftModelDB(){
+        List<String> lst = new ArrayList<>();
+        DatabaseModel db = new DatabaseModel(this.p);
+        
+        return lst;
+    }
+    
+    public List<FlightPlan> getFlightPlansDB() {
+        List<FlightPlan> lst = new ArrayList<>();
+        
+        DatabaseModel db = new DatabaseModel(this.p);
+        //lst = db.getListFlightPlans(this.p);
+        return lst;
+    }
+    
+    public List<Node> getNodesDB(){
+        List<Node> lst = new ArrayList<>();
+        
+        DatabaseModel db = new DatabaseModel(this.p);
+        lst = db.getListNodes(this.p);
+        return lst;
+    }
+    
+    public List<String> getSegmentDB(){
         List<String> lst = new ArrayList<>();
         for (Segment segment : this.p.getAirNetwork().getMapSegment().values()) {
             lst.add(segment.getId());

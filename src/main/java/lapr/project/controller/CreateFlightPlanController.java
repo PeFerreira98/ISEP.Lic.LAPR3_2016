@@ -17,13 +17,13 @@ import lapr.project.model.Project;
  *
  * @author Tiago
  */
-public class CreateFlightController {
+public class CreateFlightPlanController {
 
     private Project project;
     private FlightPlan flightPlan;
     private AircraftModel aircraftType;
 
-    public CreateFlightController(Project proj) {
+    public CreateFlightPlanController(Project proj) {
         this.project = proj;
     }
 
