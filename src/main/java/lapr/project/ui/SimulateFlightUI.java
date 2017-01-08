@@ -13,7 +13,7 @@ import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.SimulateFlightController;
-import lapr.project.model.Airport;
+import lapr.project.model.AircraftModel;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
@@ -26,37 +26,33 @@ public class SimulateFlightUI extends javax.swing.JFrame {
 
     private Project project;
     private SimulateFlightController ctrlSimulation;
-    private ArrayList<FlightPlan> flightPlansList;
-    
+
     /**
      * Creates new form SimulateFlightUI
+     *
      * @param p
      */
     public SimulateFlightUI(Project p) {
         this.project = p;
         this.ctrlSimulation = new SimulateFlightController(p);
-        this.flightPlansList = new ArrayList<>();
         initComponents();
         initFlightPlansList();
         super.setVisible(true);
     }
-    
-    private void initFlightPlansList(){
-        
+
+    private void initFlightPlansList() {
+
         if (this.project.getFlightPlanRegister().getFlightPlansList().isEmpty()) {
             this.lstFlightPlans.setModel(new DefaultListModel());
-            JOptionPane.showMessageDialog(this, "There are no existing airports.");
+            JOptionPane.showMessageDialog(this, "There are no existing FlightPlans.");
+        }
 
-            return;
-        }
-        
-        for(FlightPlan fp : this.project.getFlightPlanRegister().getFlightPlansList().values()){
-                    this.flightPlansList.add(fp);
-        }
-        int tam = flightPlansList.size();
+        this.ctrlSimulation.initializeFlightPlansList();
+
+        int tam = this.ctrlSimulation.getFlightPlansListSize();
         final String[] a = new String[tam];
         for (int i = 0; i < tam; i++) {
-            a[i] = this.flightPlansList.get(i).getName();
+            a[i] = this.ctrlSimulation.getFlightPlanNameByIndex(i);
         }
 
         DefaultListModel lm = new DefaultListModel() {
@@ -72,6 +68,34 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         this.lstFlightPlans.setModel(lm);
     }
 
+    private void initAircraftModelList(AircraftModel.Type aircraftType) {
+
+        if (this.project.getAircraftModelRegister().getAircraftsByType(aircraftType).isEmpty()) {
+            this.lstAircraftModels.setModel(new DefaultListModel());
+            JOptionPane.showMessageDialog(this, "There are no existing AircraftModels with this type.");
+        }
+
+        this.ctrlSimulation.initializeaircraftModelsList(aircraftType);
+
+        int tam = this.ctrlSimulation.getaircraftModelsListSize();
+        final String[] a = new String[tam];
+        for (int i = 0; i < tam; i++) {
+            a[i] = this.ctrlSimulation.getaircraftModelIdByIndex(i);
+        }
+
+        DefaultListModel lm = new DefaultListModel() {
+            public int getSize() {
+                return a.length;
+            }
+
+            public Object getElementAt(int i) {
+                return a[i];
+            }
+        };
+
+        this.lstAircraftModels.setModel(lm);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,18 +105,13 @@ public class SimulateFlightUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstFlightPlans = new javax.swing.JList<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtFirst = new javax.swing.JTextField();
-        txtNormal = new javax.swing.JTextField();
-        txtCrew = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -103,56 +122,40 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         btnCancel = new javax.swing.JButton();
         btnOk = new javax.swing.JButton();
+        txtFirst = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtNormal = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtCrew = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lstAircraftModels = new javax.swing.JList<>();
+        jLabel7 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jButton1.setText("jButton1");
 
-        jLabel1.setText("Flight plans:");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
+        jLabel1.setText("FlightPlans:");
+
+        lstFlightPlans.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(lstFlightPlans);
 
         jLabel8.setText("Simulate flight");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createCompoundBorder(), null));
 
-        jLabel2.setText("Number First Class:");
-
-        jLabel3.setText("Number Normal Class:");
-
-        jLabel4.setText("Number Crew:");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtFirst, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(txtNormal, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(txtCrew))
-                .addContainerGap(27, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtFirst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtCrew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jLabel9.setText("Cargo:");
@@ -174,7 +177,7 @@ public class SimulateFlightUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtFuel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel11)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -192,7 +195,7 @@ public class SimulateFlightUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(txtFuel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fastest path", "Shortest path", "Less energy consuption path" }));
@@ -218,38 +221,74 @@ public class SimulateFlightUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText("Number First Class:");
+
+        jLabel3.setText("Number Normal Class:");
+
+        jLabel4.setText("Number Crew:");
+
+        lstAircraftModels.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(lstAircraftModels);
+
+        jLabel7.setText("Aircraft Models:");
+
+        jButton2.setText("Show Type");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel8)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(28, 28, 28)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(53, 53, 53)))
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBox1, 0, 1, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtFirst, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                                    .addComponent(txtNormal)
+                                    .addComponent(txtCrew)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnCancel))
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(34, 34, 34)
                         .addComponent(jLabel5))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancel))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 49, Short.MAX_VALUE))))
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,24 +300,45 @@ public class SimulateFlightUI extends javax.swing.JFrame {
                         .addComponent(jLabel5))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addGap(53, 53, 53)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(41, 41, 41)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(txtFirst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel2))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(txtNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel3))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(txtCrew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6))))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOk)
-                    .addComponent(btnCancel))
-                .addContainerGap(14, Short.MAX_VALUE))
+                                    .addComponent(jLabel6))
+                                .addGap(16, 16, 16)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnOk)
+                                    .addComponent(btnCancel)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(34, 34, 34))
         );
 
         pack();
@@ -288,58 +348,68 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    
-    private void callResultsUI(double numberNormal, double numberFirst, double numberCrew){
-        if(!this.lstFlightPlans.isSelectionEmpty()){
-                
-            FlightPlan fp = this.flightPlansList.get(this.lstFlightPlans.getSelectedIndex());
-                
-            if(!this.ctrlSimulation.checkMax(fp, numberNormal, numberFirst, numberCrew)){
+    private void callResultsUI(double numberNormal, double numberFirst, double numberCrew) {
+        if (!this.lstFlightPlans.isSelectionEmpty()) {
+
+            FlightPlan fp = this.ctrlSimulation.getFlightPlanByIndex(this.lstFlightPlans.getSelectedIndex());
+
+            if (!this.ctrlSimulation.checkMax(fp, numberNormal, numberFirst, numberCrew)) {
                 JOptionPane.showMessageDialog(this, "Limit reached: \n"
-                            + " Max normal class: " + fp.getnNormalClass()
-                    + "\nMax first class: " + fp.getnFirstClass()
-                    + "\nMax crew: " + fp.getnCrew());
-            }else{
+                        + " Max normal class: " + fp.getnNormalClass()
+                        + "\nMax first class: " + fp.getnFirstClass()
+                        + "\nMax crew: " + fp.getnCrew());
+            } else {
                 int option = this.jComboBox1.getSelectedIndex();
-                
+
                 Map<Double, LinkedList<Node>> res = this.ctrlSimulation.getPathByAlgorithm(fp, option);
 
                 LinkedList<Node> path = res.entrySet().iterator().next().getValue();
                 double energy = this.ctrlSimulation.getEnergyByPath(res.entrySet().iterator().next().getValue());
                 double travelingTime = res.entrySet().iterator().next().getKey();
 
-                 new SimulationResultsUI(path, travelingTime, energy);
+                new SimulationResultsUI(path, travelingTime, energy);
             }
-       }else{
-                JOptionPane.showMessageDialog(this, "Select a plan!","Error",1);
-            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Select a plan!", "Error", 1);
+        }
     }
-    
+
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        try{
+        try {
             int numberNormal = parseInt(txtNormal.getText());
             int numberFirst = parseInt(txtFirst.getText());
             int numberCrew = parseInt(txtCrew.getText());
             int fuel = parseInt(txtFuel.getText());
             int cargo = parseInt(txtCargo.getText());
-            
+
             callResultsUI(numberNormal, numberFirst, numberCrew);
-            
-        }catch(NumberFormatException ex){
-             JOptionPane.showMessageDialog(this, "Insert only positive numbers","Error",1);
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Insert only positive numbers", "Error", 1);
         }
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Want to exit?");
-        
-        if(option == 0)
-                dispose();
+        int option = JOptionPane.showConfirmDialog(this, "Want to exit?", "Confirm", 0);
+
+        if (option == 0) {
+            dispose();
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (!this.lstFlightPlans.isSelectionEmpty()) {
+            initAircraftModelList(this.ctrlSimulation.getFlightPlanByIndex(this.lstFlightPlans.getSelectedIndex()).getAircraftType());
+        } else {
+            JOptionPane.showMessageDialog(this, "Select a FlightPlan!", "Error", 1);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnOk;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -349,11 +419,14 @@ public class SimulateFlightUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> lstAircraftModels;
     private javax.swing.JList<String> lstFlightPlans;
     private javax.swing.JTextField txtCargo;
     private javax.swing.JTextField txtCrew;

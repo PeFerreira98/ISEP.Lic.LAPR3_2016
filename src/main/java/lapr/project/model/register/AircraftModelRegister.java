@@ -5,6 +5,7 @@
  */
 package lapr.project.model.register;
 
+import java.awt.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -50,7 +51,19 @@ public class AircraftModelRegister {
 
         return null;
     }
-
+    
+    public Map<String, AircraftModel> getAircraftsByType(AircraftModel.Type aircraftType) {
+        Map<String, AircraftModel> aircraftModelTypeMap = new LinkedHashMap<>();
+        
+        for (AircraftModel aircraftModel : this.aircraftModelMap.values()) {
+            if (aircraftType.equals(aircraftModel.getType())) {
+                aircraftModelTypeMap.put(aircraftModel.getId(), aircraftModel);
+            }
+        }
+        
+        return aircraftModelTypeMap;
+    }
+    
     public Map<String, AircraftModel> getAircraftModelMap() {
         return aircraftModelMap;
     }

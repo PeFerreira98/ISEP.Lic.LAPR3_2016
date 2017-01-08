@@ -18,21 +18,22 @@ import lapr.project.model.network.Segment;
  */
 public class SimulationResultsUI extends javax.swing.JFrame {
 
-    private LinkedList<Node> path;    
+    private LinkedList<Node> path;
     private double time;
     private double energy;
-    
+
     /**
      * Creates new form SimulationResultsUI
+     *
      * @param path
      * @param travelingTime
      * @param energy
      */
-    public SimulationResultsUI( LinkedList<Node> path, double travelingTime, double energy) {
+    public SimulationResultsUI(LinkedList<Node> path, double travelingTime, double energy) {
         this.path = path;
-        this.time= travelingTime;
+        this.time = travelingTime;
         this.energy = energy;
-        
+
         initComponents();
     }
 
@@ -153,14 +154,15 @@ public class SimulationResultsUI extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO metodo de gravar os dados na base de dados
-        
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Want to exit?");
-        
-        if(option == 0)
-                dispose();
+
+        if (option == 0) {
+            dispose();
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -5,9 +5,11 @@
  */
 package lapr.project.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import lapr.project.model.AircraftModel;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
@@ -19,10 +21,50 @@ import lapr.project.model.network.Segment;
  */
 public class SimulateFlightController {
     
-    private Project project; 
+    private Project project;
+    private ArrayList<FlightPlan> flightPlansList;
+    private ArrayList<AircraftModel> aircraftModelsList;
         
     public SimulateFlightController(Project p){
         this.project = p;
+        this.flightPlansList = new ArrayList<>();
+        this.aircraftModelsList = new ArrayList<>();
+    }
+    
+    public void initializeFlightPlansList(){
+        for (FlightPlan fp : this.project.getFlightPlanRegister().getFlightPlansList().values()) {
+            this.flightPlansList.add(fp);
+        }
+    }
+    
+    public int getFlightPlansListSize(){
+        return this.flightPlansList.size();
+    }
+    
+    public String getFlightPlanNameByIndex(int index){
+        return this.flightPlansList.get(index).getName();
+    }
+    
+    public FlightPlan getFlightPlanByIndex(int index){
+        return this.flightPlansList.get(index);
+    }
+    
+    public void initializeaircraftModelsList(AircraftModel.Type aircraftType){
+        for (AircraftModel aircraftModel : this.project.getAircraftModelRegister().getAircraftsByType(aircraftType).values()) {
+            this.aircraftModelsList.add(aircraftModel);
+        }
+    }
+    
+    public int getaircraftModelsListSize(){
+        return this.aircraftModelsList.size();
+    }
+    
+    public String getaircraftModelIdByIndex(int index){
+        return this.aircraftModelsList.get(index).getId();
+    }
+    
+    public AircraftModel getaircraftModelsByIndex(int index){
+        return this.aircraftModelsList.get(index);
     }
     
     public Map<Double, LinkedList<Node>> getPathByAlgorithm(FlightPlan fp, int algorithm){
