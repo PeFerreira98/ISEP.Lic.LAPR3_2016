@@ -90,7 +90,7 @@ public class DatabaseModel {
 
     public void addProject(Project project) {
         try {
-            this.rs = this.st.executeQuery("insert into Project(name, description) "
+            this.st.execute("insert into Project(name, description) "
                     + "values ('"
                     + project.getName() + "', '"
                     + project.getDescription() + "')");
@@ -98,16 +98,17 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        project.getAirNetwork().getMapNodes().values().stream().forEach((n) -> {
+            addNode(n);
+        });
         project.getAirNetwork().getMapSegment().values().stream().forEach((s) -> {
             addSegment(s);
         });
-        project.getAirNetwork().getMapNodes().values().stream().forEach((n) -> {
-            //openDB();
-            addNode(n);
-        });
+
 //        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
 //            //openDB();
-//            addAirport(airport);
+//            addAirport2(airport);
 //        });
 //        project.getAircraftRegister().getAircraftRegister().values().stream().forEach((aircraft) -> {
 //            //openDB();
@@ -122,26 +123,50 @@ public class DatabaseModel {
 //            addFlight(f);
 //        });
         closeDB();
-        //return getLastInsertedProjectCod();
     }
 
+    /**
+     * add segment to DB
+     * @param segment 
+     */
     public void addSegment(Segment segment) {
         try {
-
             this.st.execute("insert into Segment(name, direction, wind_intensity, wind_Direction, node_start, node_end, project_name) "
                     + "values ('"
-                    + segment.getId() + "', "
-                    + 2 + ", "
-                    + segment.getWind_speed() + ", "
-                    + /*segment.getWind_direction()*/ 2 + ", '"
-                    + segment.getBeginningNode().getName() + "', '"
-                    + segment.getEndNode().getName() + "', '"
+                    + segment.getId() + "','"
+                    + segment.getDirection() + "',"
+                    + segment.getWind_speed() + ","
+                    + segment.getWind_direction() + ","
+                    + getNodeIdByName(segment.getBeginningNode().getName()) + ","
+                    + getNodeIdByName(segment.getEndNode().getName()) + ", '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
-    
+
+    /**
+     * search the id that only DB knows
+     *
+     * @param name
+     * @return id
+     */
+    public int getNodeIdByName(String name) {
+        int id = 0;
+        try {
+            this.rs = this.st.executeQuery("SELECT * FROM NODE "
+                    + "WHERE name = '" + name + "' AND "
+                    + " project_name = '" + this.project.getName() + "'");
+            while (rs.next()) {
+                id = this.rs.getInt("node_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+
     public List<Segment> getSegments(/*Project p*/) {
         List<Segment> lst_seg = new ArrayList<>();
 
@@ -149,15 +174,15 @@ public class DatabaseModel {
             this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_name= '" + this.project.getName() + "'");
 
             while (rs.next()) {
-                Node n1 = getNode(rs.getInt("Node_Id_Start"));
-                Node n2 = getNode(rs.getInt("Node_Id_End"));
-                Segment s = new Segment(rs.getString("Segment_name"),
+                Node n1 = getNode(rs.getInt("Node_Start"));
+                Node n2 = getNode(rs.getInt("Node_End"));
+                Segment s = new Segment(rs.getString("name"),
                         n1,
                         n2,
                         null,
                         rs.getString("direction"),
                         rs.getDouble("wind_direction"),
-                        rs.getDouble("wind_instensity"));
+                        rs.getDouble("wind_intensity"));
                 lst_seg.add(s);
             }
         } catch (SQLException ex) {
@@ -175,7 +200,7 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air) {
         try {
-            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, cruiseAltitude, cruiseSpeed, TSFC, lapseRateFactor, thrust0, thrustMaxSpeed, maxSpeed, emptyWeight, MTOW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, aspectRatio, e, project_id) "
+            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, cruiseAltitude, cruiseSpeed, TSFC, lapseRateFactor, thrust0, thrustMaxSpeed, maxSpeed, emptyWeight, MTOW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, aspectRatio, e, project_name) "
                     + "values ('"
                     + air.getId() + "', '"
                     + air.getDescription() + "', '"
@@ -184,22 +209,22 @@ public class DatabaseModel {
                     + air.getNumberMotors() + ", '"
                     + air.getMotor() + "', '"
                     + air.getMotorType().toString() + "', "
-                    + air.getCruiseAltitude() + ", "
-                    + air.getCruiseSpeed() + ", "
-                    + air.getTSFC() + ", "
-                    + air.getLapseRateFactor() + ", "
-                    + air.getThrust_0() + ", "
-                    + air.getThrustMaxSpeed() + ", "
-                    + air.getMaxSpeed() + ", "
-                    + air.getEmptyWeight() + ", "
-                    + air.getMTOW() + ", "
-                    + air.getMaxPayload() + ", "
-                    + air.getFuelCapacity() + ", "
-                    + air.getVMO() + ", "
-                    + air.getMMO() + ", "
-                    + air.getWingArea() + ", "
-                    + air.getWingSpan() + ", "
-                    + air.getAspectRatio() + ", "
+                    + air.getCruiseAltitude() + ","
+                    + air.getCruiseSpeed() + ","
+                    + air.getTSFC() + ","
+                    + air.getLapseRateFactor() + ","
+                    + air.getThrust_0() + ","
+                    + air.getThrustMaxSpeed() + ","
+                    + air.getMaxSpeed() + ","
+                    + air.getEmptyWeight() + ","
+                    + air.getMTOW() + ","
+                    + air.getMaxPayload() + ","
+                    + air.getFuelCapacity() + ","
+                    + air.getVMO() + ","
+                    + air.getMMO() + ","
+                    + air.getWingArea() + ","
+                    + air.getWingSpan() + ","
+                    + air.getAspectRatio() + ","
                     + air.getE() + ", '"
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
@@ -253,7 +278,7 @@ public class DatabaseModel {
     public void addAirport(Airport ap) {
         try {
             this.st.execute("insert into Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name)"
-                    + "values ('" 
+                    + "values ('"
                     + ap.getIATAcode() + "', '"
                     + ap.getName() + "', '"
                     + ap.getTown() + "', '"
@@ -264,6 +289,23 @@ public class DatabaseModel {
                     + this.project.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void addAirport2(Airport air) {
+        try {
+            this.st.executeQuery("INSERT INTO Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name) "
+                    + "values('"
+                    + air.getIATAcode() + "', '"
+                    + air.getName() + "', '"
+                    + air.getTown() + "', '"
+                    + air.getCountry() + "', "
+                    + air.getLocation().getLatitude() + ","
+                    + air.getLocation().getLongitude() + ","
+                    + air.getLocation().getAltitude() + ",'"
+                    + this.project.getName() + "')");
+        } catch (Exception ex) {
+
         }
     }
 
@@ -284,11 +326,12 @@ public class DatabaseModel {
         }
     }
 
-    public ArrayList<Airport> getListAirports() {
+    public List<Airport> getListAirports(Project p) {
         List<Airport> lst_airports = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM AIRPORT WHERE project_name = '" + this.project.getName() + "'");
+
+            this.rs = this.st.executeQuery("SELECT * FROM AIRPORT WHERE project_name = '" + p.getName() + "'");
             while (rs.next()) {
                 //FIX_ME falta saber o que fazer com Location
 //                Airport a = new Airport ();
@@ -297,15 +340,17 @@ public class DatabaseModel {
                 Airport a = new Airport(rs.getString("name"),
                         rs.getString("town"),
                         rs.getString("country"),
-                        rs.getString("IATAcode"));
+                        rs.getString("cod_IATA"));
+                System.out.println(a);
                 lst_airports.add(a);
+                System.out.println(lst_airports);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         closeDB();
-        return (ArrayList<Airport>) lst_airports;
+        return lst_airports;
     }
 
     public List<Node> getListNodes(Project p) {
@@ -335,12 +380,13 @@ public class DatabaseModel {
         try {
             st2 = con.createStatement();
             rs2 = st2.executeQuery("SELECT * FROM NODE "
-                    + "WHERE name = " + id_node
+                    + "WHERE node_id = " + id_node
                     + " AND project_name = '" + this.project.getName() + "'");
-
-            n = new Node(rs2.getString("name"),
-                    rs2.getDouble("latitude"),
-                    rs2.getDouble("longitude"));
+            while (rs2.next()) {
+                n = new Node(rs2.getString("name"),
+                        rs2.getDouble("latitude"),
+                        rs2.getDouble("longitude"));
+            }
 
             rs2.close();
         } catch (SQLException ex) {
@@ -384,37 +430,6 @@ public class DatabaseModel {
         }
     }
 
-//    private ArrayList<Segment> getListSegmentByFlight(int id_flight){
-//        ArrayList<Segment> lst_segment = new ArrayList<>();
-//        Statement st2;
-//        ResultSet rs2;
-//        try {
-//            
-//            st2 = con.createStatement();
-//            
-//            rs2 = st2.executeQuery("SELECT Segment.* FROM FlightPlan, Segment WHERE FlightPlan.id_fligt = " + id_flight
-//            + " AND FlightPlan.id_segment = Segment.id_segment");
-//            
-//            while(rs.next()){
-//                Node n1 = getNode(rs2.getInt("Node_Id_Start"));
-//                Node n2 = getNode(rs2.getInt("Node_Id_End"));
-//                Segment s = new Segment(rs2.getString("Segment_name"),
-//                                n1,
-//                                n2,
-//                                null,
-//                                rs2.getString("direction"),
-//                                rs2.getDouble("wind_direction"),
-//                                rs2.getDouble("wind_instensity"));
-//                lst_segment.add(s);
-//            }
-//            
-//            rs2.close();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//               
-//        return lst_segment;
-//    }
     public List<Flight> getListFlights() {
         List<Flight> lst_Flight = new ArrayList<>();
         try {
@@ -480,46 +495,44 @@ public class DatabaseModel {
         }
         return true;
     }
-    
-    
-    
-    public void deleteNodesByProject(String projectID){
-        try{
+
+    public void deleteNodesByProject(String projectID) {
+        try {
             this.st.executeQuery("DELETE FROM NODE"
-                + "WHERE project_name = '" + projectID + "'");
-        }catch(Exception ex){
+                    + "WHERE project_name = '" + projectID + "'");
+        } catch (Exception ex) {
             System.out.println("Error: deleting nodes");
         }
     }
-    
-    public void deleteSegmentsByProject(String projectID){
-        try{
-          this.st.executeQuery("DELETE FROM SEgMENT"
-                + "WHERE project_name = '" + projectID + "'");  
-        }catch(Exception ex){
+
+    public void deleteSegmentsByProject(String projectID) {
+        try {
+            this.st.executeQuery("DELETE FROM SEgMENT"
+                    + "WHERE project_name = '" + projectID + "'");
+        } catch (Exception ex) {
             System.out.println("Error: deleting segments");
         }
     }
-    
-    public void deleteAirportsByProject(String projectID){
-        try{
+
+    public void deleteAirportsByProject(String projectID) {
+        try {
             this.st.executeQuery("DELETE FROM AIRPORT"
-                + "WHERE project_name = '" + projectID + "'");
-        }catch(Exception ex){
+                    + "WHERE project_name = '" + projectID + "'");
+        } catch (Exception ex) {
             System.out.println("Error: deleting Airports");
         }
     }
-    
-    public void deleteProject(String projectID){
+
+    public void deleteProject(String projectID) {
         deleteNodesByProject(projectID);
         deleteSegmentsByProject(projectID);
         deleteAirportsByProject(projectID);
-        try{
+        try {
             this.st.executeQuery("DELETE FROM POJECT"
-                + "WHERE project_name = '" + projectID + "'");
-        }catch(Exception ex){
+                    + "WHERE project_name = '" + projectID + "'");
+        } catch (Exception ex) {
             System.out.println("Error: deleting Project");
         }
-        
+
     }
 }

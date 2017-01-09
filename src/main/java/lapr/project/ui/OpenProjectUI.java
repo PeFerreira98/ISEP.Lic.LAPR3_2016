@@ -30,10 +30,10 @@ public class OpenProjectUI extends javax.swing.JFrame {
         inicializar();
         super.setVisible(true);
     }
+    
     private void initAirportsList() {
         try {
             List lst_a = this.ctr_OpenP.getAirportsDB();
-
             int tam = lst_a.size();
             final String[] a = new String[tam];
             for (int i = 0; i < tam; i++) {
@@ -124,7 +124,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
         try {
             List lst_a = this.ctr_OpenP.getSegmentDB();
-
+            System.out.println(lst_a);
             int tam = lst_a.size();
             final String[] a = new String[tam];
             for (int i = 0; i < tam; i++) {
@@ -141,12 +141,12 @@ public class OpenProjectUI extends javax.swing.JFrame {
                 }
             };
 
-            this.lst_Se6ments.setModel(lm);
+            this.lst_Segments.setModel(lm);
 
         } catch (NullPointerException ex) {
-            this.lst_Se6ments.setModel(new DefaultListModel());
+            this.lst_Segments.setModel(new DefaultListModel());
 
-            //JOptionPane.showMessageDialog(this, "There are no existing segments.");
+            JOptionPane.showMessageDialog(this, "There are no existing segments.");
         }
     }
     
@@ -182,11 +182,11 @@ public class OpenProjectUI extends javax.swing.JFrame {
     
 
     private void inicializar() {
-       initAirportsList();
+       //initAirportsList();
        //initAircraftsList();
        //initFlightPlansList();
        initNodeList();
-       //initSegmentsList();
+       initSegmentsList();
     }
 
     /**
@@ -212,7 +212,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         lst_Nodes = new javax.swing.JList<>();
         jScrollPane5 = new javax.swing.JScrollPane();
-        lst_Se6ments = new javax.swing.JList<>();
+        lst_Segments = new javax.swing.JList<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -248,7 +248,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
         jScrollPane4.setViewportView(lst_Nodes);
 
-        jScrollPane5.setViewportView(lst_Se6ments);
+        jScrollPane5.setViewportView(lst_Segments);
 
         jLabel5.setText("Nodes");
 
@@ -408,7 +408,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_proj_name;
     private javax.swing.JLabel lbl_proj_name1;
     private javax.swing.JList<String> lst_Nodes;
-    private javax.swing.JList<String> lst_Se6ments;
+    private javax.swing.JList<String> lst_Segments;
     private javax.swing.JList<String> lst_aircraftModels;
     private javax.swing.JList<String> lst_airports;
     private javax.swing.JList<String> lst_flightplans;

@@ -72,9 +72,8 @@ public class OpenProjectController {
     
     
     public List<Airport> getAirportsDB(){
-        List<Airport> lst = new ArrayList<>();
         DatabaseModel db = new DatabaseModel(this.p);
-        lst = db.getListAirports();
+        List<Airport> lst = db.getListAirports(this.p);
         return lst;
     }
     
@@ -101,11 +100,11 @@ public class OpenProjectController {
         return lst;
     }
     
-    public List<String> getSegmentDB(){
-        List<String> lst = new ArrayList<>();
-        for (Segment segment : this.p.getAirNetwork().getMapSegment().values()) {
-            lst.add(segment.getId());
-        }
+    public List<Segment> getSegmentDB(){
+        List<Segment> lst = new ArrayList<>();
+        
+        DatabaseModel db = new DatabaseModel(this.p);
+        lst = db.getSegments();
         return lst;
     }
 }

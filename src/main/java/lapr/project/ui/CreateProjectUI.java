@@ -156,6 +156,7 @@ public class CreateProjectUI extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             filePath = fileChooser.getSelectedFile().getAbsolutePath();
             this.ctrl_createProj.addNetwork(filePath);
+            System.out.println();
             
         } else {
             System.out.println("File access cancelled by user.");
