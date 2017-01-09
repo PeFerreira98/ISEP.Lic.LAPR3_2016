@@ -115,10 +115,9 @@ public class DatabaseModel {
             });
         }
 
-//        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
-//            //openDB();
-//            addAirport2(airport);
-//        });
+        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
+            addAirport2(airport);
+        });
 //        project.getAircraftRegister().getAircraftRegister().values().stream().forEach((aircraft) -> {
 //            //openDB();
 //            addAircraft(aircraft);
@@ -315,16 +314,27 @@ public class DatabaseModel {
      */
     public void addAirport2(Airport air) {
         try {
-            this.st.executeQuery("INSERT INTO Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name) "
-                    + "values('"
-                    + air.getIATAcode() + "', '"
-                    + air.getName() + "', '"
-                    + air.getTown() + "', '"
-                    + air.getCountry() + "', "
-                    + air.getLocation().getLatitude() + ","
-                    + air.getLocation().getLongitude() + ","
-                    + air.getLocation().getAltitude() + ",'"
-                    + this.project.getName() + "')");
+//            this.st.executeQuery("INSERT INTO Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name) "
+//                    + "values('"
+//                    + air.getIATAcode() + "', '"
+//                    + air.getName() + "', '"
+//                    + air.getTown() + "', '"
+//                    + air.getCountry() + "', "
+//                    + air.getLocation().getLatitude() + ","
+//                    + air.getLocation().getLongitude() + ","
+//                    + air.getLocation().getAltitude() + ",'"
+//                    + this.project.getName() + "')");
+            
+            CallableStatement cs = con.prepareCall("{call insertAircraftModel(?,?,?,?,?,?,?,?)}");
+            cs.setString(1, air.getIATAcode());
+            cs.setString(2, air.getName());
+            cs.setString(3, air.getTown());
+            cs.setString(4, air.getCountry());
+            cs.setDouble(5, air.getLocation().getLatitude());
+            cs.setDouble(6, air.getLocation().getLongitude());
+            cs.setDouble(7, air.getLocation().getAltitude());
+            cs.setString(8, this.project.getName());
+            
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -362,7 +372,6 @@ public class DatabaseModel {
                         rs.getString("town"),
                         rs.getString("country"),
                         rs.getString("cod_IATA"));
-                System.out.println(a);
                 lst_airports.add(a);
                 System.out.println(lst_airports);
             }
