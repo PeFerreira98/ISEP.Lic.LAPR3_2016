@@ -90,21 +90,30 @@ public class DatabaseModel {
 
     public void addProject(Project project) {
         try {
-            this.st.execute("insert into Project(name, description) "
-                    + "values ('"
-                    + project.getName() + "', '"
-                    + project.getDescription() + "')");
+//            this.rs = this.st.executeQuery("insert into Project(name, description) "
+//                    + "values ('"
+//                    + project.getName() + "', '"
+//                    + project.getDescription() + "')");
+
+            CallableStatement cs = con.prepareCall("{call insertProject(?,?)}");
+            cs.setString(1, project.getName());
+            cs.setString(2, project.getDescription());
+            cs.executeUpdate();
             this.project = project;
+
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        project.getAirNetwork().getMapNodes().values().stream().forEach((n) -> {
-            addNode(n);
-        });
-        project.getAirNetwork().getMapSegment().values().stream().forEach((s) -> {
-            addSegment(s);
-        });
+        if (!project.getAirNetwork().getMapNodes().isEmpty()) {
+            project.getAirNetwork().getMapNodes().values().stream().forEach((n) -> {
+                addNode(n);
+            });
+        }
+        if (!project.getAirNetwork().getMapSegment().isEmpty()) {
+            project.getAirNetwork().getMapSegment().values().stream().forEach((s) -> {
+                addSegment(s);
+            });
+        }
 
 //        project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
 //            //openDB();
@@ -127,7 +136,8 @@ public class DatabaseModel {
 
     /**
      * add segment to DB
-     * @param segment 
+     *
+     * @param segment
      */
     public void addSegment(Segment segment) {
         try {
@@ -200,33 +210,61 @@ public class DatabaseModel {
      */
     public void addAircraftModel(AircraftModel air) {
         try {
-            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, cruiseAltitude, cruiseSpeed, TSFC, lapseRateFactor, thrust0, thrustMaxSpeed, maxSpeed, emptyWeight, MTOW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, aspectRatio, e, project_name) "
-                    + "values ('"
-                    + air.getId() + "', '"
-                    + air.getDescription() + "', '"
-                    + air.getMaker() + "', '"
-                    + air.getType().toString() + "', "
-                    + air.getNumberMotors() + ", '"
-                    + air.getMotor() + "', '"
-                    + air.getMotorType().toString() + "', "
-                    + air.getCruiseAltitude() + ","
-                    + air.getCruiseSpeed() + ","
-                    + air.getTSFC() + ","
-                    + air.getLapseRateFactor() + ","
-                    + air.getThrust_0() + ","
-                    + air.getThrustMaxSpeed() + ","
-                    + air.getMaxSpeed() + ","
-                    + air.getEmptyWeight() + ","
-                    + air.getMTOW() + ","
-                    + air.getMaxPayload() + ","
-                    + air.getFuelCapacity() + ","
-                    + air.getVMO() + ","
-                    + air.getMMO() + ","
-                    + air.getWingArea() + ","
-                    + air.getWingSpan() + ","
-                    + air.getAspectRatio() + ","
-                    + air.getE() + ", '"
-                    + this.project.getName() + "')");
+//            this.st.execute("insert into AircraftModel(id, description, maker, type, numberMotors, motor, motorType, cruiseAltitude, cruiseSpeed, TSFC, lapseRateFactor, thrust0, thrustMaxSpeed, maxSpeed, emptyWeight, MTOW, maxPayload, fuelCapacity, VMO, MMO, wingArea, wingSpan, aspectRatio, e, project_name) "
+//                    + "values ('"
+//                    + air.getId() + "', '"
+//                    + air.getDescription() + "', '"
+//                    + air.getMaker() + "', '"
+//                    + air.getType().toString() + "', "
+//                    + air.getNumberMotors() + ", '"
+//                    + air.getMotor() + "', '"
+//                    + air.getMotorType().toString() + "', "
+//                    + air.getCruiseAltitude() + ","
+//                    + air.getCruiseSpeed() + ","
+//                    + air.getTSFC() + ","
+//                    + air.getLapseRateFactor() + ","
+//                    + air.getThrust_0() + ","
+//                    + air.getThrustMaxSpeed() + ","
+//                    + air.getMaxSpeed() + ","
+//                    + air.getEmptyWeight() + ","
+//                    + air.getMTOW() + ","
+//                    + air.getMaxPayload() + ","
+//                    + air.getFuelCapacity() + ","
+//                    + air.getVMO() + ","
+//                    + air.getMMO() + ","
+//                    + air.getWingArea() + ","
+//                    + air.getWingSpan() + ","
+//                    + air.getAspectRatio() + ","
+//                    + air.getE() + ", '"
+//                    + this.project.getName() + "')");
+
+            CallableStatement cs = con.prepareCall("{call insertAircraftModel(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cs.setString(1, air.getId());
+            cs.setString(2, air.getDescription());
+            cs.setString(3, air.getMaker());
+            cs.setString(4, air.getType().toString());
+            cs.setDouble(5, air.getNumberMotors());
+            cs.setString(6, air.getMotor());
+            cs.setString(7, air.getMotorType().toString());
+            cs.setDouble(8, air.getCruiseAltitude());
+            cs.setDouble(9, air.getCruiseSpeed());
+            cs.setDouble(10, air.getTSFC());
+            cs.setDouble(11, air.getLapseRateFactor());
+            cs.setDouble(12, air.getThrust_0());
+            cs.setDouble(13, air.getThrustMaxSpeed());
+            cs.setDouble(14, air.getMaxSpeed());
+            cs.setDouble(15, air.getEmptyWeight());
+            cs.setDouble(16, air.getMTOW());
+            cs.setDouble(17, air.getMaxPayload());
+            cs.setDouble(18, air.getFuelCapacity());
+            cs.setDouble(19, air.getVMO());
+            cs.setDouble(20, air.getMMO());
+            cs.setDouble(21, air.getWingArea());
+            cs.setDouble(22, air.getWingSpan());
+            cs.setDouble(23, air.getAspectRatio());
+            cs.setDouble(24, air.getE());
+            cs.setString(25, this.project.getName() + "')");
+            cs.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -275,23 +313,6 @@ public class DatabaseModel {
      *
      * @param ap
      */
-    public void addAirport(Airport ap) {
-        try {
-            this.st.execute("insert into Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name)"
-                    + "values ('"
-                    + ap.getIATAcode() + "', '"
-                    + ap.getName() + "', '"
-                    + ap.getTown() + "', '"
-                    + ap.getCountry() + "', "
-                    + ap.getLocation().getLatitude() + ", "
-                    + ap.getLocation().getLongitude() + ", "
-                    + ap.getLocation().getAltitude() + ", '"
-                    + this.project.getName() + "')");
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     public void addAirport2(Airport air) {
         try {
             this.st.executeQuery("INSERT INTO Airport(cod_IATA, name, town, country, latitude, longitude, altitude, project_name) "
@@ -305,7 +326,7 @@ public class DatabaseModel {
                     + air.getLocation().getAltitude() + ",'"
                     + this.project.getName() + "')");
         } catch (Exception ex) {
-
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -397,14 +418,20 @@ public class DatabaseModel {
 
     public void addNode(Node n) {
         try {
-            this.st.execute("insert into Node(name, latitude, longitude, project_name)"
-                    + "values ('"
-                    + n.getName() + "', "
-                    + n.getLatitude() + ","
-                    + n.getLongitude() + ", '"
-                    + this.project.getName() + "')");
-//            "')'"
-//            + "WHERE project_id = " + p.getId());
+//            this.st.execute("insert into Node(name, latitude, longitude, project_name)"
+//                    + "values ('"
+//                    + n.getName() + "', "
+//                    + n.getLatitude() + ","
+//                    + n.getLongitude() + ", '"
+//                    + this.project.getName() + "')");
+
+            CallableStatement cs = con.prepareCall("{call insertNode(?,?,?,?)}");
+            cs.setString(1, n.getName());
+            cs.setDouble(2, n.getLatitude());
+            cs.setDouble(3, n.getLongitude());
+            cs.setString(4, this.project.getName());
+            cs.executeUpdate();
+
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
