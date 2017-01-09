@@ -6,17 +6,10 @@
 package lapr.project.controller;
 
 import lapr.project.model.register.FlightRegister;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import lapr.project.model.Aircraft;
 import lapr.project.model.Flight;
-import lapr.project.model.Flight.FlightType;
 import lapr.project.model.Project;
 import lapr.project.model.network.AirNetwork;
-import lapr.project.model.network.Segment;
 
 /**
  *
@@ -36,18 +29,14 @@ public class AddFlightController {
         this.proj = proj;
     }
 
-    public HashMap<Integer, Flight> getFlightsList() {
-        return this.flightsList = proj.getFlightRegister().getFlightsList();
-    }
-
-    public void setData(int id, FlightType type, Date departure_day, double minimum_stop,
-            Date scheduled_arrival, ArrayList<Segment> flight_plan, Aircraft aircraft) {
-
-        Flight flight = new Flight(id, type, departure_day, minimum_stop, departure_day, flight_plan, aircraft);
-
-        if (regFlights.validateFlight(flight) == true) {
-            this.regFlights.addFlight(flight);
-
-        }
-    }
+//    public void setData(int id, FlightType type, Date departure_day, double minimum_stop,
+//            Date scheduled_arrival, ArrayList<Segment> flight_plan, Aircraft aircraft) {
+//
+//        Flight flight = new Flight(id, type, departure_day, minimum_stop, departure_day, flight_plan, aircraft);
+//
+//        if (regFlights.validateFlight(flight) == true) {
+//            this.regFlights.addFlight(flight);
+//
+//        }
+//    }
 }

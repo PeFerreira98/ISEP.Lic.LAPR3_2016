@@ -16,29 +16,33 @@ public class Aircraft {
     private String id;
     private String description;
 
-    private int numberFirstClass;
-    private int numberNormalClass;
-    private int numberElementsCrew;
+    private double numberFirstClass;
+    private double numberNormalClass;
+    private double numberElementsCrew;
+    private double cargo;
+    private double fuel;
 
     private AircraftModel model;
 
-    public Aircraft(AircraftModel model, String id, String description, int numberFirstClass, int numberNormalClass, int numberElementsCrew) {
-        this.model = model;
-
-        this.id = id;
+    public Aircraft(String description, double numberFirstClass, double numberNormalClass, double numberElementsCrew, double cargo, double fuel, AircraftModel model) {
         this.description = description;
-
         this.numberFirstClass = numberFirstClass;
         this.numberNormalClass = numberNormalClass;
         this.numberElementsCrew = numberElementsCrew;
-    }
-    
-    public Aircraft(){
-        
+        this.cargo = cargo;
+        this.fuel = fuel;
+        this.model = model;
     }
 
-    public AircraftModel getModel() {
-        return model;
+    public Aircraft(String id, String description, double numberFirstClass, double numberNormalClass, double numberElementsCrew, double cargo, double fuel, AircraftModel model) {
+        this.id = id;
+        this.description = description;
+        this.numberFirstClass = numberFirstClass;
+        this.numberNormalClass = numberNormalClass;
+        this.numberElementsCrew = numberElementsCrew;
+        this.cargo = cargo;
+        this.fuel = fuel;
+        this.model = model;
     }
 
     public String getId() {
@@ -49,43 +53,34 @@ public class Aircraft {
         return description;
     }
 
-    public int getNumberFirstClass() {
+    public double getNumberFirstClass() {
         return numberFirstClass;
     }
 
-    public int getNumberNormalClass() {
+    public double getNumberNormalClass() {
         return numberNormalClass;
     }
 
-    public int getNumberElementsCrew() {
+    public double getNumberElementsCrew() {
         return numberElementsCrew;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public double getCargo() {
+        return cargo;
+    }
+
+    public double getFuel() {
+        return fuel;
+    }
+
+    public AircraftModel getModel() {
+        return model;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setNumberFirstClass(int numberFirstClass) {
-        this.numberFirstClass = numberFirstClass;
-    }
-
-    public void setNumberNormalClass(int numberNormalClass) {
-        this.numberNormalClass = numberNormalClass;
-    }
-
-    public void setNumberElementsCrew(int numberElementsCrew) {
-        this.numberElementsCrew = numberElementsCrew;
-    }
-
-    public void setModel(AircraftModel model) {
-        this.model = model;
-    }
-
-    
     public boolean equals(Object otherObj) {
         if (otherObj == null || this.getClass() != otherObj.getClass()) {
             return false;
@@ -98,7 +93,7 @@ public class Aircraft {
 
     @Override
     public String toString() {
-        return "Aircraft{" + "id=" + id + ", description=" + description + ", numberFirstClass=" + numberFirstClass + ", numberNormalClass=" + numberNormalClass + ", numberElementsCrew=" + numberElementsCrew + ",\n model=" + model + '}';
+        return "Aircraft{" + "id=" + id + ", description=" + description + ", numberFirstClass=" + numberFirstClass + ", numberNormalClass=" + numberNormalClass + ", numberElementsCrew=" + numberElementsCrew + ", cargo=" + cargo + ", fuel=" + fuel + ", model=" + model + '}';
     }
 
 }

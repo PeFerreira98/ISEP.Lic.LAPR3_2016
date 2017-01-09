@@ -2,15 +2,10 @@ package lapr.project.ui;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
 import lapr.project.model.Aircraft;
-import lapr.project.model.Airport;
-import lapr.project.model.CalculatorExample;
 import lapr.project.model.Physics;
 import lapr.project.model.Project;
 import lapr.project.model.network.AirNetwork;
@@ -83,8 +78,8 @@ class Main {
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
 
-        Aircraft a1 = new Aircraft(project.getAircraftModelRegister().getAircraftModel("777-200ER"), "a1", "desc", 1, 1, 1);
-
+        Aircraft a1 = new Aircraft("a1", "desc", 1, 1, 1, 1, 1, project.getAircraftModelRegister().getAircraftModel("777-200ER"));
+        
         double expResult = 0.0;
         AirNetwork an = project.getAirNetwork();
 

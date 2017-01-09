@@ -48,11 +48,12 @@ public class AircraftRegisterTest {
         AircraftRegister ar1 = new AircraftRegister();
         boolean expResult = false;
         AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
-        Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+
+        Aircraft a1 = new Aircraft("1A", "description", 15, 25, 7, 20, 20, newAircraftModel);
 
         ar1.addAircraft(a1);
 
-        Aircraft a2 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+        Aircraft a2 = new Aircraft("1A", "description", 15, 25, 7, 20, 20, newAircraftModel);
 
         boolean result = ar1.validateAircraft(a2);
         assertEquals(expResult, result);
@@ -66,10 +67,10 @@ public class AircraftRegisterTest {
     public void testAddAircraft() {
         System.out.println("addAircraft");
         AircraftModel newAircraftModel = new AircraftModel("1A", "AircraftDescription", "Maker", AircraftModel.Type.MIXED, 5, "Motor", AircraftModel.MotorType.TURBOJET, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25);
-        Aircraft a1 = new Aircraft(newAircraftModel, "1A", "description", 15, 25, 7);
+        Aircraft a1 = new Aircraft("1A", "description", 15, 25, 7, 20, 20, newAircraftModel);
 
         AircraftRegister instance = new AircraftRegister();
-        boolean expResult = false;
+        boolean expResult = true;
         boolean result = instance.addAircraft(a1);
         assertEquals(expResult, result);
     }

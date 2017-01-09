@@ -450,16 +450,16 @@ public class DatabaseModel {
     public void addFlight(Flight f) {
         if (f != null) {
             try {
-                this.st.execute("inser into Flight(Type, Departure_day,Minimun_stop,Scheduled_arrival, Flight_plan,Project_name,Airport_id_Start,Airport_id_End, Aircraft_id) "
-                        + "values ('" + f.getType() + "', "
-                        + f.getDeparture_day() + ", "
-                        + f.getMinimun_stop() + ", "
-                        + f.getScheduled_arrival() + ", "
-                        + f.getFlight_plan() + ", '"
-                        + this.project.getName() + "', '"
-                        + f.getFlight_plan().get(0).getBeginningNode() + "', '"
-                        + f.getFlight_plan().get(f.getFlight_plan().size()).getEndNode() + "', '"
-                        + f.getAircraft().getId() + "')");
+                this.st.execute("insert into Flight(Id, FlightPlan, Aircraft, PathTaken, TravelingTime, EnergyConsumption, Project_name)"
+                        + "values ('" 
+                        + f.getId()+ "', "
+                        + f.getFlightPlan().getName()+ ", "
+                        + f.getAircraft().getId()+ ", "
+                        + f.getPathTaken()+ ", "
+                        + f.getTravelingTime()+ ", "
+                        + f.getEnergyConsumption()+ ", "
+                        + this.project.getName()
+                        + "')");
             } catch (SQLException ex) {
                 Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -469,21 +469,26 @@ public class DatabaseModel {
     public List<Flight> getListFlights() {
         List<Flight> lst_Flight = new ArrayList<>();
         try {
-            this.rs = this.st.executeQuery("SELECT F.*, A.description FROM FLIgHT F, Aircraft A "
-                    + "WHERE Fliht.project_name = '" + this.project.getName()
-                    + "' And F.aircraft_id = A.aircraft_id");
+            this.rs = this.st.executeQuery("SELECT F.*, FROM FLIGHT F"
+                    + "WHERE Flight.project_name = '" + this.project.getName()
+                    + "'");
 
             while (rs.next()) {
-                int id_flight = rs.getInt("id_flight");
-                FlightType type = FlightType.valueOf(rs.getString("Type"));
-                Date departure_day = rs.getDate("departure_day");
-                double minimun_stop = rs.getDouble("mininum_stop");
-                Date shedule_arrival = rs.getDate("shedule_day");
-                String aircraft_name = rs.getString("description");
-
-                //ArrayList<Segment> lst_s = getListSegmentByFlight(id_flight);
+                
+                String id_flight = rs.getString("id_flight");
+                int id_flightPlan = rs.getInt("FlightPlan");
+                String aircraft_name = rs.getString("Aircraft");
+                
+                double travelingTime = rs.getInt("TravelingTime");
+                double energyConsumption = rs.getInt("EnergyConsumption");
+                
+//                ArrayList<Segment> lst_s = getListSegmentByFlight(id_flight);
+                ArrayList<Segment> lst_s = new ArrayList<>();
+                
                 Aircraft aircraft = this.project.getAircraftRegister().getAircraftByID(aircraft_name);
-                Flight f = new Flight(id_flight, type, departure_day, minimun_stop, shedule_arrival, aircraft);
+                FlightPlan flightPlan = this.project.getFlightPlanRegister().getFlightPlansList().get(id_flightPlan);
+                
+                Flight f = new Flight(id_flight, flightPlan, aircraft, lst_s, travelingTime, energyConsumption);
                 lst_Flight.add(f);
             }
 
@@ -514,7 +519,7 @@ public class DatabaseModel {
                             rs.getString("direction"),
                             rs.getDouble("wind_direction"),
                             rs.getDouble("wind_instensity"));
-                    lst_Flight.get(i).getFlight_plan().add(s);
+                    lst_Flight.get(i).getPathTaken().add(s);
                 }
             }
         } catch (SQLException ex) {

@@ -6,91 +6,83 @@
 package lapr.project.controller;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
-import lapr.project.model.network.Node;
-import lapr.project.model.network.Segment;
 
 /**
  *
  * @author zero_
  */
 public class SimulateFlightController {
-    
+
     private Project project;
     private ArrayList<FlightPlan> flightPlansList;
     private ArrayList<AircraftModel> aircraftModelsList;
-        
-    public SimulateFlightController(Project p){
+    private Aircraft newAircraft;
+
+    public SimulateFlightController(Project p) {
         this.project = p;
         this.flightPlansList = new ArrayList<>();
         this.aircraftModelsList = new ArrayList<>();
     }
-    
-    public void initializeFlightPlansList(){
+
+    public void initializeFlightPlansList() {
         for (FlightPlan fp : this.project.getFlightPlanRegister().getFlightPlansList().values()) {
             this.flightPlansList.add(fp);
         }
     }
-    
-    public int getFlightPlansListSize(){
+
+    public int getFlightPlansListSize() {
         return this.flightPlansList.size();
     }
-    
-    public String getFlightPlanNameByIndex(int index){
+
+    public String getFlightPlanNameByIndex(int index) {
         return this.flightPlansList.get(index).getName();
     }
-    
-    public FlightPlan getFlightPlanByIndex(int index){
+
+    public FlightPlan getFlightPlanByIndex(int index) {
         return this.flightPlansList.get(index);
     }
-    
-    public void initializeaircraftModelsList(AircraftModel.Type aircraftType){
+
+    public void initializeaircraftModelsList(AircraftModel.Type aircraftType) {
         for (AircraftModel aircraftModel : this.project.getAircraftModelRegister().getAircraftsByType(aircraftType).values()) {
             this.aircraftModelsList.add(aircraftModel);
         }
     }
-    
-    public int getaircraftModelsListSize(){
+
+    public int getaircraftModelsListSize() {
         return this.aircraftModelsList.size();
     }
-    
-    public String getaircraftModelIdByIndex(int index){
+
+    public String getaircraftModelIdByIndex(int index) {
         return this.aircraftModelsList.get(index).getId();
     }
-    
-    public AircraftModel getaircraftModelsByIndex(int index){
+
+    public AircraftModel getaircraftModelsByIndex(int index) {
         return this.aircraftModelsList.get(index);
     }
     
-    public Map<Double, LinkedList<Node>> getPathByAlgorithm(FlightPlan fp, int algorithm){
-        switch (algorithm) {
-        //TODO metodo de pesquisa
-            case 1:
-                break;
-        //TODO metodo de pesquisa
-            case 2:
-                break;     
-        //TODO metodo de pesquisa
-            case 3:
-                break;
-        }
-        return null;
+    public Aircraft getAircraft(){
+        return this.newAircraft;
     }
-    
-    public double getEnergyByPath(LinkedList<Node> path){
-        //TODO metodo calcular energia
-        return 0.0;
+
+    public boolean checkMax(FlightPlan fp, double nNormal, double nFirst, double nCrew) {
+
+        return !(fp.getnNormalClass() < nNormal
+                || fp.getnFirstClass() < nFirst
+                || fp.getnCrew() < nCrew);
     }
-    
-    public boolean checkMax(FlightPlan fp, double nNormal, double nFirst, double nCrew){
+
+    public boolean generateAircraft(double nNormal, double nFirst, double nCrew, 
+            double cargo, double fuel, AircraftModel aircraftModel){
         
-        return !(fp.getnNormalClass() < nNormal ||
-                fp.getnFirstClass() < nFirst ||
-                fp.getnCrew() < nCrew);
+        this.newAircraft = new Aircraft(aircraftModel.getId(), aircraftModel.getDescription(), 
+                nFirst, nNormal, nCrew, cargo, fuel, aircraftModel);
+        
+        System.out.println(newAircraft);
+        
+        return this.project.addAircraft(this.newAircraft);
     }
 }

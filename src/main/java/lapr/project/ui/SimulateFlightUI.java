@@ -348,43 +348,47 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void callResultsUI(double numberNormal, double numberFirst, double numberCrew) {
-        if (!this.lstFlightPlans.isSelectionEmpty()) {
-
-            FlightPlan fp = this.ctrlSimulation.getFlightPlanByIndex(this.lstFlightPlans.getSelectedIndex());
-
-            if (!this.ctrlSimulation.checkMax(fp, numberNormal, numberFirst, numberCrew)) {
-                JOptionPane.showMessageDialog(this, "Limit reached: \n"
-                        + " Max normal class: " + fp.getnNormalClass()
-                        + "\nMax first class: " + fp.getnFirstClass()
-                        + "\nMax crew: " + fp.getnCrew());
+    private void dataSearchAndResultCall(double numberNormal, double numberFirst, double numberCrew, double fuel, double cargo) {
+        FlightPlan fp = this.ctrlSimulation.getFlightPlanByIndex(this.lstFlightPlans.getSelectedIndex());
+        AircraftModel aircraftModel = this.ctrlSimulation.getaircraftModelsByIndex(this.lstAircraftModels.getSelectedIndex());
+        
+        
+        if (this.ctrlSimulation.checkMax(fp, numberNormal, numberFirst, numberCrew)) {
+            if (this.ctrlSimulation.generateAircraft(numberFirst, numberNormal, numberCrew, cargo, fuel, aircraftModel)) {
+                
+                new SimulationResultsUI(project, fp, this.ctrlSimulation.getAircraft(), jComboBox1.getSelectedItem().toString());
+                
             } else {
-                int option = this.jComboBox1.getSelectedIndex();
-
-                Map<Double, LinkedList<Node>> res = this.ctrlSimulation.getPathByAlgorithm(fp, option);
-
-                LinkedList<Node> path = res.entrySet().iterator().next().getValue();
-                double energy = this.ctrlSimulation.getEnergyByPath(res.entrySet().iterator().next().getValue());
-                double travelingTime = res.entrySet().iterator().next().getKey();
-
-                new SimulationResultsUI(path, travelingTime, energy);
+                JOptionPane.showMessageDialog(this, "Error Generating Aircraft", "Error", 1);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Select a plan!", "Error", 1);
+            JOptionPane.showMessageDialog(this, "Limit reached: \n"
+                    + " Max normal class: " + fp.getnNormalClass()
+                    + "\nMax first class: " + fp.getnFirstClass()
+                    + "\nMax crew: " + fp.getnCrew());
         }
     }
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        try {
-            int numberNormal = parseInt(txtNormal.getText());
-            int numberFirst = parseInt(txtFirst.getText());
-            int numberCrew = parseInt(txtCrew.getText());
-            int fuel = parseInt(txtFuel.getText());
-            int cargo = parseInt(txtCargo.getText());
+        int numberNormal = parseInt(txtNormal.getText());
+        int numberFirst = parseInt(txtFirst.getText());
+        int numberCrew = parseInt(txtCrew.getText());
+        int fuel = parseInt(txtFuel.getText());
+        int cargo = parseInt(txtCargo.getText());
 
-            callResultsUI(numberNormal, numberFirst, numberCrew);
+        if (!(numberNormal < 0 || numberFirst < 0 || numberCrew < 0 || fuel < 0 || cargo < 0)) {
+            if (!this.lstFlightPlans.isSelectionEmpty()) {
+                if (!this.lstAircraftModels.isSelectionEmpty()) {
 
-        } catch (NumberFormatException ex) {
+                    dataSearchAndResultCall(numberNormal, numberFirst, numberCrew, fuel, cargo);
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Select a AircraftModel!", "Error", 1);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Select a plan!", "Error", 1);
+            }
+        } else {
             JOptionPane.showMessageDialog(this, "Insert only positive numbers", "Error", 1);
         }
     }//GEN-LAST:event_btnOkActionPerformed
