@@ -22,7 +22,7 @@ public class ImportFlightPatternCSV {
 
     }
 
-    public double[][] CSVImport(String filePath) {
+    public static double[][] CSVImport(String filePath) {
         List<List<String>> valuesList = new ArrayList<>();
         double[][] values;
         String line = "";
@@ -49,7 +49,7 @@ public class ImportFlightPatternCSV {
         return values;
     }
 
-    private double[][] parseToMatrix(List<List<String>> values) {
+    private static double[][] parseToMatrix(List<List<String>> values) {
         int horizontalSize = values.get(0).size() - 2;
         double[][] matrix = new double[3][horizontalSize];
 
@@ -62,7 +62,7 @@ public class ImportFlightPatternCSV {
         return matrix;
     }
 
-    private void printMatrix(double[][] values) {
+    private static void printMatrix(double[][] values) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 14; j++) {
                 System.out.print(values[i][j] + " ");

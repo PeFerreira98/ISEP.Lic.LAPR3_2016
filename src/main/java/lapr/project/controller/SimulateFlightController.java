@@ -10,6 +10,7 @@ import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
+import lapr.project.utils.ImportFlightPatternCSV;
 
 /**
  *
@@ -21,6 +22,7 @@ public class SimulateFlightController {
     private ArrayList<FlightPlan> flightPlansList;
     private ArrayList<AircraftModel> aircraftModelsList;
     private Aircraft newAircraft;
+    private double[][] csvList = null;
 
     public SimulateFlightController(Project p) {
         this.project = p;
@@ -63,9 +65,14 @@ public class SimulateFlightController {
     public AircraftModel getaircraftModelsByIndex(int index) {
         return this.aircraftModelsList.get(index);
     }
-    
-    public Aircraft getAircraft(){
+
+    public Aircraft getAircraft() {
         return this.newAircraft;
+    }
+    
+    public boolean importCSV(String filepath){
+        this.csvList = ImportFlightPatternCSV.CSVImport(filepath);
+        return this.csvList != null;
     }
 
     public boolean checkMax(FlightPlan fp, double nNormal, double nFirst, double nCrew) {
@@ -75,14 +82,14 @@ public class SimulateFlightController {
                 || fp.getnCrew() < nCrew);
     }
 
-    public boolean generateAircraft(double nNormal, double nFirst, double nCrew, 
-            double cargo, double fuel, AircraftModel aircraftModel){
-        
-        this.newAircraft = new Aircraft(aircraftModel.getId(), aircraftModel.getDescription(), 
+    public boolean generateAircraft(double nNormal, double nFirst, double nCrew,
+            double cargo, double fuel, AircraftModel aircraftModel) {
+
+        this.newAircraft = new Aircraft(aircraftModel.getId(), aircraftModel.getDescription(),
                 nFirst, nNormal, nCrew, cargo, fuel, aircraftModel);
-        
+
         System.out.println(newAircraft);
-        
+
         return this.project.addAircraft(this.newAircraft);
     }
 }
