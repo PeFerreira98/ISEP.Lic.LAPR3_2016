@@ -7,6 +7,7 @@ package lapr.project.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import lapr.project.model.network.Segment;
 
 /**
@@ -72,6 +73,14 @@ public class FlightPlan {
         return nCrew;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 19 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
     public boolean equals(Object otherObj) {
         if (this == otherObj) {
             return true;

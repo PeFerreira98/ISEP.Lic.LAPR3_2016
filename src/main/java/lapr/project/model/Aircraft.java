@@ -81,6 +81,19 @@ public class Aircraft {
         this.description = description;
     }
 
+   @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.description);
+        return hash;
+    }
+
+    /**
+     *
+     * @param otherObj
+     * @return
+     */
     public boolean equals(Object otherObj) {
         if (otherObj == null || this.getClass() != otherObj.getClass()) {
             return false;
@@ -91,6 +104,7 @@ public class Aircraft {
                 && this.description.equalsIgnoreCase(otherAircraft.description);
     }
 
+    
     @Override
     public String toString() {
         return "Aircraft{" + "id=" + id + ", description=" + description + ", numberFirstClass=" + numberFirstClass + ", numberNormalClass=" + numberNormalClass + ", numberElementsCrew=" + numberElementsCrew + ", cargo=" + cargo + ", fuel=" + fuel + ", model=" + model + '}';
