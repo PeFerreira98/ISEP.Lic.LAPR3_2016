@@ -176,8 +176,12 @@ public class ProjectListUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void dbLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbLoadActionPerformed
-        this.ctrl_projList.loadAllProjects();
-        inicializar();
+        try {
+            this.ctrl_projList.loadAllProjects();
+            inicializar();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error to connect to database");
+        }
     }//GEN-LAST:event_dbLoadActionPerformed
 
     /**

@@ -81,41 +81,56 @@ public class OpenProjectController {
         return lst;
     }
     
-    public List<String> getAircraftModelDB(){
-        List<String> lst = new ArrayList<>();
-        DatabaseModel db = new DatabaseModel(this.p);
-        
-        return lst;
-    }
+//    public List<AircraftModel> getAircraftModelDB(){
+//        DatabaseModel db = new DatabaseModel(this.p);
+//        List<AircraftModel> lst = db.getAircraftModels();
+//        
+//        
+//        for(AircraftModel a : lst){
+//            this.p.getAircraftModelRegister().addAircraftModel(a);
+//        }
+//        
+//        return lst;
+//    }
     
-    public List<FlightPlan> getFlightPlansDB() {
-        List<FlightPlan> lst = new ArrayList<>();
-        
-        DatabaseModel db = new DatabaseModel(this.p);
-        //lst = db.getListFlightPlans(this.p);
-        return lst;
-    }
+//    public List<FlightPlan> getFlightPlansDB() {
+//        
+//        DatabaseModel db = new DatabaseModel(this.p);
+//        List<FlightPlan> lst = db.getListFlightPlans(this.p);
+//        
+//        for(FlightPlan fp : lst){
+//            this.p.getFlightPlanRegister().addFlightPlan(fp);
+//        }
+//         
+//        return lst;
+//    }
     
     public List<Node> getNodesDB(){
-        List<Node> lst = new ArrayList<>();
         
         DatabaseModel db = new DatabaseModel(this.p);
-        lst = db.getListNodes(this.p);
+        List<Node> lst = db.getListNodes(this.p);
+        
+        for(Node n : lst){
+            this.p.getAirNetwork().addNode(n);
+        }
         return lst;
     }
     
     public List<Segment> getSegmentDB(){
-        List<Segment> lst = new ArrayList<>();
         
         DatabaseModel db = new DatabaseModel(this.p);
-        lst = db.getSegments();
+        List<Segment> lst = db.getSegments();
+        
+        for(Segment s : lst){
+            this.p.getAirNetwork().addSegment(s);
+        }
         return lst;
     }
     
     public void LoadInformation(){
-        getAircraftModelDB();
+//        getAircraftModelDB();
         getAirportsDB();
-        getFlightPlansDB();
+//        getFlightPlansDB();
         getNodesDB();
         getSegmentDB();
     }

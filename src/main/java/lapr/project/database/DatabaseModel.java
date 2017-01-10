@@ -66,15 +66,15 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void closeDBDAL(){
+
+    public void closeDBDAL() {
         try {
             this.con.close();
             this.cs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     /**
@@ -86,16 +86,26 @@ public class DatabaseModel {
         List<Project> list_projects = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("Select * From PROJECT");
-            while (rs.next()) {
-                Project p = new Project(rs.getString("NAME"), rs.getString("DESCRIPTION"));
+
+            this.cs = this.con.prepareCall("{? = call getAllProjects}");
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.executeUpdate();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                String id = cs1.getString("NAME");
+                String des = cs1.getString("DESCRIPTION");
+                
+                Project p = new Project(id, des);
                 list_projects.add(p);
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDB();
+        closeDBDAL();
         return list_projects;
     }
 
@@ -336,7 +346,7 @@ public class DatabaseModel {
 //                    + air.getLocation().getLongitude() + ","
 //                    + air.getLocation().getAltitude() + ",'"
 //                    + this.project.getName() + "')");
-            
+
             this.cs = con.prepareCall("{call insertAirport(?,?,?,?,?,?,?,?)}");
             this.cs.setString(1, air.getIATAcode());
             this.cs.setString(2, air.getName());
@@ -347,7 +357,7 @@ public class DatabaseModel {
             this.cs.setDouble(7, air.getLocation().getAltitude());
             this.cs.setString(8, this.project.getName());
             this.cs.executeUpdate();
-            
+
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -464,13 +474,13 @@ public class DatabaseModel {
         if (f != null) {
             try {
                 this.st.execute("insert into Flight(Id, FlightPlan, Aircraft, PathTaken, TravelingTime, EnergyConsumption, Project_name)"
-                        + "values ('" 
-                        + f.getId()+ "', "
-                        + f.getFlightPlan().getName()+ ", "
-                        + f.getAircraft().getId()+ ", "
-                        + f.getPathTaken()+ ", "
-                        + f.getTravelingTime()+ ", "
-                        + f.getEnergyConsumption()+ ", "
+                        + "values ('"
+                        + f.getId() + "', "
+                        + f.getFlightPlan().getName() + ", "
+                        + f.getAircraft().getId() + ", "
+                        + f.getPathTaken() + ", "
+                        + f.getTravelingTime() + ", "
+                        + f.getEnergyConsumption() + ", "
                         + this.project.getName()
                         + "')");
             } catch (SQLException ex) {
@@ -487,20 +497,20 @@ public class DatabaseModel {
                     + "'");
 
             while (rs.next()) {
-                
+
                 String id_flight = rs.getString("id_flight");
                 int id_flightPlan = rs.getInt("FlightPlan");
                 String aircraft_name = rs.getString("Aircraft");
-                
+
                 double travelingTime = rs.getInt("TravelingTime");
                 double energyConsumption = rs.getInt("EnergyConsumption");
-                
+
 //                ArrayList<Segment> lst_s = getListSegmentByFlight(id_flight);
                 ArrayList<Segment> lst_s = new ArrayList<>();
-                
+
                 Aircraft aircraft = this.project.getAircraftRegister().getAircraftByID(aircraft_name);
                 FlightPlan flightPlan = this.project.getFlightPlanRegister().getFlightPlansList().get(id_flightPlan);
-                
+
                 Flight f = new Flight(id_flight, flightPlan, aircraft, lst_s, travelingTime, energyConsumption);
                 lst_Flight.add(f);
             }

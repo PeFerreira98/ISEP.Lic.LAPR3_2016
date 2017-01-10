@@ -279,35 +279,40 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         Airport dest = this.lstAirports.get(lstDest.getSelectedIndex());
 
         String name = txtName.getText();
-        int nNormalClass = parseInt(txtNormal.getText());
-        int nFirstClass = parseInt(txtFirst.getText());
-        int nCrew = parseInt(txtCrew.getText());
-        String type = cmbAircraftModelType.getSelectedItem().toString();
+        try {
+            int nNormalClass = parseInt(txtNormal.getText());
+            int nFirstClass = parseInt(txtFirst.getText());
+            int nCrew = parseInt(txtCrew.getText());
+        
+            String type = cmbAircraftModelType.getSelectedItem().toString();
 
-        if (!origin.equals(dest)) {
-            if (this.ctrlFlightPlan.saveFlightPlan(name, type, origin, dest, nNormalClass, nFirstClass, nCrew)) {
+            if (!origin.equals(dest)) {
+                if (this.ctrlFlightPlan.saveFlightPlan(name, type, origin, dest, nNormalClass, nFirstClass, nCrew)) {
 
-                int option = JOptionPane.showConfirmDialog(this, "Want add to database?", "Confirm", 0);
+                    int option = JOptionPane.showConfirmDialog(this, "Want add to database?", "Confirm", 0);
 
-                if (option == 0) {
-                    if (this.ctrlFlightPlan.saveFlightPlanToDatabase()) {
+                    if (option == 0) {
+                        if (this.ctrlFlightPlan.saveFlightPlanToDatabase()) {
+                            JOptionPane.showMessageDialog(this, "FlightPlan saved");
+                            dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Error Adding FlightPlan to database!");
+                        }
+                    }
+                    if (option == 1) {
                         JOptionPane.showMessageDialog(this, "FlightPlan saved");
                         dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Error Adding FlightPlan to database!");
                     }
-                }
-                if (option == 1) {
-                    JOptionPane.showMessageDialog(this, "FlightPlan saved");
-                    dispose();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error Creating FlightPlan!");
                 }
 
             } else {
-                JOptionPane.showMessageDialog(this, "Error Creating FlightPlan!");
+                JOptionPane.showMessageDialog(this, "The origin must be diferent of destination");
             }
-
-        } else {
-            JOptionPane.showMessageDialog(this, "The origin must be diferent of destination");
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "invalid information");
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
