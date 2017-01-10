@@ -50,6 +50,14 @@ public class Node implements Comparable<Node> {
         return 1;
     }
 
+       @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -65,6 +73,7 @@ public class Node implements Comparable<Node> {
         return true;
     }
 
+ 
     @Override
     public String toString() {
         return "Node{" + name + '}';

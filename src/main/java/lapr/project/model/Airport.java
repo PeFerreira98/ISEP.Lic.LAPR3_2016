@@ -55,6 +55,13 @@ public class Airport {
     }
     
     @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.IATAcode);
+        return hash;
+    }
+    
+    @Override
     public boolean equals(Object otherObj) {
             if (this == otherObj) {
                 return true;
@@ -66,6 +73,8 @@ public class Airport {
 
             return this.IATAcode.equalsIgnoreCase(otherAirport.getIATAcode());
         }
+
+    
 
     @Override
     public String toString() {

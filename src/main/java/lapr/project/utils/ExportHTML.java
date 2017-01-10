@@ -113,7 +113,7 @@ public class ExportHTML {
 
     public static void imagem(Formatter out, String str) {
         out.format("<div><br>"
-                + "<p class=\"c2\"><img src=\"http://images.slideplayer.com.br/5/1609675/slides/slide_73.jpg\" width=\"250\" height=\"70\" alt=\"Formula Lei de Malus\"></p>"
+                + "<p class=\"c2\"></p>"
                 + "<p class=\"c3\">%s</p>"
                 + "</div>"
                 + "<span class=\"c4\"><br>"
