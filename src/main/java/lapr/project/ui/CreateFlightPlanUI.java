@@ -284,19 +284,30 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         int nCrew = parseInt(txtCrew.getText());
         String type = cmbAircraftModelType.getSelectedItem().toString();
 
-        if (origin.equals(dest)) {
-            JOptionPane.showMessageDialog(this, "The origin must be diferent of destination");
-        } else {
+        if (!origin.equals(dest)) {
             if (this.ctrlFlightPlan.saveFlightPlan(name, type, origin, dest, nNormalClass, nFirstClass, nCrew)) {
-                if (this.ctrlFlightPlan.saveFlightPlanToDatabase()) {
+
+                int option = JOptionPane.showConfirmDialog(this, "Want add to database?", "Confirm", 0);
+
+                if (option == 0) {
+                    if (this.ctrlFlightPlan.saveFlightPlanToDatabase()) {
+                        JOptionPane.showMessageDialog(this, "FlightPlan saved");
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error Adding FlightPlan to database!");
+                    }
+                }
+                if (option == 1) {
                     JOptionPane.showMessageDialog(this, "FlightPlan saved");
                     dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error Adding FlightPlan to database!");
                 }
+
             } else {
                 JOptionPane.showMessageDialog(this, "Error Creating FlightPlan!");
             }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "The origin must be diferent of destination");
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 

@@ -42,13 +42,15 @@ public class CreateFlightPlanController {
             this.flightPlan = new FlightPlan(name, AircraftModel.Type.valueOf(aircraftModel),
                     originAeroport, destinationAeroport, normalClass, firstClass, crew);
 
-            this.project.addFlightPlan(flightPlan);
-            return true;
+            if (this.flightPlan.equals(this.project.addFlightPlan(flightPlan))) {
+                return true;
+            }
+
         } catch (NullPointerException e) {
             System.out.println("Error Creating New FlightPlan > " + e);
         }
 
-        return true;
+        return false;
     }
 
     public boolean saveFlightPlanToDatabase() {

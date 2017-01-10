@@ -22,7 +22,7 @@ import lapr.project.model.network.Segment;
 public class SimulationResultsUI extends javax.swing.JFrame {
 
     private SimulationResultsController simulationResultsController;
-    
+
     private double time = 0;
     private double energy = 0;
     private String aircraft;
@@ -42,9 +42,9 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         initComponents();
         this.setVisible(true);
     }
-    
-    private void initCalculations(){
-        
+
+    private void initCalculations() {
+
     }
 
     /**
@@ -71,7 +71,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jLabel1.setText("Segments list:");
@@ -194,7 +194,26 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO metodo de gravar os dados na base de dados
+        if (true) {
+
+            int option = JOptionPane.showConfirmDialog(this, "Want add to database?", "Confirm", 0);
+
+            if (option == 0) {
+                if (true) {
+                    JOptionPane.showMessageDialog(this, "Flight saved");
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error Adding Flight to database!");
+                }
+            }
+            if (option == 1) {
+                JOptionPane.showMessageDialog(this, "Flight saved");
+                dispose();
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Error Creating Flight!");
+        }
 
     }//GEN-LAST:event_btnSaveActionPerformed
 

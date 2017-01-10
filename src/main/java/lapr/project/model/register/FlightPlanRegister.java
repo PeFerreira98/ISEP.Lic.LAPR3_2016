@@ -17,18 +17,30 @@ import lapr.project.model.network.Segment;
  */
 public class FlightPlanRegister {
 
-    private HashMap<Integer, FlightPlan> mapFlightPlans;
+    private HashMap<String, FlightPlan> mapFlightPlans;
 
     public FlightPlanRegister() {
         this.mapFlightPlans = new LinkedHashMap<>();
     }
 
     public FlightPlan addFlightPlan(FlightPlan newFlightPlan) {
-        return mapFlightPlans.put(newFlightPlan.getId(), newFlightPlan);
-
+        if (validateFlightPlan(newFlightPlan)) {
+            this.mapFlightPlans.put(newFlightPlan.getName(), newFlightPlan);
+            return this.mapFlightPlans.get(newFlightPlan.getName());
+        }
+        return null;
     }
 
-    public HashMap<Integer, FlightPlan> getFlightPlansList() {
+    private boolean validateFlightPlan(FlightPlan newFlightPlan) {
+        for (FlightPlan flightPlan : this.mapFlightPlans.values()) {
+            if (newFlightPlan.equals(flightPlan)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public HashMap<String, FlightPlan> getFlightPlansList() {
         return this.mapFlightPlans;
     }
 }

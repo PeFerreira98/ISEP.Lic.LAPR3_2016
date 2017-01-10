@@ -25,8 +25,8 @@ public class FlightPlan {
     private double nFirstClass;
     private double nCrew;
 
-
     public FlightPlan(String name, AircraftModel.Type aircraftType, Airport origin, Airport dest, double nNormalClass, double nFirstClass, double nCrew) {
+        this.id = 0;
         this.name = name;
         this.aircraftType = aircraftType;
         this.origin = origin;
@@ -79,13 +79,14 @@ public class FlightPlan {
         if (otherObj == null || this.getClass() != otherObj.getClass()) {
             return false;
         }
+
         FlightPlan otherFlight = (FlightPlan) otherObj;
-        return this.id == otherFlight.id;
+        return this.name.equals(otherFlight.name);
     }
 
     @Override
     public String toString() {
-        return "Flight{" + "id=" + id + ", name=" + name + '}';
+        return "FlightPlan{" + "id=" + id + ", name=" + name + ", aircraftType=" + aircraftType + ", origin=" + origin + ", dest=" + dest + ", nNormalClass=" + nNormalClass + ", nFirstClass=" + nFirstClass + ", nCrew=" + nCrew + '}';
     }
 
 }
