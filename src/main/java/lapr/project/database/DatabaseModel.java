@@ -25,6 +25,7 @@ public class DatabaseModel {
     public static final String DBUSER = "LAPR3_33";
     public static final String DBPASS = "qwerty";
     Connection con;
+    CallableStatement cs;
     Statement st;
     ResultSet rs;
     Project project;
@@ -64,6 +65,16 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void closeDBDAL(){
+        try {
+            this.con.close();
+            this.cs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -130,7 +141,8 @@ public class DatabaseModel {
 //            //openDB();
 //            addFlight(f);
 //        });
-        closeDB();
+        //closeDB();
+        closeDBDAL();
     }
 
     /**
@@ -310,7 +322,7 @@ public class DatabaseModel {
     /**
      * Método utilizado para guardar dados de um aeroporto na base de dados.
      *
-     * @param ap
+     * @param air
      */
     public void addAirport2(Airport air) {
         try {
@@ -325,15 +337,16 @@ public class DatabaseModel {
 //                    + air.getLocation().getAltitude() + ",'"
 //                    + this.project.getName() + "')");
             
-            CallableStatement cs = con.prepareCall("{call insertAircraftModel(?,?,?,?,?,?,?,?)}");
-            cs.setString(1, air.getIATAcode());
-            cs.setString(2, air.getName());
-            cs.setString(3, air.getTown());
-            cs.setString(4, air.getCountry());
-            cs.setDouble(5, air.getLocation().getLatitude());
-            cs.setDouble(6, air.getLocation().getLongitude());
-            cs.setDouble(7, air.getLocation().getAltitude());
-            cs.setString(8, this.project.getName());
+            this.cs = con.prepareCall("{call insertAirport(?,?,?,?,?,?,?,?)}");
+            this.cs.setString(1, air.getIATAcode());
+            this.cs.setString(2, air.getName());
+            this.cs.setString(3, air.getTown());
+            this.cs.setString(4, air.getCountry());
+            this.cs.setDouble(5, air.getLocation().getLatitude());
+            this.cs.setDouble(6, air.getLocation().getLongitude());
+            this.cs.setDouble(7, air.getLocation().getAltitude());
+            this.cs.setString(8, this.project.getName());
+            this.cs.executeUpdate();
             
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);

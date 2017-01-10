@@ -5,10 +5,12 @@
  */
 package lapr.project.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.OpenProjectController;
+import lapr.project.model.Airport;
 import lapr.project.model.Project;
 
 /**
@@ -16,28 +18,34 @@ import lapr.project.model.Project;
  * @author Marcos
  */
 public class OpenProjectUI extends javax.swing.JFrame {
-    
+
     private Project project;
     private OpenProjectController ctr_OpenP;
-    
+
     /**
      * Creates new form ProjectMenuUI
      */
     public OpenProjectUI(Project proj) {
         this.project = proj;
         this.ctr_OpenP = new OpenProjectController(proj);
+        this.ctr_OpenP.LoadInformation();
+
         initComponents();
         inicializar();
         super.setVisible(true);
     }
-    
+
     private void initAirportsList() {
         try {
-            List lst_a = this.ctr_OpenP.getAirportsDB();
+            List<Airport> lst_a = new ArrayList<>();
+            for (Airport a : this.project.getAirportRegister().getAirportRegister().values()) {
+                lst_a.add(a);
+            }
+
             int tam = lst_a.size();
             final String[] a = new String[tam];
             for (int i = 0; i < tam; i++) {
-                a[i] = lst_a.get(i).toString();
+                a[i] = lst_a.get(i).getIATAcode();
             }
 
             DefaultListModel lm = new DefaultListModel() {
@@ -149,10 +157,10 @@ public class OpenProjectUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "There are no existing segments.");
         }
     }
-    
-    private void initFlightPlansList(){
+
+    private void initFlightPlansList() {
         List lst_a = this.ctr_OpenP.getFlightPlansDB();
-        
+
         if (lst_a == null) {
             this.lst_flightplans.setModel(new DefaultListModel());
 
@@ -179,14 +187,13 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
         this.lst_flightplans.setModel(lm);
     }
-    
 
     private void inicializar() {
-       //initAirportsList();
-       //initAircraftsList();
-       //initFlightPlansList();
-       initNodeList();
-       initSegmentsList();
+        initAirportsList();
+        //initAircraftsList();
+        //initFlightPlansList();
+        initNodeList();
+        initSegmentsList();
     }
 
     /**
@@ -374,7 +381,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       new CreateFlightPlanUI(project);
+        new CreateFlightPlanUI(project);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

@@ -78,7 +78,7 @@ public class Airport {
 
     @Override
     public String toString() {
-        return "Airport{" + "name=" + name + ", town=" + town + ", country=" + country + ", IATAcode=" + IATAcode + ", latitude=" + location.getLatitude() + ", longitude=" + location.getLongitude() + ", altitude=" + location.getAltitude() + '}';
+        return "Airport{" + "IATAcode=" + IATAcode +'}';
     }
 
 }
