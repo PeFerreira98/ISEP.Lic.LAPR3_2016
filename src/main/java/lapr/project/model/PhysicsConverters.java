@@ -27,8 +27,13 @@ public class PhysicsConverters {
 //        
 //        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC()
 //    }
+    
     public static double altitudeConverterFeetToMeters(Aircraft aircraft) {
-        return aircraft.getModel().getCruiseAltitude() * 0.3048;
+        return altitudeConverterFeetToMeters(aircraft.getModel().getCruiseAltitude());
+    }
+    
+    public static double altitudeConverterFeetToMeters(double feet) {
+        return feet * 0.3048;
     }
 
     public static double aicraftWeightConverterPoundsToKg(double anyAircraftWeightValue) {
@@ -44,7 +49,6 @@ public class PhysicsConverters {
     }
 
     public static double temperatudeConverterKelvinToCelsius(double temperature) {
-
         return temperature - 273.15;
     }
 

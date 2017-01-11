@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lapr.project.model.PhysicsConverters;
 
 /**
  *
@@ -44,6 +45,10 @@ public class ImportFlightPatternCSV {
 
         values = parseToMatrix(valuesList);
 
+        if (valuesList.get(0).get(1).endsWith("ft")) {
+            values = altitudeFeetConverter(values, valuesList.get(0).size() - 2);
+        }
+
         printMatrix(values);
 
         return values;
@@ -60,6 +65,14 @@ public class ImportFlightPatternCSV {
         }
 
         return matrix;
+    }
+
+    private static double[][] altitudeFeetConverter(double[][] values, int size) {
+        for (int j = 0; j < size; j++) {
+            values[0][j] = PhysicsConverters.altitudeConverterFeetToMeters(values[0][j]);
+        }
+
+        return values;
     }
 
     private static void printMatrix(double[][] values) {
