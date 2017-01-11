@@ -50,22 +50,29 @@ public class AircraftRegister {
         return null;
     }
 
-    public void aircraftDuplicationName(Aircraft aircraft, int p) {
-        aircraft.setDescription(String.format("%s(%d)", aircraft.getDescription(), p));
-        p++;
+    public boolean aircraftCheckDuplicate(Aircraft aircraft) {
         for (Aircraft aircraft1 : this.aircraftRegister.values()) {
             if (aircraft.getDescription().equalsIgnoreCase(aircraft1.getDescription())) {
-                aircraftDuplicationName(aircraft, p);
-
+                System.out.println(aircraft.getDescription() + " = " + aircraft1.getDescription());
+                aircraftDuplicationName(aircraft, 1);
+                return true;
             }
+            System.out.println(aircraft);
         }
+        return false;
     }
 
-    public void aircraftCheckDuplicate(Aircraft aircraft) {
+    private void aircraftDuplicationName(Aircraft aircraft, int p) {
+        aircraft.setDescription(String.format("%s(%d)", aircraft.getDescription(), p));
+        int i = 0;
+        p++;
         for (Aircraft aircraft1 : this.aircraftRegister.values()) {
-            if (aircraft.getDescription().equalsIgnoreCase(aircraft1.getDescription())) {
-                aircraftDuplicationName(aircraft, 1);
+            if (i >= p) {
+                if (aircraft.getDescription().equalsIgnoreCase(aircraft1.getDescription())) {
+                    aircraftDuplicationName(aircraft, p);
+                }
             }
+
         }
     }
 
