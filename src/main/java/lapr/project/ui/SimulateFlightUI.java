@@ -375,7 +375,7 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         if (this.ctrlSimulation.checkMax(fp, numberNormal, numberFirst, numberCrew)) {
             if (this.ctrlSimulation.generateAircraft(numberFirst, numberNormal, numberCrew, cargo, fuel, aircraftModel)) {
                 
-                new SimulationResultsUI(project, fp, this.ctrlSimulation.getAircraft(), jComboBox1.getSelectedItem().toString());
+                new SimulationResultsUI(project, fp, this.ctrlSimulation.getAircraft(), jComboBox1.getSelectedItem().toString(), this.ctrlSimulation.getCSVList());
                 
             } else {
                 JOptionPane.showMessageDialog(this, "Error Generating Aircraft", "Error", 1);

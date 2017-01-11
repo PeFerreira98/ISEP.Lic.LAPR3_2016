@@ -5,15 +5,11 @@
  */
 package lapr.project.ui;
 
-import java.util.LinkedList;
-import java.util.Map;
 import javax.swing.JOptionPane;
 import lapr.project.controller.SimulationResultsController;
 import lapr.project.model.Aircraft;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
-import lapr.project.model.network.Node;
-import lapr.project.model.network.Segment;
 
 /**
  *
@@ -35,8 +31,8 @@ public class SimulationResultsUI extends javax.swing.JFrame {
      * @param travelingTime
      * @param energy
      */
-    public SimulationResultsUI(Project project, FlightPlan flightPlan, Aircraft aircraft, String pathChoosed) {
-        this.simulationResultsController = new SimulationResultsController(project, flightPlan, aircraft, pathChoosed);
+    public SimulationResultsUI(Project project, FlightPlan flightPlan, Aircraft aircraft, String pathChoosed, double[][] flightPattern) {
+        this.simulationResultsController = new SimulationResultsController(project, flightPlan, aircraft, pathChoosed, flightPattern);
         this.aircraft = aircraft.getDescription();
         this.flightPlan = flightPlan.getName();
         initComponents();

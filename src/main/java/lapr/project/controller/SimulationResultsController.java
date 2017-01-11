@@ -22,12 +22,14 @@ public class SimulationResultsController {
     private FlightPlan flightPlan;
     private Aircraft aircraft;
     private String flightPath;
+    private double[][] flightPattern;
 
-    public SimulationResultsController(Project project, FlightPlan flightPlan, Aircraft aircraft, String flightPath) {
+    public SimulationResultsController(Project project, FlightPlan flightPlan, Aircraft aircraft, String flightPath, double[][] flightPattern) {
         this.project = project;
         this.flightPlan = flightPlan;
         this.aircraft = aircraft;
         this.flightPath = flightPath;
+        this.flightPattern = flightPattern;
     }
 
     //TODO: Change this

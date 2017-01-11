@@ -70,6 +70,10 @@ public class SimulateFlightController {
         return this.newAircraft;
     }
     
+    public double[][] getCSVList(){
+        return this.csvList;
+    }
+    
     public boolean importCSV(String filepath){
         this.csvList = ImportFlightPatternCSV.CSVImport(filepath);
         return this.csvList != null;
