@@ -8,12 +8,13 @@ package lapr.project.utils;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.*;
-import lapr.project.model.Location;
 import lapr.project.model.Project;
 import lapr.project.model.network.AirNetwork;
 import lapr.project.model.network.Node;
@@ -24,6 +25,7 @@ import lapr.project.model.network.Segment;
  * @author Pedro Ferreira
  */
 public class NetworkStAXParser {
+    private static final Logger LOG = Logger.getLogger("NetworkStAXParserLog");
     
     private AirNetwork c_airnetwork;
     private Node c_node;
@@ -221,8 +223,10 @@ public class NetworkStAXParser {
                 }
             }
         } catch (FileNotFoundException | XMLStreamException e) {
+            LOG.log(Level.INFO, filePath, e);
         }
         return this.c_airnetwork;
     }
+    
 
 }

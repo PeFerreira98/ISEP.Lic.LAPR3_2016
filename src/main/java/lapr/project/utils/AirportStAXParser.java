@@ -8,6 +8,8 @@ package lapr.project.utils;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -22,7 +24,9 @@ import lapr.project.model.Project;
  * @author Pedro Ferreira
  */
 public class AirportStAXParser {
-    
+
+    private static final Logger LOG = Logger.getLogger("AirportStAXParserLog");
+        
     private Project c_project;
     private Airport c_airport;
     private Location c_location;
@@ -180,6 +184,7 @@ public class AirportStAXParser {
                 }
             }
         } catch (FileNotFoundException | XMLStreamException e) {
+            LOG.log(Level.INFO, filePath, e);
         }
         return this.c_project;
     }

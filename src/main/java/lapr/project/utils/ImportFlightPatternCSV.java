@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lapr.project.model.PhysicsConverters;
 
 /**
@@ -19,6 +21,8 @@ import lapr.project.model.PhysicsConverters;
  */
 public class ImportFlightPatternCSV {
 
+    private static final Logger LOG = Logger.getLogger("ImportFlightPatternCSVLog");
+    
     public ImportFlightPatternCSV() {
 
     }
@@ -40,7 +44,7 @@ public class ImportFlightPatternCSV {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.INFO, filePath, e);
         }
 
         values = parseToMatrix(valuesList);

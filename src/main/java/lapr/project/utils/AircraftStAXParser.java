@@ -8,6 +8,8 @@ package lapr.project.utils;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -22,6 +24,8 @@ import lapr.project.model.register.CDragRegister;
  * @author Pedro Ferreira
  */
 public class AircraftStAXParser {
+
+    private static final Logger LOG = Logger.getLogger("AircraftStAXParserLog");
 
     private AircraftModelRegister c_aircraftModelRegister;
     private AircraftModel c_aircraftModel;
@@ -464,6 +468,7 @@ public class AircraftStAXParser {
                 }
             }
         } catch (FileNotFoundException | XMLStreamException e) {
+            LOG.log(Level.INFO, filePath, e);
         }
         return this.c_aircraftModelRegister;
     }
