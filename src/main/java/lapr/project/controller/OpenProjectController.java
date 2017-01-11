@@ -129,7 +129,7 @@ public class OpenProjectController {
     
     public void LoadInformation(){
 //        getAircraftModelDB();
-        getAirportsDB();
+        //getAirportsDB();
 //        getFlightPlansDB();
         getNodesDB();
         getSegmentDB();

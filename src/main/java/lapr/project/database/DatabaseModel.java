@@ -87,16 +87,16 @@ public class DatabaseModel {
 
         try {
 
-            this.cs = this.con.prepareCall("{? = call getAllProjects}");
+            this.cs = this.con.prepareCall("{ ? = call GETALLPROJECTS() }");
             cs.registerOutParameter(1, OracleTypes.CURSOR);
-            cs.executeUpdate();
+            cs.execute();
 
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
             while (cs1.next()) {
                 String id = cs1.getString("NAME");
                 String des = cs1.getString("DESCRIPTION");
-                
+
                 Project p = new Project(id, des);
                 list_projects.add(p);
             }
@@ -111,11 +111,6 @@ public class DatabaseModel {
 
     public void addProject(Project project) {
         try {
-//            this.rs = this.st.executeQuery("insert into Project(name, description) "
-//                    + "values ('"
-//                    + project.getName() + "', '"
-//                    + project.getDescription() + "')");
-
             CallableStatement cs = con.prepareCall("{call insertProject(?,?)}");
             cs.setString(1, project.getName());
             cs.setString(2, project.getDescription());
@@ -202,24 +197,44 @@ public class DatabaseModel {
         List<Segment> lst_seg = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_name= '" + this.project.getName() + "'");
+//            this.rs = this.st.executeQuery("SELECT * FROM segment WHERE project_name= '" + this.project.getName() + "'");
+//
+//            while (rs.next()) {
+//                Node n1 = getNode(rs.getInt("Node_Start"));
+//                Node n2 = getNode(rs.getInt("Node_End"));
+//                Segment s = new Segment(rs.getString("name"),
+//                        n1,
+//                        n2,
+//                        null,
+//                        rs.getString("direction"),
+//                        rs.getDouble("wind_direction"),
+//                        rs.getDouble("wind_intensity"));
+//                lst_seg.add(s);
+//        }
 
-            while (rs.next()) {
-                Node n1 = getNode(rs.getInt("Node_Start"));
-                Node n2 = getNode(rs.getInt("Node_End"));
-                Segment s = new Segment(rs.getString("name"),
-                        n1,
-                        n2,
-                        null,
-                        rs.getString("direction"),
-                        rs.getDouble("wind_direction"),
-                        rs.getDouble("wind_intensity"));
-                lst_seg.add(s);
-            }
+                this.cs = this.con.prepareCall("{ ? = call getProjectSegments(?) }");
+                cs.setString(2, this.project.getName());
+                cs.registerOutParameter(1, OracleTypes.CURSOR);
+                cs.execute();
+
+                ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+                while (cs1.next()) {
+                    Node n1 = getNode(cs1.getInt("Node_Start"));
+                    Node n2 = getNode(cs1.getInt("Node_End"));
+                    Segment s = new Segment(cs1.getString("name"),
+                            n1,
+                            n2,
+                            null,
+                            cs1.getString("direction"),
+                            cs1.getDouble("wind_direction"),
+                            cs1.getDouble("wind_intensity"));
+                    lst_seg.add(s);
+                }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDB();
+        closeDBDAL();
         return lst_seg;
     }
 
@@ -410,18 +425,26 @@ public class DatabaseModel {
         List<Node> lst_nodes = new ArrayList<>();
 
         try {
-            this.rs = this.st.executeQuery("SELECT * FROM NODE WHERE project_name = '" + p.getName() + "'");
-            while (rs.next()) {
-                Node n = new Node(rs.getString("name"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude"));
+            this.cs = this.con.prepareCall("{ ? = call GETPROJECTNODES(?) }");
+
+            this.cs.setString(2, p.getName());
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                Node n = new Node(cs1.getString("name"),
+                        cs1.getDouble("latitude"),
+                        cs1.getDouble("longitude"));
                 lst_nodes.add(n);
             }
-        } catch (SQLException ex) {
+
+        } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDB();
+        closeDBDAL();
         return lst_nodes;
     }
 
@@ -450,13 +473,6 @@ public class DatabaseModel {
 
     public void addNode(Node n) {
         try {
-//            this.st.execute("insert into Node(name, latitude, longitude, project_name)"
-//                    + "values ('"
-//                    + n.getName() + "', "
-//                    + n.getLatitude() + ","
-//                    + n.getLongitude() + ", '"
-//                    + this.project.getName() + "')");
-
             CallableStatement cs = con.prepareCall("{call insertNode(?,?,?,?)}");
             cs.setString(1, n.getName());
             cs.setDouble(2, n.getLatitude());
@@ -467,7 +483,6 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //closeDB();
     }
 
     public void addFlight(Flight f) {

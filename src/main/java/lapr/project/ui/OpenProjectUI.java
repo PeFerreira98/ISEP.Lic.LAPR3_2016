@@ -196,7 +196,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }
 
     private void inicializar() {
-        initAirportsList();
+        //initAirportsList();
         //initAircraftsList();
         //initFlightPlansList();
         initNodeList();
