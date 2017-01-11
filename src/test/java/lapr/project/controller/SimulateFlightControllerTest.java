@@ -5,16 +5,10 @@
  */
 package lapr.project.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import lapr.project.model.Aircraft;
 import lapr.project.model.AircraftModel;
-import static lapr.project.model.AircraftModel.Type.CARGO;
 import lapr.project.model.Airport;
-import lapr.project.model.CDrag;
 import lapr.project.model.FlightPlan;
-import lapr.project.model.Location;
 import lapr.project.model.Project;
 import lapr.project.utils.AircraftStAXParser;
 import lapr.project.utils.AirportStAXParser;
@@ -32,27 +26,51 @@ import static org.junit.Assert.*;
  */
 public class SimulateFlightControllerTest {
 
-    private final List<Project> listProjects;
-    private final Project project;
-    private final Aircraft aircraft;
-    private final AircraftModel aircraftModel;
-    private final ArrayList<FlightPlan> flightPlansList;
-    private final Airport airportOrigin;
-    private final Airport airportDest;
+    Project project;
+
+    Aircraft aircraft;
+    AircraftModel aircraftModel;
+
+    FlightPlan flightPlan1, flightPlan2;
+    Airport airportOrigin, airportDest;
 
     public SimulateFlightControllerTest() {
-        listProjects = new LinkedList<>();
-        project = new Project("proj0", "proj");
         defaultProject();
+
         aircraftModel = project.getAircraftModelRegister().getAircraftModel("A380");
 
         aircraft = new Aircraft(aircraftModel.getId(), aircraftModel.getDescription(), 10, 5, 4, 200, 10.000, aircraftModel);
 
-        flightPlansList = new ArrayList<>();
+        flightPlan1 = project.getFlightPlanRegister().getFlightPlansList().get("FP1");
+        flightPlan2 = project.getFlightPlanRegister().getFlightPlansList().get("FP2");
 
         airportOrigin = project.getAirportRegister().getAirportByIATACode("OPO");
         airportDest = project.getAirportRegister().getAirportByIATACode("LIS");
+    }
 
+    private void defaultProject() {
+        project = new Project("proj0", "proj");
+
+        NetworkStAXParser network = new NetworkStAXParser(project);
+        AircraftStAXParser instance = new AircraftStAXParser(project);
+        AirportStAXParser airports = new AirportStAXParser(project);
+
+        network.XMLReader("inOutFiles/TestSet02_Network.xml");
+        instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
+        airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
+
+        FlightPlan flightplan = new FlightPlan("FP1", AircraftModel.Type.PASSENGER,
+                project.getAirportRegister().getAirportByIATACode("OPO"),
+                project.getAirportRegister().getAirportByIATACode("LIS"),
+                10, 10, 10);
+
+        FlightPlan flightplan2 = new FlightPlan("FP2", AircraftModel.Type.PASSENGER,
+                project.getAirportRegister().getAirportByIATACode("PDL"),
+                project.getAirportRegister().getAirportByIATACode("LIS"),
+                7, 7, 7);
+
+        project.addFlightPlan(flightplan);
+        project.addFlightPlan(flightplan2);
     }
 
     @BeforeClass
@@ -71,20 +89,6 @@ public class SimulateFlightControllerTest {
     public void tearDown() {
     }
 
-    private void defaultProject() {
-
-        NetworkStAXParser network = new NetworkStAXParser(project);
-        AircraftStAXParser instance = new AircraftStAXParser(project);
-        AirportStAXParser airports = new AirportStAXParser(project);
-
-        network.XMLReader("inOutFiles/TestSet02_Network.xml");
-        instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
-        airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
-
-        this.listProjects.add(project);
-
-    }
-
     /**
      * Test of initializeFlightPlansList method, of class
      * SimulateFlightController.
@@ -92,9 +96,9 @@ public class SimulateFlightControllerTest {
     @Test
     public void testInitializeFlightPlansList() {
         System.out.println("initializeFlightPlansList");
+
         SimulateFlightController instance = new SimulateFlightController(project);
         instance.initializeFlightPlansList();
-
     }
 
     /**
@@ -102,15 +106,15 @@ public class SimulateFlightControllerTest {
      */
     @Test
     public void testGetFlightPlansListSize() {
-
-        FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
-        flightPlansList.add(flightPlan);
         System.out.println("getFlightPlansListSize");
-        SimulateFlightController instance = new SimulateFlightController(project);
-        int expResult = 0;
-        int result = instance.getFlightPlansListSize();
-        assertEquals(expResult, result);
 
+        SimulateFlightController instance = new SimulateFlightController(project);
+        instance.initializeFlightPlansList();
+
+        int expResult = 2;
+        int result = instance.getFlightPlansListSize();
+
+        assertEquals(expResult, result);
     }
 
     /**
@@ -121,15 +125,13 @@ public class SimulateFlightControllerTest {
     public void testGetFlightPlanNameByIndex() {
         System.out.println("getFlightPlanNameByIndex");
 
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-
-        FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
-        flightPlansList.add(flightPlan);
         int index = 0;
         SimulateFlightController instance = new SimulateFlightController(project);
-        String expResult = flightPlan.getName();
+        instance.initializeFlightPlansList();
+
+        String expResult = "FP1";
         String result = instance.getFlightPlanNameByIndex(index);
+
         assertEquals(expResult, result);
 
     }
@@ -141,13 +143,13 @@ public class SimulateFlightControllerTest {
     public void testGetFlightPlanByIndex() {
         System.out.println("getFlightPlanByIndex");
 
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-
         int index = 0;
         SimulateFlightController instance = new SimulateFlightController(project);
-        FlightPlan expResult = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
+        instance.initializeFlightPlansList();
+
+        FlightPlan expResult = flightPlan1;
         FlightPlan result = instance.getFlightPlanByIndex(index);
+
         assertEquals(expResult, result);
     }
 
@@ -158,11 +160,10 @@ public class SimulateFlightControllerTest {
     @Test
     public void testInitializeaircraftModelsList() {
         System.out.println("initializeaircraftModelsList");
-        FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
-        AircraftModel.Type aircraftType = flightPlan.getAircraftType();
-        SimulateFlightController instance = new SimulateFlightController(project);
-        instance.initializeaircraftModelsList(aircraftType);
 
+        SimulateFlightController instance = new SimulateFlightController(project);
+
+        instance.initializeaircraftModelsList(AircraftModel.Type.PASSENGER);
     }
 
     /**
@@ -188,16 +189,14 @@ public class SimulateFlightControllerTest {
     public void testGetaircraftModelIdByIndex() {
         System.out.println("getaircraftModelIdByIndex");
 
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-
-        FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
-        int index = 0;
+        int index = 1;
         SimulateFlightController instance = new SimulateFlightController(project);
-        String expResult = "PASSENGER";
-        String result = instance.getaircraftModelIdByIndex(index);
-        assertEquals(expResult, result);
+        instance.initializeaircraftModelsList(AircraftModel.Type.PASSENGER);
 
+        String expResult = "A380";
+        String result = instance.getaircraftModelIdByIndex(index);
+
+        assertEquals(expResult, result);
     }
 
     /**
@@ -207,17 +206,15 @@ public class SimulateFlightControllerTest {
     @Test
     public void testGetaircraftModelsByIndex() {
         System.out.println("getaircraftModelsByIndex");
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-
-        int index = 0;
-        FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
+        
+        int index = 1;
         SimulateFlightController instance = new SimulateFlightController(project);
-        AircraftModel expResult = null;
+        instance.initializeaircraftModelsList(AircraftModel.Type.PASSENGER);
+        
+        AircraftModel expResult = aircraftModel;
         AircraftModel result = instance.getaircraftModelsByIndex(index);
+        
         assertEquals(expResult, result);
-
     }
 
     /**
@@ -235,10 +232,11 @@ public class SimulateFlightControllerTest {
 
         SimulateFlightController instance = new SimulateFlightController(project);
         instance.generateAircraft(nNormal, nFirst, nCrew, cargo, fuel, aircraftModel);
+        
         Aircraft expResult = aircraft;
         Aircraft result = instance.getAircraft();
+        
         assertEquals(expResult, result);
-
     }
 
     /**
@@ -247,12 +245,14 @@ public class SimulateFlightControllerTest {
     @Test
     public void testImportCSV() {
         System.out.println("importCSV");
+        
         String filepath = "inOutFiles/Flight_pattern_A380_v1a.csv";
         SimulateFlightController instance = new SimulateFlightController(project);
+        
         boolean expResult = true;
         boolean result = instance.importCSV(filepath);
+        
         assertEquals(expResult, result);
-
     }
 
     /**
@@ -261,15 +261,17 @@ public class SimulateFlightControllerTest {
     @Test
     public void testCheckMax() {
         System.out.println("checkMax");
+        
         FlightPlan fp = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
         double nNormal = 10;
         double nFirst = 5;
         double nCrew = 4;
         SimulateFlightController instance = new SimulateFlightController(project);
+        
         boolean expResult = true;
         boolean result = instance.checkMax(fp, nNormal, nFirst, nCrew);
+        
         assertEquals(expResult, result);
-
     }
 
     /**
@@ -278,6 +280,7 @@ public class SimulateFlightControllerTest {
     @Test
     public void testGenerateAircraft() {
         System.out.println("generateAircraft");
+        
         double nNormal = 10;
         double nFirst = 5;
         double nCrew = 4;
@@ -285,10 +288,11 @@ public class SimulateFlightControllerTest {
         double fuel = 10.000;
         AircraftModel aModel = project.getAircraftModelRegister().getAircraftModel("A380");
         SimulateFlightController instance = new SimulateFlightController(project);
+        
         boolean expResult = true;
         boolean result = instance.generateAircraft(nNormal, nFirst, nCrew, cargo, fuel, aModel);
+        
         assertEquals(expResult, result);
-
     }
 
 }
