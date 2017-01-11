@@ -8,6 +8,7 @@ package lapr.project.model;
 import lapr.project.model.network.Segment;
 import lapr.project.model.register.AircraftModelRegister;
 import java.lang.Math;
+import java.util.List;
 import lapr.project.model.PhysicsConverters;
 import lapr.project.model.network.AirNetwork;
 
@@ -198,7 +199,7 @@ public class Physics {
     }
 
     //___________________________________Forces and aircraft related formulas_____________________________________
-    public static double calculateLiftForceInASegment(Aircraft aircraft, Segment segment, double altitude) {
+    public static double calculateLiftForceInASegment(Aircraft aircraft, double altitude) {
         double AirDensity = 0;
         if (altitude == -1) {
             altitude = aircraft.getModel().getCruiseAltitude();
@@ -209,10 +210,10 @@ public class Physics {
         AirDensity = calculateDensityDueAltitude(altitude, pressure, temperature);
         //calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
 
-        return calculateLiftCoeficient(aircraft, segment, altitude) * (AirDensity * Math.pow(aircraft.getModel().getCruiseSpeed(), 2) / 2) * aircraft.getModel().getWingArea();
+        return calculateLiftCoeficient(aircraft, altitude) * (AirDensity * Math.pow(aircraft.getModel().getCruiseSpeed(), 2) / 2) * aircraft.getModel().getWingArea();
     }
 
-    public static double calculateDragForceInASegment(Aircraft aircraft, Segment segment, double altitude) {
+    public static double calculateDragForceInASegment(Aircraft aircraft, double altitude) {
         double AirDensity = 0;
         if (altitude == -1) {
             altitude = aircraft.getModel().getCruiseAltitude();
@@ -228,14 +229,14 @@ public class Physics {
         double speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
 
         double TAS = calculateTrueAirSpeed(machNumber, speedOfSound);
-        double dragCoef = calculateDragCoeficient(aircraft, segment, altitude);
+        double dragCoef = calculateDragCoeficient(aircraft, altitude);
 
         //calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
         return 0.5 * AirDensity * Math.pow(TAS, 2)
                 * aircraft.getModel().getWingArea() * dragCoef;
     }
 
-    public static double calculateLiftCoeficient(Aircraft aircraft, Segment segment, double altitude) {
+    public static double calculateLiftCoeficient(Aircraft aircraft, double altitude) {
         double AirDensity = 0;
         if (altitude == -1) {
             altitude = aircraft.getModel().getCruiseAltitude();
@@ -255,12 +256,12 @@ public class Physics {
         return (2 * finalWeight * 9.81) / (AirDensity * aircraft.getModel().getWingArea() * Math.pow(TAS, 2));
     }
 
-    public static double calculateDragCoeficient(Aircraft aircraft, Segment segment, Double altitude) {
+    public static double calculateDragCoeficient(Aircraft aircraft, Double altitude) {
         if (altitude == -1) {
             altitude = aircraft.getModel().getCruiseAltitude();
         }
 
-        double liftcoeficient = calculateLiftCoeficient(aircraft, segment, altitude);
+        double liftcoeficient = calculateLiftCoeficient(aircraft, altitude);
         //calculateAirDensityTemperatureDueAltitude(altitude, AirDensity, 0);
         //return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() + (Math.pow(calculateLiftCoeficient(aircraft, segment, altitude), 2)) / (Math.PI * (Math.pow(aircraft.getModel().getWingSpan(), 2) / aircraft.getModel().getWingArea()) * aircraft.getModel().getE());
         return aircraft.getModel().getCdragRegister().getCDrag(0).getcDrag0() + (Math.pow(liftcoeficient, 2) / (Math.PI * aircraft.getModel().getAspectRatio() * aircraft.getModel().getE()));
@@ -280,7 +281,7 @@ public class Physics {
 
         //Falta calcular o consumo nesta distancia à velocidade cruseiro
         return (aircraft.getModel().getCruiseSpeed() / aircraft.getModel().getTSFC())
-                * (calculateLiftCoeficient(aircraft, segment, altitude) / calculateDragCoeficient(aircraft, segment, altitude)
+                * (calculateLiftCoeficient(aircraft, altitude) / calculateDragCoeficient(aircraft, altitude)
                 * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
     }
 
@@ -294,18 +295,28 @@ public class Physics {
 
         double latitude1 = segment.getBeginningNode().getLatitude();
         double longitude1 = segment.getBeginningNode().getLongitude();
+
         double latitude2 = segment.getEndNode().getLatitude();
         double longitude2 = segment.getEndNode().getLongitude();
+//        latitude1=Math.toRadians(latitude1);
+//        latitude2=Math.toRadians(latitude2);
+//        longitude1=Math.toRadians(longitude1);
+//        longitude2=Math.toRadians(longitude2);
 
         double a = Math.toRadians(latitude2 - latitude1);
+//        if(longitude2==longitude1){
+//            longitude1=longitude1-0.0001;
+//        }
         double b = Math.toRadians(longitude2 - longitude1);
 
-        double c = Math.sin(a / 2) * Math.sin(b / 2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(b / 2) * Math.sin(b / 2);
+        double a1 = Math.sin(a / 2) * Math.sin(a / 2)
+                + Math.cos(latitude1) * Math.cos(latitude2)
+                * Math.sin(b / 2) * Math.sin(b / 2);
 
-        double d = 2 * Math.atan2(Math.sqrt(c), Math.sqrt(1 - c));
-        double r = 6371;
+        double c = 2 * Math.atan2(Math.sqrt(a1), Math.sqrt(1 - a1));
+        double r = 6371000;
 
-        return r * d;
+        return r * c;
     }
 
     public static double calculateFuelComsuptionEachSegment(Aircraft aircraft, Segment segment) {
@@ -318,19 +329,6 @@ public class Physics {
     }
 
     //__________________________________________Trip related formulas_______________________________________________
-//    public static double calculateAircraftTrueAirspeed(Aircraft aircraft, Double altitude) {
-//        double p = 0;
-//        double t = 0;
-//        calculateAirDensityTemperatureDueAltitude(altitude, p, t);
-//
-//        return 661.47 * aircraft.getModel().getMaxSpeed() * Math.sqrt(t / 288.15);
-//
-//        //TAS=a0*M*Sqrt(T/T0)
-//        //a0=speed of sound(knot)
-//        //M=Mach number
-//        //T= temperature in kelvin
-//        //T0=temperature at standard sea level in kelvin
-//    }
     public static double calculateTrueMachNumber(Aircraft aircraft, double altitude, double speedVIAS) {
 
         double temperature = calculateTemperatureDueAltitude(altitude);
@@ -346,14 +344,14 @@ public class Physics {
         double temperature = calculateTemperatureDueAltitude(altitude);
         double pressure = calculatePressureDueAltitude(altitude);
         double AirDensity = calculateDensityDueAltitude(altitude, pressure, temperature);
-        double thrustSeaLevelMach0 = 338000; // em newtons
-        double thrustChangeRate = (thrustSeaLevelMach0 - 176000) / 0.9; //duvida no Lapse Rate
+        double thrustSeaLevelMach0 = aircraft.getModel().getThrust_0(); // em newtons
+        double thrustChangeRate = (thrustSeaLevelMach0 - aircraft.getModel().getThrustMaxSpeed()) / aircraft.getModel().getMaxSpeed(); //duvida no Lapse Rate
 
         return thrustSeaLevelMach0 - thrustChangeRate * trueMachNumber;
 
     }
 
-    public static double calculateThrustAltitude(Aircraft aircraft, Segment segment, double altitude, double trueMachNumber) {
+    public static double calculateThrustAltitude(Aircraft aircraft, double altitude, double trueMachNumber) {
 
         double temperature = calculateTemperatureDueAltitude(altitude);
         double pressure = calculatePressureDueAltitude(altitude);
@@ -371,7 +369,7 @@ public class Physics {
         return trueMachNumber * speedOfSound; //valor em metros por segundo
     }
 
-    public static double calculateAircraftClimbRate(Aircraft aircraft, Segment segment, double thrustTotal, double dragForce, double maxWeight, double trueAirSpeed) {
+    public static double calculateAircraftClimbRate(Aircraft aircraft, double thrustTotal, double dragForce, double maxWeight, double trueAirSpeed) {
 
         return ((thrustTotal - dragForce) * trueAirSpeed / maxWeight / 9.81); // dividir por gravidade ou multiplicar?
 
@@ -402,7 +400,7 @@ public class Physics {
         return trueAirspeed * Math.cos(climbAngle) * time;
     }
 
-    public static double calculateDistanceEach120MinAtCruiseAltitude(Aircraft aircraft, double speed) {
+    public static double calculateDistanceEach60SecAtCruiseAltitude(Aircraft aircraft, double speed) {
 
         return speed * 120;
     }
@@ -414,18 +412,15 @@ public class Physics {
         return aircraft.getModel().getEmptyWeight() + aircraft.getModel().getMaxPayload() + litersInKg;
     }
 
-    public static double[] aircraftClimb(Aircraft aircraft, Segment segment, Airport airport) {
+    public static double[] aircraftClimb(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments) {
 
-
-        double distanceSegment = calculateSegmentDistance(aircraft, segment);
-        double[] vec = new double[10];
         double liftForce = 0;
         double dragForce = 0;
         double thrustAltitude = 0;
         double maxWeight = 0;
         double climbRate = 0;
         double altitude = airport.getLocation().getAltitude();
-        double time = 120;
+        double time = 1;
         double fuelBurned = 0;
         double totalFuelBurned = 0;
         double distanceTraveled = 0;
@@ -436,169 +431,309 @@ public class Physics {
         double trueAirSpeed = 0;
         double speedOfSound = 0;
         double climbAngle = 0;
+        double distanceTraveledInSegment = 0;
+        double percAux;
+        double i = valuesVec[5];
+        int a = ((int) i);
+        Segment segment = segments[a];
+        double segmentDistance = calculateSegmentDistance(aircraft, segment);
 
-            while (altitude <= aircraft.getModel().getCruiseAltitude()) {
-
-                speed = calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
-                trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
-                speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
-                trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
-                liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-                dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-                thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude, trueMachNumber);
-                thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
-                maxWeight = calculateAircraftFinalWeight(aircraft);
-                climbRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
-                climbAngle = calculateClimbingAngle(trueAirSpeed, climbRate);
-                distance = calculateDistanceTraveledWhileClimbing(trueAirSpeed, climbAngle, 120);
-                fuelBurned = calculatedWdT(aircraft, 120, thrustAltitude);
-                altitudeVariation = calculateAltitudeVariation(trueAirSpeed, thrustAltitude, dragForce, maxWeight);
-                maxWeight = maxWeight - fuelBurned;
-                totalFuelBurned = totalFuelBurned + fuelBurned;
-                altitude = altitude + altitudeVariation * 120;
-                distanceTraveled = distanceTraveled + distance;
-                time = time + 120;
-             
-            }
-
-        
-        vec[0] = altitude;
-        vec[1] = maxWeight;
-        vec[2] = distanceTraveled;
-        vec[3] = totalFuelBurned;
-        vec[4] = time;
-
-        return vec;
-    }
-
-    public static double[] aircraftDescent(Aircraft aircraft, Segment segment, double[] valuesVec, Airport airport) {
-
-        double altitudeAirport = airport.getLocation().getAltitude();
-
-        double[] vec = new double[10];
-        double liftForce = 0;
-        double dragForce = 0;
-        double thrustAltitude = 0;
-        double maxWeight = vec[1];
-        double descentRate = 0;
-        double altitude = aircraft.getModel().getCruiseAltitude();
-        double time = vec[4];
-        double fuelBurned = 0;
-        double totalFuelBurned = vec[3];
-        double distanceTraveled = vec[2];
-        double distance = 0;
-        double altitudeVariation = 0;
-        double speed = 0;
-        double trueMachNumber = 0;
-        double trueAirSpeed = 0;
-        double speedOfSound = 0;
-        double descentAngle = 0;
-
-        while (altitude > altitudeAirport) {
+        do {
 
             speed = calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
             trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
             speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
             trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
-            liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-            dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-            thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude, trueMachNumber);
-            thrustAltitude = 0.1 * aircraft.getModel().getNumberMotors() * thrustAltitude; //thrust quando está a descer
-            descentRate = calculateAircraftClimbRate(aircraft, segment, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
-            descentAngle = calculateClimbingAngle(trueAirSpeed, descentRate);
-            distance = calculateDistanceTraveledWhileClimbing(trueAirSpeed, descentAngle, time);
-
-            fuelBurned = calculatedWdT(aircraft, 120, thrustAltitude);
+            liftForce = calculateLiftForceInASegment(aircraft, altitude);
+            dragForce = calculateDragForceInASegment(aircraft, altitude);
+            thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+            thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
+            maxWeight = calculateAircraftFinalWeight(aircraft);
+            climbRate = calculateAircraftClimbRate(aircraft, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
+            climbAngle = calculateClimbingAngle(trueAirSpeed, climbRate);
+            distance = calculateDistanceTraveledWhileClimbing(trueAirSpeed, climbAngle, 60);
+            fuelBurned = calculatedWdT(aircraft, 60, thrustAltitude);
             altitudeVariation = calculateAltitudeVariation(trueAirSpeed, thrustAltitude, dragForce, maxWeight);
+            distanceTraveled = distanceTraveled + distance;
+            distanceTraveledInSegment = distanceTraveledInSegment + distance;
+
+            if (distanceTraveledInSegment > segmentDistance) {
+                percAux = (distanceTraveled - segmentDistance) / distance;
+                maxWeight = maxWeight - fuelBurned * percAux;
+                totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
+                altitude = altitude + altitudeVariation * 60 * percAux;
+                time = time + 60 * percAux;
+                if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
+                    segment = segments[(int) i + 1];
+                    i = i + 1;
+                    distanceTraveledInSegment = 0;
+                }
+            }
             maxWeight = maxWeight - fuelBurned;
             totalFuelBurned = totalFuelBurned + fuelBurned;
-            altitude = altitude - altitudeVariation;
-            distanceTraveled = distanceTraveled + distance;
-            time = time + 120;
+            altitude = altitude + altitudeVariation * 60;
+            time = time + 60;
 
-            //duvida onde entra o calculo do liftcoeficient
-        }
+        } while (altitudeVariation * 60 >= 50);
 
-        vec[0] = altitude;
-        vec[1] = maxWeight;
-        vec[2] = distanceTraveled;
-        vec[3] = totalFuelBurned;
-        vec[4] = time;
+        valuesVec[0] = altitude;
+        valuesVec[1] = maxWeight;
+        valuesVec[2] = distanceTraveled;
+        valuesVec[3] = totalFuelBurned;
+        valuesVec[4] = time;
+        valuesVec[5] = i;
+        valuesVec[6] = distanceTraveledInSegment;
 
-        return vec;
-
+        return valuesVec;
     }
 
-//    public static double calculateDistanceNeededToDescent(Aircraft aircraft, Segment segment1, Segment segment2){
-//        
-//        double altitude = aircraft.getModel().getCruiseAltitude();
-//        
-//        
-//    }
-    public static double[] aircraftCruiseAltitudeCalculations(Aircraft aircraft, Segment segment, double[] valuesVec) {
+    public static double[] aircraftDescent(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments) {
 
-        double[] vec = new double[10];
-        double segmentDistance = calculateSegmentDistance(aircraft, segment);
+        double altitudeAirport = airport.getLocation().getAltitude();
+
         double liftForce = 0;
         double dragForce = 0;
         double thrustAltitude = 0;
-        double maxWeight = vec[1];
-        double altitude = aircraft.getModel().getCruiseAltitude();
-        double time = vec[4];
+        double maxWeight = valuesVec[1];
+        double descentRate = 0;
+        double altitude = valuesVec[0];
+        double time = valuesVec[4];
         double fuelBurned = 0;
-        double totalFuelBurned = vec[3];
-        double distanceTraveled = vec[2];
-        double distanceTraveledInSegment = 0;
+        double totalFuelBurned = valuesVec[3];
+        double distanceTraveled = valuesVec[2];
+        double distance = 0;
+        double distanceDescending = 0;
+        double altitudeVariation = 0;
+        double altitudeAux = 0;
         double speed = 0;
         double trueMachNumber = 0;
         double trueAirSpeed = 0;
         double speedOfSound = 0;
+        double descentAngle = 0;
+        double percAux = 0;
+        double distanceTraveledInSegment = valuesVec[6];
+        double i = valuesVec[5];
+        Segment segment = segments[(int) i];
+        double segmentDistance = calculateSegmentDistance(aircraft, segment);
+
+        do {
+
+            speed = calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
+            trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
+            speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
+            trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
+            liftForce = calculateLiftForceInASegment(aircraft, altitude);
+            dragForce = calculateDragForceInASegment(aircraft, altitude);
+            thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+            thrustAltitude = 0.1 * aircraft.getModel().getNumberMotors() * thrustAltitude; //thrust quando está a descer
+            descentRate = calculateAircraftClimbRate(aircraft, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
+            descentAngle = calculateClimbingAngle(trueAirSpeed, descentRate);
+            distance = calculateDistanceTraveledWhileClimbing(trueAirSpeed, descentAngle, 60);
+
+            if (distanceTraveledInSegment > segmentDistance) {
+                percAux = (distanceTraveled - segmentDistance) / distance;
+                maxWeight = maxWeight - fuelBurned * percAux;
+                totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
+                altitude = altitude + altitudeVariation * 60 * percAux;
+                time = time + 60 * percAux;
+                if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
+                    segment = segments[(int) i + 1];
+                    i = i + 1;
+                    distanceTraveledInSegment = 0;
+                }
+            }
+
+            fuelBurned = calculatedWdT(aircraft, 60, thrustAltitude);
+            altitudeVariation = calculateAltitudeVariation(trueAirSpeed, thrustAltitude, dragForce, maxWeight);
+            altitudeAux = altitude;
+            altitude = altitude + altitudeVariation * 60;
+
+            if (altitude < altitudeAirport) {
+                percAux = -((altitudeAux - altitudeAirport) / (altitudeVariation * 60));
+                altitude = altitudeAux - (-(altitudeVariation * 60)) * percAux;
+                maxWeight = maxWeight - fuelBurned * percAux;
+                totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
+                distanceTraveled = distanceTraveled + distance * percAux;
+                time = time + 60 * percAux;
+                break;
+            }
+            maxWeight = maxWeight - fuelBurned;
+            totalFuelBurned = totalFuelBurned + fuelBurned;
+            distanceDescending = distanceDescending + distance;
+            distanceTraveled = distanceTraveled + distance;
+            time = time + 60;
+
+        } while (altitude > altitudeAirport);
+
+        valuesVec[0] = altitude;
+        valuesVec[1] = maxWeight;
+        valuesVec[2] = distanceTraveled;
+        valuesVec[3] = totalFuelBurned;
+        valuesVec[4] = time;
+        valuesVec[5] = i;
+        valuesVec[6] = distanceTraveledInSegment + distanceDescending;
+        valuesVec[7] = distanceDescending;
+
+        return valuesVec;
+
+    }
+
+
+    public static double[] aircraftDistanceToDescent(Aircraft aircraft, double[] valuesVec, double totalDist, double[] valuesVecAux, Segment[] segments) {
+
+        double liftForce = 0;
+        double dragForce = 0;
+        double thrustAltitude = 0;
+        double maxWeight = valuesVec[1];
+        double altitude = valuesVec[0];
+        double time = valuesVec[4];
+        double fuelBurned = 0;
+        double totalFuelBurned = valuesVec[3];
+        double distanceTraveled = valuesVec[2];
+        double distanceTraveledInSegment = valuesVec[6];
+        double speed = 0;
+        double trueMachNumber = 0;
+        double trueAirSpeed = 0;
+        double speedOfSound = 0;
+        double i = valuesVec[5];
+        Segment segment = segments[(int) i];
+        double segmentDistance = calculateSegmentDistance(aircraft, segment);
+        double percAux;
 
         maxWeight = calculateAircraftFinalWeight(aircraft);
         speed = calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
         trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
         speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
         trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
-        liftForce = calculateLiftForceInASegment(aircraft, segment, altitude);
-        dragForce = calculateDragForceInASegment(aircraft, segment, altitude);
-        thrustAltitude = calculateThrustAltitude(aircraft, segment, altitude, trueMachNumber);
+        liftForce = calculateLiftForceInASegment(aircraft, altitude);
+        dragForce = calculateDragForceInASegment(aircraft, altitude);
+        thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
         thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
 
-        double distanceTraveledEach120secs = calculateDistanceEach120MinAtCruiseAltitude(aircraft, trueAirSpeed);
+        double distanceTraveledEach60secs = calculateDistanceEach60SecAtCruiseAltitude(aircraft, trueAirSpeed);
 
-        while (distanceTraveledInSegment < segmentDistance) {//altitude <= aircraft.getModel().getCruiseAltitude()) {
+        while (distanceTraveled < totalDist - 120000) {//altitude <= aircraft.getModel().getCruiseAltitude()) {
 
-            fuelBurned = calculatedWdT(aircraft, 120, thrustAltitude);
+            fuelBurned = calculatedWdT(aircraft, 60, thrustAltitude);
+            distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach60secs;
+            if (distanceTraveledInSegment > segmentDistance) {
+                percAux = (distanceTraveledInSegment - segmentDistance) / distanceTraveledEach60secs;
+                maxWeight = maxWeight - fuelBurned * percAux;
+                totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
+                distanceTraveled = distanceTraveled + distanceTraveledEach60secs * percAux;
+                distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach60secs * percAux;
+                if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
+                    segment = segments[(int) i + 1];
+                    i = i + 1;
+                }
+                distanceTraveledInSegment = 0;
+                segmentDistance = calculateSegmentDistance(aircraft, segment);
+            }
             maxWeight = maxWeight - fuelBurned;
             totalFuelBurned = totalFuelBurned + fuelBurned;
-            distanceTraveled = distanceTraveled + distanceTraveledEach120secs;
-            distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach120secs;
-            time = time + 120;
+            distanceTraveled = distanceTraveled + distanceTraveledEach60secs;
+            time = time + 60;
         }
 
-        vec[0] = altitude;
-        vec[1] = maxWeight;
-        vec[2] = distanceTraveled;
-        vec[3] = totalFuelBurned;
-        vec[4] = time;
+        valuesVecAux[0] = altitude;
+        valuesVecAux[1] = maxWeight;
+        valuesVecAux[2] = distanceTraveled;
+        valuesVecAux[3] = totalFuelBurned;
+        valuesVecAux[4] = time;
+        valuesVecAux[5] = i;
+        valuesVecAux[6] = distanceTraveledInSegment;
 
-        return vec;
+        return valuesVecAux;
 
     }
 
-    public static double[] allFlightCalculations(Aircraft aircraft, Segment[] segmentVec, Airport initialAirport, Airport endAirport) {
+    public static double[] aircraftCruiseAltitudeCalculations(Aircraft aircraft, double[] valuesVec, double totalDist, double distanceToDescend, Segment[] segments) {
 
-        Segment initialSegment = segmentVec[0];
-        double[] valuesVec = new double[5];
+        double liftForce = 0;
+        double dragForce = 0;
+        double thrustAltitude = 0;
+        double maxWeight = valuesVec[1];
+        double altitude = valuesVec[0];
+        double time = valuesVec[4];
+        double fuelBurned = 0;
+        double totalFuelBurned = valuesVec[3];
+        double distanceTraveled = valuesVec[2];
+        double distanceTraveledInSegment = valuesVec[6];
+        double totalDistance = totalDist;
+        double speed = 0;
+        double trueMachNumber = 0;
+        double trueAirSpeed = 0;
+        double speedOfSound = 0;
+        double percAux;
+        double i = valuesVec[5];
+        Segment segment = segments[(int) i];
+        double segmentDistance = calculateSegmentDistance(aircraft, segment);
 
-        valuesVec = aircraftClimb(aircraft, segmentVec[0], initialAirport);
+        maxWeight = calculateAircraftFinalWeight(aircraft);
+        speed = calculateSpeedDueAltitudeClimbing(aircraft, altitude, speed); //Speed Due Altitude
+        trueMachNumber = calculateTrueMachNumber(aircraft, altitude, speed); //MachNumber
+        speedOfSound = calculateSpeedOfSoundDueAltitude(altitude);
+        trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
+        liftForce = calculateLiftForceInASegment(aircraft, altitude);
+        dragForce = calculateDragForceInASegment(aircraft, altitude);
+        thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+        thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
 
-        for (int i = 0; i < segmentVec.length - 1; i++) {
-            valuesVec = aircraftCruiseAltitudeCalculations(aircraft, initialSegment, valuesVec);
+        double distanceTraveledEach60secs = calculateDistanceEach60SecAtCruiseAltitude(aircraft, trueAirSpeed);
+
+        while (distanceTraveled < (totalDistance - distanceToDescend)) {//altitude <= aircraft.getModel().getCruiseAltitude()) {
+
+            fuelBurned = calculatedWdT(aircraft, 60, thrustAltitude);
+            distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach60secs;
+            if (distanceTraveledInSegment > segmentDistance) {
+                percAux = (distanceTraveledInSegment - segmentDistance) / distanceTraveledEach60secs;
+                maxWeight = maxWeight - fuelBurned * percAux;
+                totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
+                distanceTraveled = distanceTraveled + distanceTraveledEach60secs * percAux;
+                distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach60secs * percAux;
+                if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
+                    segment = segments[(int) i + 1];
+                    i = i + 1;
+                }
+                distanceTraveledInSegment = 0;
+                segmentDistance = calculateSegmentDistance(aircraft, segment);
+            }
+            maxWeight = maxWeight - fuelBurned;
+            totalFuelBurned = totalFuelBurned + fuelBurned;
+            distanceTraveled = distanceTraveled + distanceTraveledEach60secs;
+            time = time + 60;
         }
 
-        valuesVec = aircraftDescent(aircraft, segmentVec[segmentVec.length], valuesVec, endAirport);
+        valuesVec[0] = altitude;
+        valuesVec[1] = maxWeight;
+        valuesVec[2] = distanceTraveled;
+        valuesVec[3] = totalFuelBurned;
+        valuesVec[4] = time;
+        valuesVec[5] = i;
+        valuesVec[6] = distanceTraveledInSegment;
 
+        return valuesVec;
+
+    }
+
+    public static double[] allFlightCalculations(Aircraft aircraft, Airport initialAirport, Airport endAirport, double dist, Segment[] segments) {
+
+        double[] valuesVec = new double[8];
+        double[] valuesVecAux = new double[8];
+        valuesVec[5] = 0;
+        double totalDistance = 0;
+
+        for (int i = 0; i <= segments.length; i++) {
+            totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments[0]);
+        }
+        //distance=dist;
+        valuesVec = aircraftClimb(aircraft, valuesVec, initialAirport, segments);
+        valuesVecAux = aircraftDistanceToDescent(aircraft, valuesVec, totalDistance, valuesVecAux, segments); //este método é para saber os valores do vec até 120km antes do aeropor(valor dos slides para quando aviao costuma começar a descer)
+        valuesVecAux = aircraftDescent(aircraft, valuesVecAux, endAirport, segments);
+        valuesVec = aircraftCruiseAltitudeCalculations(aircraft, valuesVec, totalDistance, valuesVecAux[7], segments);
+        valuesVec = aircraftDescent(aircraft, valuesVec, endAirport, segments);
+
+        // falta mudar a altitude da velocidade (tem que se ter em consideração a altitude do aeroporto onde começa, 0 a partir dessa altura, que é diferente da altitude para os outros calculos)
         return valuesVec;
     }
 
