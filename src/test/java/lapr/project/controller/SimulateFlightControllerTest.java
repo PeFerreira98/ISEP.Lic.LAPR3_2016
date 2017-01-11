@@ -45,15 +45,14 @@ public class SimulateFlightControllerTest {
         project = new Project("proj0", "proj");
         defaultProject();
         aircraftModel = project.getAircraftModelRegister().getAircraftModel("A380");
-        
-        aircraft = new Aircraft(aircraftModel.getId(),aircraftModel.getDescription(), 10, 5, 4, 200, 10.000, aircraftModel);
-        
+
+        aircraft = new Aircraft(aircraftModel.getId(), aircraftModel.getDescription(), 10, 5, 4, 200, 10.000, aircraftModel);
+
         flightPlansList = new ArrayList<>();
-        
+
         airportOrigin = project.getAirportRegister().getAirportByIATACode("OPO");
         airportDest = project.getAirportRegister().getAirportByIATACode("LIS");
-        
-        
+
     }
 
     @BeforeClass
@@ -120,10 +119,13 @@ public class SimulateFlightControllerTest {
      */
     @Test
     public void testGetFlightPlanNameByIndex() {
+        System.out.println("getFlightPlanNameByIndex");
+
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
 
         FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
         flightPlansList.add(flightPlan);
-        System.out.println("getFlightPlanNameByIndex");
         int index = 0;
         SimulateFlightController instance = new SimulateFlightController(project);
         String expResult = flightPlan.getName();
@@ -138,12 +140,15 @@ public class SimulateFlightControllerTest {
     @Test
     public void testGetFlightPlanByIndex() {
         System.out.println("getFlightPlanByIndex");
+
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+
         int index = 0;
         SimulateFlightController instance = new SimulateFlightController(project);
         FlightPlan expResult = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
         FlightPlan result = instance.getFlightPlanByIndex(index);
         assertEquals(expResult, result);
-
     }
 
     /**
@@ -182,6 +187,10 @@ public class SimulateFlightControllerTest {
     @Test
     public void testGetaircraftModelIdByIndex() {
         System.out.println("getaircraftModelIdByIndex");
+
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+
         FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
         int index = 0;
         SimulateFlightController instance = new SimulateFlightController(project);
@@ -198,6 +207,10 @@ public class SimulateFlightControllerTest {
     @Test
     public void testGetaircraftModelsByIndex() {
         System.out.println("getaircraftModelsByIndex");
+
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+
         int index = 0;
         FlightPlan flightPlan = new FlightPlan("Porto-Lisboa", AircraftModel.Type.PASSENGER, airportOrigin, airportDest, 10, 5, 4);
         SimulateFlightController instance = new SimulateFlightController(project);
@@ -213,14 +226,13 @@ public class SimulateFlightControllerTest {
     @Test
     public void testGetAircraft() {
         System.out.println("getAircraft");
-        
+
         double nNormal = 10;
         double nFirst = 5;
         double nCrew = 4;
         double cargo = 200;
         double fuel = 10.000;
-        
-               
+
         SimulateFlightController instance = new SimulateFlightController(project);
         instance.generateAircraft(nNormal, nFirst, nCrew, cargo, fuel, aircraftModel);
         Aircraft expResult = aircraft;
@@ -236,7 +248,7 @@ public class SimulateFlightControllerTest {
     public void testImportCSV() {
         System.out.println("importCSV");
         String filepath = "inOutFiles/Flight_pattern_A380_v1a.csv";
-        SimulateFlightController instance =  new SimulateFlightController(project);
+        SimulateFlightController instance = new SimulateFlightController(project);
         boolean expResult = true;
         boolean result = instance.importCSV(filepath);
         assertEquals(expResult, result);
