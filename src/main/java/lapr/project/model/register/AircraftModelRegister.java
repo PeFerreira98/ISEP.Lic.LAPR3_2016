@@ -68,6 +68,11 @@ public class AircraftModelRegister {
         return aircraftModelMap;
     }
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -83,6 +88,13 @@ public class AircraftModelRegister {
         }
 
         return Objects.equals(this.aircraftModelMap, other.aircraftModelMap);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.aircraftModelMap);
+        return hash;
     }
 
     @Override

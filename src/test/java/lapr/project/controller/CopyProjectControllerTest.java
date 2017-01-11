@@ -24,12 +24,12 @@ import static org.junit.Assert.*;
  */
 public class CopyProjectControllerTest {
 
-    private List<Project> listProjects;
-    private Project project;
+    private final List<Project> listProjects;
+    private final Project project;
 
     public CopyProjectControllerTest() {
          listProjects = new LinkedList<>();
-        project = new Project();
+        project = new Project("proj0", "proj");
         defaultProject();
     }
 
@@ -50,8 +50,7 @@ public class CopyProjectControllerTest {
     }
 
     private void defaultProject() {
-        Project project = new Project("proj0", "proj");
-        
+       
 
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);
