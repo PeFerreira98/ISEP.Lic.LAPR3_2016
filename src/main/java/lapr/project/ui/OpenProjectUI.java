@@ -47,7 +47,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
             int tam = lst_a.size();
             final String[] a = new String[tam];
             for (int i = 0; i < tam; i++) {
-                a[i] = lst_a.get(i).getIATAcode();
+                a[i] = lst_a.get(i).getIATAcode() + " (" + lst_a.get(i).getCountry() +")";
             }
 
             DefaultListModel lm = new DefaultListModel() {
@@ -196,8 +196,8 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }
 
     private void inicializar() {
-        //initAirportsList();
-        //initAircraftsList();
+        initAirportsList();
+        initAircraftsList();
         //initFlightPlansList();
         initNodeList();
         initSegmentsList();
