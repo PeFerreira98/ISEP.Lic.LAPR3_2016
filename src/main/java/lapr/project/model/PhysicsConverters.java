@@ -11,44 +11,31 @@ package lapr.project.model;
  */
 public class PhysicsConverters {
 
-    public static double calculateSegmentDistanceInMiles(double distance) {
+    public static double converterDistanceKmToMiles(double distance) {
         return 0.62 * distance;
     }
 
-    public static double speedAndMMOConverterMachToKmsHour(Double aircraftSpeedORMmoValue) {
+    public static double converterMachToKmsHour(double aircraftSpeedORMmoValue) {
         return aircraftSpeedORMmoValue * 1225.04;
-    }
-
-    public static double tsfcConverter(Aircraft aircraft) {
-        return aircraft.getModel().getTSFC() / 3600 * 101972;
-    }
-
-//    public static double thrustConversor(Aircraft aircraft){
-//        
-//        return aircraft.getModel().getRegimeRegister().getRegime("cruise").getTSFC()
-//    }
-    
-    public static double altitudeConverterFeetToMeters(Aircraft aircraft) {
-        return altitudeConverterFeetToMeters(aircraft.getModel().getCruiseAltitude());
     }
     
     public static double altitudeConverterFeetToMeters(double feet) {
         return feet * 0.3048;
     }
 
-    public static double aicraftWeightConverterPoundsToKg(double anyAircraftWeightValue) {
+    public static double converterPoundsToKg(double anyAircraftWeightValue) {
         return anyAircraftWeightValue * 0.45359237;
     }
-
-    public static double aircraftVMOConverterKnotToKmsHour(Aircraft aircraft) {
-        return aircraft.getModel().getVMO() * 1.852;
+    
+    public static double converterKnotToKms(double knot){
+        return knot*1.852;
     }
 
-    public static double aircraftFuelCapacityConverterGallonsToLiter(Aircraft aircraft) {
-        return (aircraft.getModel().getFuelCapacity() * 0.82) / 0.2642;       //Fuel density = 0,82 fuel (1kg water = 0,82 fuel(petrol)
+    public static double converterGallonsToLiter(double gallons) {
+        return (gallons* 0.82) / 0.2642;       //Fuel density = 0,82 fuel (1kg water = 0,82 fuel(petrol)
     }
 
-    public static double temperatudeConverterKelvinToCelsius(double temperature) {
+    public static double converterKelvinToCelsius(double temperature) {
         return temperature - 273.15;
     }
 
@@ -56,9 +43,4 @@ public class PhysicsConverters {
 
         return liters * 0.804;
     }
-    
-    public static double knotToKmsPerHourConverter(double speed){
-       return speed*1.852;
-    }
-    
 }

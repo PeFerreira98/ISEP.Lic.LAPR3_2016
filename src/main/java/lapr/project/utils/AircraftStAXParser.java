@@ -356,7 +356,7 @@ public class AircraftStAXParser {
                             
                             if (characters.getData().endsWith("US")) {
                                 d_maxPayload = Double.parseDouble(characters.getData().replace(" US", ""));
-                                d_maxPayload = PhysicsConverters.aicraftWeightConverterPoundsToKg(d_maxPayload);
+                                d_maxPayload = PhysicsConverters.converterPoundsToKg(d_maxPayload);
                             } 
                             else{
                                 d_maxPayload = Double.parseDouble(characters.getData().replace(" SI", ""));
@@ -370,7 +370,7 @@ public class AircraftStAXParser {
                             
                             if (characters.getData().endsWith("US")) {
                                 d_fuelCapacity = Double.parseDouble(characters.getData().replace(" US", ""));
-                                d_fuelCapacity = PhysicsConverters.aicraftWeightConverterPoundsToKg(d_fuelCapacity);
+                                d_fuelCapacity = PhysicsConverters.converterPoundsToKg(d_fuelCapacity);
                                 
                             } 
                             else{
