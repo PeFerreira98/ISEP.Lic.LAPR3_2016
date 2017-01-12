@@ -26,4 +26,14 @@ public class EditController {
         db.EditAirport(iata, name, town, country, latitude, longitude, altitude);
     }
     
+    public void editAircraftModel(String id, String description, String maker, String type, String motor, double numberMotors, String motorType, double cruiseAltitude, double cruiseSpeed, double TSFC, double lapseRateFactor,
+        double thrust_0, double thrustMaxSpeed, double maxSpeed, double emptyWeight, double MTOW, double maxPayload, double fuelCapacity, double VMO,double MMO, double wingArea, double wingSpan, double aspectRatio,double e){
+        
+        DatabaseModel db = new DatabaseModel(this.project);
+        
+        db.EditAircraftModel(id,  description,  maker,  type,  motor,  numberMotors, motorType,  cruiseAltitude,  cruiseSpeed,  TSFC, lapseRateFactor,
+    thrust_0, thrustMaxSpeed, maxSpeed, emptyWeight, MTOW, maxPayload, fuelCapacity, VMO, MMO,wingArea,      wingSpan,      aspectRatio,e);
+        
+    }
+    
 }

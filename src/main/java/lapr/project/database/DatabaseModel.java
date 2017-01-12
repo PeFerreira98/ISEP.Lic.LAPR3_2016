@@ -155,7 +155,7 @@ public class DatabaseModel {
         List<AircraftModel> lst_a = new ArrayList<>();
 
         try {
-            cs = con.prepareCall("{ ? = call getProjectAircraftModel(?)");
+            cs = con.prepareCall("{ ? = call getProjectAircraftModels(?) }");
             cs.setString(2, this.project.getName());
             cs.registerOutParameter(1, OracleTypes.CURSOR);
             cs.execute();
@@ -163,13 +163,14 @@ public class DatabaseModel {
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
             while (cs1.next()) {
-                AircraftModel am = new AircraftModel(cs.getString("id"), cs.getString("description"), cs.getString("maker"),
-                        AircraftModel.Type.valueOf(cs.getString("type")), cs.getDouble("numberMotors"), cs.getString("motor"),
-                        AircraftModel.MotorType.valueOf(cs.getString("motorType")), cs.getDouble("cruiseAltitude"),
-                        cs.getDouble("cruiseSpeed"), cs.getDouble("TSFC"), cs.getDouble("lapseRateFactor"),
-                        cs.getDouble("thrust0"), cs.getDouble("thrustMaxSpeed"), cs.getDouble("maxSpeed"), cs.getDouble("emptyWeight"),
-                        cs.getDouble("MTOW"), cs.getDouble("maxPayload"), cs.getDouble("fuelCapacity"), cs.getDouble("VMO"), cs.getDouble("MMO"),
-                        cs.getDouble("wingArea"), cs.getDouble("wingSpan"), cs.getDouble("aspectRatio"), cs.getDouble("e"));
+                AircraftModel am = new AircraftModel(cs1.getString("name"), cs1.getString("description"), cs1.getString("maker"),
+                        AircraftModel.Type.valueOf(cs1.getString("type")), cs1.getDouble("number_motors"), cs1.getString("motor"),
+                        AircraftModel.MotorType.valueOf(cs1.getString("motor_type")), cs1.getDouble("cruise_altitude"),
+                        cs1.getDouble("cruise_speed"), cs1.getDouble("TSFC"), cs1.getDouble("lapse_Rate_Factor"),
+                        cs1.getDouble("thrust_0"), cs1.getDouble("thrust_Max_Speed"), cs1.getDouble("max_Speed"), cs1.getDouble("eWeight"),
+                        cs1.getDouble("MTOW"), cs1.getDouble("max_payload"), cs1.getDouble("fuel_capacity"), cs1.getDouble("VMO"),
+                        cs1.getDouble("MMO"), cs1.getDouble("wing_area"), cs1.getDouble("wing_span"), cs1.getDouble("aspect_ratio"), 
+                        cs1.getDouble("e"));
                 lst_a.add(am);
             }
         } catch (SQLException ex) {
@@ -514,7 +515,6 @@ public class DatabaseModel {
 // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" EDITS ">
-    
     //FIXME falta DAL
     public void EditAirport(String iata, String name, String town, String country, double latitude, double longitude, double altitude) {
         try {
@@ -534,8 +534,24 @@ public class DatabaseModel {
         }
     }
 
+    public void EditAircraftModel(String id, String description, String maker, String type, String motor, double numberMotors, String motorType, double cruiseAltitude, double cruiseSpeed, double TSFC, double lapseRateFactor,
+            double thrust_0,
+            double thrustMaxSpeed,
+            double maxSpeed,
+            double emptyWeight,
+            double MTOW,
+            double maxPayload,
+            double fuelCapacity,
+            double VMO,
+            double MMO,
+            double wingArea,
+            double wingSpan,
+            double aspectRatio,
+            double e) {
+
+    }
+
     // </editor-fold>
-    
     /**
      * search the id that only DB knows
      *

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.OpenProjectController;
+import lapr.project.model.AircraftModel;
 import lapr.project.model.Airport;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
@@ -72,32 +73,32 @@ public class OpenProjectUI extends javax.swing.JFrame {
     }
 
     private void initAircraftsList() {
-//        try {
-//            List lst_a = this.ctr_OpenP.getAircraftModelDB();
-//
-//            int tam = lst_a.size();
-//            final String[] a = new String[tam];
-//            for (int i = 0; i < tam; i++) {
-//                a[i] = lst_a.get(i).toString();
-//            }
-//
-//            DefaultListModel lm = new DefaultListModel() {
-//                public int getSize() {
-//                    return a.length;
-//                }
-//
-//                public Object getElementAt(int i) {
-//                    return a[i];
-//                }
-//            };
-//
-//            this.lst_aircraftModels.setModel(lm);
-//
-//        } catch (NullPointerException ex) {
-//            this.lst_aircraftModels.setModel(new DefaultListModel());
-//
-//            //JOptionPane.showMessageDialog(this, "There are no existing aircraft Models.");
-//        }
+        try {
+            List lst_a = this.ctr_OpenP.getAircraftModelDB();
+
+            int tam = lst_a.size();
+            final String[] a = new String[tam];
+            for (int i = 0; i < tam; i++) {
+                a[i] = lst_a.get(i).toString();
+            }
+
+            DefaultListModel lm = new DefaultListModel() {
+                public int getSize() {
+                    return a.length;
+                }
+
+                public Object getElementAt(int i) {
+                    return a[i];
+                }
+            };
+
+            this.lst_aircraftModels.setModel(lm);
+
+        } catch (NullPointerException ex) {
+            this.lst_aircraftModels.setModel(new DefaultListModel());
+
+            //JOptionPane.showMessageDialog(this, "There are no existing aircraft Models.");
+        }
 
     }
 
@@ -303,6 +304,11 @@ public class OpenProjectUI extends javax.swing.JFrame {
         });
 
         btnEditAircraftModels.setText("...");
+        btnEditAircraftModels.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditAircraftModelsActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -431,6 +437,17 @@ public class OpenProjectUI extends javax.swing.JFrame {
             new EditAirportUI(this.project, a);
         }
     }//GEN-LAST:event_btnEditAirportsActionPerformed
+
+    private void btnEditAircraftModelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditAircraftModelsActionPerformed
+        if(lst_aircraftModels.isSelectionEmpty()){
+            JOptionPane.showMessageDialog(this, "Choose an airport");
+        }else{
+            String aircraftModel = lst_aircraftModels.getSelectedValue();
+            AircraftModel airM = this.project.getAircraftModelRegister().getAircraftModel(aircraftModel);
+            
+            new EditAircraftModelUI(this.project, airM);
+        }
+    }//GEN-LAST:event_btnEditAircraftModelsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnEditAircraftModels;

@@ -5,6 +5,7 @@
  */
 package lapr.project.ui;
 
+import javax.swing.JOptionPane;
 import lapr.project.controller.EditController;
 import lapr.project.model.Airport;
 import lapr.project.model.Project;
@@ -15,12 +16,13 @@ import lapr.project.model.Project;
  */
 public class EditAirportUI extends javax.swing.JFrame {
 
-    
-    Airport airport;
-    Project project;
-    EditController ctrl_edit;
+    private final Airport airport;
+    private final Project project;
+    private final EditController ctrl_edit;
+
     /**
      * Creates new form EditAirportUI
+     *
      * @param p
      * @param a
      */
@@ -28,19 +30,19 @@ public class EditAirportUI extends javax.swing.JFrame {
         this.project = p;
         this.airport = a;
         this.ctrl_edit = new EditController(this.project);
-        
+
         initComponents();
         inicializar();
         super.setLocationRelativeTo(null);
         super.setTitle("Edit airport (" + this.airport.getIATAcode() + ")");
         super.setVisible(true);
     }
-    
-    public void inicializar(){
-        this.txtAlt.setText(""+this.airport.getLocation().getAltitude());
-        this.txtLat.setText(""+this.airport.getLocation().getLatitude());
-        this.txtLon.setText(""+this.airport.getLocation().getLongitude());
-        
+
+    public void inicializar() {
+        this.txtAlt.setText("" + this.airport.getLocation().getAltitude());
+        this.txtLat.setText("" + this.airport.getLocation().getLatitude());
+        this.txtLon.setText("" + this.airport.getLocation().getLongitude());
+
         txtName.setText(this.airport.getName());
         txtTown.setText(this.airport.getTown());
         txtCountry.setText(this.airport.getCountry());
@@ -136,6 +138,11 @@ public class EditAirportUI extends javax.swing.JFrame {
         });
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,8 +209,20 @@ public class EditAirportUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            this.ctrl_edit.editAirport(this.airport.getIATAcode(), txtName.getText(), txtTown.getText(), txtCountry.getText(), Double.parseDouble(txtLat.getText()), Double.parseDouble(txtLon.getText()), Double.parseDouble(txtAlt.getText()));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Invalid information (Number format or missing data");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Want to exit?", "Confirm", 0);
+
+        if (option == 0) {
+            dispose();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
