@@ -256,7 +256,7 @@ public class Physics {
         return (2 * finalWeight * 9.81) / (AirDensity * aircraft.getModel().getWingArea() * Math.pow(TAS, 2));
     }
 
-    public static double calculateDragCoeficient(Aircraft aircraft, Double altitude) {
+    public static double calculateDragCoeficient(Aircraft aircraft, double altitude) {
         if (altitude == -1) {
             altitude = aircraft.getModel().getCruiseAltitude();
         }
@@ -375,9 +375,9 @@ public class Physics {
 
     }
 
-    public static double calculateFuelBurned(Aircraft aircraft, double dragForce) {
+    public static double calculateFuelBurned(Aircraft aircraft, double totalthrust, double time) {
 
-        return -aircraft.getModel().getTSFC() * dragForce;
+        return -totalthrust*time*aircraft.getModel().getTSFC()/9.81;
     }
 
     public static double calculateAltitudeVariation(double trueAirSpeed, double totalThrust, double dragForce, double maxWeight) {
@@ -402,14 +402,17 @@ public class Physics {
 
     public static double calculateDistanceEach60SecAtCruiseAltitude(Aircraft aircraft, double speed) {
 
-        return speed * 120;
+        return speed * 60;
     }
 
     public static double calculateAircraftFinalWeight(Aircraft aircraft) {
-        // return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity() + aircraft.getModel().getEmptyWeight();
+        //return (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195 + aircraft.getModel().getFuelCapacity() + aircraft.getModel().getEmptyWeight();
         double litersInKg = PhysicsConverters.litersToKgConverter(aircraft.getModel().getFuelCapacity());
 
-        return aircraft.getModel().getEmptyWeight() + aircraft.getModel().getMaxPayload() + litersInKg;
+        return aircraft.getCargo()+aircraft.getFuel()+
+                (aircraft.getNumberElementsCrew()+aircraft.getNumberFirstClass()+aircraft.getNumberNormalClass())*195+
+                aircraft.getModel().getEmptyWeight() 
+                + aircraft.getModel().getMaxPayload() + litersInKg;
     }
 
     public static double[] aircraftClimb(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments) {
@@ -446,7 +449,7 @@ public class Physics {
             trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
             liftForce = calculateLiftForceInASegment(aircraft, altitude);
             dragForce = calculateDragForceInASegment(aircraft, altitude);
-            thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+            thrustAltitude = calculateThrust(aircraft, altitude, trueMachNumber);
             thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
             maxWeight = calculateAircraftFinalWeight(aircraft);
             climbRate = calculateAircraftClimbRate(aircraft, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
@@ -524,7 +527,7 @@ public class Physics {
             trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
             liftForce = calculateLiftForceInASegment(aircraft, altitude);
             dragForce = calculateDragForceInASegment(aircraft, altitude);
-            thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+            thrustAltitude = calculateThrust(aircraft, altitude, trueMachNumber);
             thrustAltitude = 0.1 * aircraft.getModel().getNumberMotors() * thrustAltitude; //thrust quando está a descer
             descentRate = calculateAircraftClimbRate(aircraft, thrustAltitude, dragForce, maxWeight, trueAirSpeed); //climbRate
             descentAngle = calculateClimbingAngle(trueAirSpeed, descentRate);
@@ -607,7 +610,7 @@ public class Physics {
         trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
         liftForce = calculateLiftForceInASegment(aircraft, altitude);
         dragForce = calculateDragForceInASegment(aircraft, altitude);
-        thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+        thrustAltitude = calculateThrust(aircraft, altitude, trueMachNumber);
         thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
 
         double distanceTraveledEach60secs = calculateDistanceEach60SecAtCruiseAltitude(aircraft, trueAirSpeed);
@@ -676,7 +679,7 @@ public class Physics {
         trueAirSpeed = calculateTrueAirSpeed(trueMachNumber, speedOfSound);
         liftForce = calculateLiftForceInASegment(aircraft, altitude);
         dragForce = calculateDragForceInASegment(aircraft, altitude);
-        thrustAltitude = calculateThrustAltitude(aircraft, altitude, trueMachNumber);
+        thrustAltitude = calculateThrust(aircraft, altitude, trueMachNumber);
         thrustAltitude = aircraft.getModel().getNumberMotors() * thrustAltitude;
 
         double distanceTraveledEach60secs = calculateDistanceEach60SecAtCruiseAltitude(aircraft, trueAirSpeed);
