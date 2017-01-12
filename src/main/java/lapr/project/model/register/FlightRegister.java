@@ -7,7 +7,6 @@ package lapr.project.model.register;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import lapr.project.model.Airport;
 import lapr.project.model.Flight;
 
 /**
@@ -16,7 +15,7 @@ import lapr.project.model.Flight;
  */
 public class FlightRegister {
 
-    private final HashMap<String, Flight> mapFlights;
+    private HashMap<String, Flight> mapFlights;
 
     public FlightRegister() {
         mapFlights = new LinkedHashMap<>();
@@ -29,22 +28,14 @@ public class FlightRegister {
         }
         return null;
     }
-    
+
     public Flight getFlightByID(String id) {
         for (Flight flight : this.mapFlights.values()) {
             if (flight.getId().equalsIgnoreCase(id)) {
                 return flight;
-
             }
         }
         return null;
-    }
-
-    public boolean confirmFlight(Flight newFlight) {
-        if (addFlight(newFlight).equals(newFlight)) {
-            return true;
-        }
-        return false;
     }
 
     public boolean validateFlight(Flight flight) {

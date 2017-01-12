@@ -506,13 +506,14 @@ public class PhysicsTest {
         Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 32000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
         project.getAircraftRegister().addAircraft(aircraft);
         aircraft.setDescription("aaa");
-        double expResult = aircraft.getCargo()+PhysicsConverters.litersToKgConverter(aircraft.getFuel())+
-                (aircraft.getNumberElementsCrew()+aircraft.getNumberFirstClass()+aircraft.getNumberNormalClass())*195+
-                aircraft.getModel().getEmptyWeight() 
+        double expResult = aircraft.getCargo() + PhysicsConverters.litersToKgConverter(aircraft.getFuel())
+                + (aircraft.getNumberElementsCrew() + aircraft.getNumberFirstClass() + aircraft.getNumberNormalClass()) * 195
+                + aircraft.getModel().getEmptyWeight()
                 + aircraft.getModel().getMaxPayload();
         double result = Physics.calculateAircraftFinalWeight(aircraft);
-        assertEquals(expResult, result, expResult*0.01);
+        assertEquals(expResult, result, expResult * 0.01);
     }
+
     /**
      * Test of aircraftClimb method, of class Physics.
      */
@@ -675,28 +676,35 @@ public class PhysicsTest {
         }
 
         System.out.println("\nShortPath" + shortPath);
-        
-        
+
         for (i = 0; i < segments1.length; i++) {
             System.out.println("\nArraySegments" + segments1[i]);
         }
         double totalDistance = 0;
 
         for (i = 0; i <= segments1.length; i++) {
-            if(segments1[i]!=null){
-            totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments1[i]);
+            if (segments1[i] != null) {
+                totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments1[i]);
+            } else {
+                break;
             }
-            else break;
         }
-        
+
         System.out.println(Physics.calculateAircraftFinalWeight(aircraft));
         double[] c = new double[8];
-        c[0] = 7;
-        c[1] = 1039777;
+//        c[0] = 7;
+//        c[1] = 1039777;
+//        c[2] = totalDistance;
+//        c[3] = 179420;
+//        c[4] = 12300;
+//        c[5] = 2;
+
+        c[0] = 3;
+        c[1] = 591773;
         c[2] = totalDistance;
         c[3] = 179420;
-        c[4] = 12300;
-        c[5] = 2;
+        c[4] = 20730;
+        c[5] = 3;
 
         double[] expResult = c;
         for (i = 0; i < expResult.length; i++) {
@@ -707,17 +715,17 @@ public class PhysicsTest {
         for (i = 0; i < result.length; i++) {
             System.out.println("\naa:" + result[i]);
         }
-        
-        System.out.println("\ndistance:"+totalDistance);
-        System.out.println("\ndistance2:"+result[2]);
 
-        System.out.println("\n::::::::"+dist);
-        assertEquals(expResult[0], result[0], expResult[0]*0.01);
-        assertEquals(expResult[1], result[1], expResult[1]*0.01);
-        assertEquals(expResult[2], result[2], expResult[2]*0.01);
-        assertEquals(expResult[3], result[3], expResult[2]*0.01);
-        assertEquals(expResult[4], result[4], expResult[4]*0.01);
-        assertEquals(expResult[5], result[5], expResult[5]*0.01);
+        System.out.println("\ndistance:" + totalDistance);
+        System.out.println("\ndistance2:" + result[2]);
+
+        System.out.println("\n::::::::" + dist);
+        assertEquals(expResult[0], result[0], expResult[0] * 0.01);
+        assertEquals(expResult[1], result[1], expResult[1] * 0.01);
+        assertEquals(expResult[2], result[2], expResult[2] * 0.01);
+        assertEquals(expResult[3], result[3], expResult[2] * 0.01);
+        assertEquals(expResult[4], result[4], expResult[4] * 0.01);
+        assertEquals(expResult[5], result[5], expResult[5] * 0.01);
 
     }
 }

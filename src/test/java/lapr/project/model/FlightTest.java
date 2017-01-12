@@ -6,9 +6,6 @@
 package lapr.project.model;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import lapr.project.model.network.AirNetwork;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
 import lapr.project.utils.AircraftStAXParser;
@@ -26,52 +23,52 @@ import static org.junit.Assert.*;
  * @author Tiago
  */
 public class FlightTest {
+
     private Project project;
-    private final Node bNode,eNode;
+    private final Node bNode, eNode;
     private final Segment segment;
     private final ArrayList<Segment> listSegments;
     private final AircraftModel aircraftModel;
     private final Aircraft aircraft;
     private final FlightPlan flightplan1;
     private final Flight flight1;
-    
-    
+
     public FlightTest() {
         defaultProject();
-        
-        bNode = new Node("ATC02",32.3639984,-64.6787033);
-        eNode = new Node("ATC03",38.7411995,-45);
-       
-        segment = new Segment("LSFU01",bNode,eNode,new double[1],"bidirectional",10,135);
-        
+
+        bNode = new Node("ATC02", 32.3639984, -64.6787033);
+        eNode = new Node("ATC03", 38.7411995, -45);
+
+        segment = new Segment("LSFU01", bNode, eNode, new double[1], "bidirectional", 10, 135);
+
         listSegments = new ArrayList<>();
         listSegments.add(segment);
-        
+
         aircraftModel = project.getAircraftModelRegister().getAircraftModel("A380");
 
         aircraft = new Aircraft(aircraftModel.getId(), aircraftModel.getDescription(), 10, 5, 4, 200, 10.000, aircraftModel);
-        
+
         flightplan1 = project.getFlightPlanRegister().getFlightPlansList().get("FP1");
-        
-        Flight flight = new Flight("FLIGHT",flightplan1,aircraft,listSegments,2000,3000);
+
+        Flight flight = new Flight("FLIGHT", flightplan1, aircraft, listSegments, 2000, 3000);
         project.addFlight(flight);
-        
-        flight1 = project.getFlightRegister().getFlightByID("FLIGHT");
-        
+
+        flight1 = project.getFlightRegister().getFlightsList().get("FLIGHT");
+
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -86,17 +83,16 @@ public class FlightTest {
         network.XMLReader("inOutFiles/TestSet02_Network.xml");
         instance.XMLReader("inOutFiles/TestSet02_Aircraft.xml");
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
-        
-        
+
         FlightPlan flightplan = new FlightPlan("FP1", AircraftModel.Type.PASSENGER,
                 project.getAirportRegister().getAirportByIATACode("OPO"),
                 project.getAirportRegister().getAirportByIATACode("LIS"),
                 10, 10, 10);
-        
-        project.addFlightPlan(flightplan);      
-        
+
+        project.addFlightPlan(flightplan);
+
     }
-    
+
     /**
      * Test of getId method, of class Flight.
      */
@@ -107,7 +103,7 @@ public class FlightTest {
         String expResult = "FLIGHT";
         String result = instance.getId();
         assertEquals(expResult, result);
-        
+
     }
 
     /**
@@ -120,7 +116,7 @@ public class FlightTest {
         FlightPlan expResult = flightplan1;
         FlightPlan result = instance.getFlightPlan();
         assertEquals(expResult, result);
-       
+
     }
 
     /**
@@ -133,7 +129,7 @@ public class FlightTest {
         Aircraft expResult = aircraft;
         Aircraft result = instance.getAircraft();
         assertEquals(expResult, result);
-        
+
     }
 
     /**
@@ -146,7 +142,7 @@ public class FlightTest {
         ArrayList<Segment> expResult = listSegments;
         ArrayList<Segment> result = instance.getPathTaken();
         assertEquals(expResult, result);
-        
+
     }
 
     /**
@@ -159,7 +155,7 @@ public class FlightTest {
         double expResult = 0.0;
         double result = instance.getTravelingTime();
         assertEquals(expResult, result, 2000);
-       
+
     }
 
     /**
@@ -172,8 +168,7 @@ public class FlightTest {
         double expResult = 3000;
         double result = instance.getEnergyConsumption();
         assertEquals(expResult, result, 3000);
-        
+
     }
 
-    
 }

@@ -6,6 +6,7 @@
 package lapr.project.model;
 
 import lapr.project.model.network.AirNetwork;
+import lapr.project.model.network.Node;
 import lapr.project.model.register.*;
 
 /**
@@ -55,12 +56,12 @@ public class Project {
         this.flightPlanRegister = flightPlanRegister;
         this.flightRegister = new FlightRegister();
     }
-    
-    public boolean addAircraft(Aircraft newAircraft){
+
+    public boolean addAircraft(Aircraft newAircraft) {
         return this.aircraftRegister.addAircraft(newAircraft);
     }
-    
-    public FlightPlan addFlightPlan(FlightPlan newFlightPlan){
+
+    public FlightPlan addFlightPlan(FlightPlan newFlightPlan) {
         return this.flightPlanRegister.addFlightPlan(newFlightPlan);
     }
 
@@ -76,8 +77,22 @@ public class Project {
         return this.flightRegister.addFlight(newFlight);
     }
 
-    public boolean confirmFlight(Flight newFlight) {
-        return this.flightRegister.confirmFlight(newFlight);
+    public boolean isReachable(Node nOrigin, Node nEnd) {
+        return this.airNetwork.isReachable(nOrigin, nEnd);
+    }
+
+    public boolean isReachable(Airport aOrigin, Airport aEnd) {
+        Node nOrigin = getAirportNode(aOrigin);
+        Node nEnd = getAirportNode(aEnd);
+
+        if (nOrigin != null && nEnd != null) {
+            return this.airNetwork.isReachable(nOrigin, nEnd);
+        }
+        return false;
+    }
+
+    public Node getAirportNode(Airport airport) {
+        return this.airNetwork.getNodeByLocation(airport.getLocation().getLatitude(), airport.getLocation().getLongitude());
     }
 
     public String getName() {

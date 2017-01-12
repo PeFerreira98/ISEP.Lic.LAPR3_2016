@@ -13,6 +13,7 @@ import lapr.project.model.Aircraft;
 import lapr.project.model.Physics;
 import lapr.project.model.graph.Edge;
 import lapr.project.model.graph.Graph;
+import lapr.project.model.graph.GraphAlgorithms;
 import lapr.project.model.graph.Vertex;
 
 /**
@@ -58,6 +59,15 @@ public class AirNetwork {
         return this.map_Nodes.get(nodeId);
     }
 
+    public Node getNodeByLocation(double latitude, double longitude) {
+        for (Node node : this.map_Nodes.values()) {
+            if (node.getLatitude() == latitude && node.getLongitude() == longitude) {
+                return node;
+            }
+        }
+        return null;
+    }
+
     /**
      * Adiciona Node n a Network
      *
@@ -99,6 +109,17 @@ public class AirNetwork {
             }
         }
         return true;
+    }
+
+    public boolean isReachable(Node nOrigin, Node nEnd) {
+        Deque<Node> path = GraphAlgorithms.BreadthFirstSearch(this.airNetwork, nOrigin);
+
+        for (Node node : path) {
+            if (node.equals(nEnd)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static <V, E> void getPath(Graph<V, E> g, V voInf, V vdInf, int[] pathKeys, Deque<V> path) {
@@ -225,7 +246,6 @@ public class AirNetwork {
         map.put(distance, path);
 
         //System.out.println(map);
-
         return map;
     }
 
@@ -364,6 +384,11 @@ public class AirNetwork {
         }
         return 0;
 
+    }
+
+    @Override
+    public String toString() {
+        return "AirNetwork{" + "airNetwork=" + airNetwork + ", map_Nodes=" + map_Nodes + ", map_Segment=" + map_Segment + '}';
     }
 
 }

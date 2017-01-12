@@ -50,7 +50,6 @@ public class CopyProjectControllerTest {
     }
 
     private void defaultProject() {
-       
 
         NetworkStAXParser network = new NetworkStAXParser(project);
         AircraftStAXParser instance = new AircraftStAXParser(project);
@@ -61,7 +60,7 @@ public class CopyProjectControllerTest {
         airports.XMLReader("inOutFiles/TestSet02_Airports.xml");
 
         this.listProjects.add(project);
-        
+
     }
 
     /**
@@ -79,20 +78,4 @@ public class CopyProjectControllerTest {
 
     }
 
-    /**
-     * Test of validateProjectNameAndDescription method, of class CopyProjectController.
-     */
-    @Test
-    public void testValidateProjectNameAndDescription() {
-        System.out.println("validateProjectNameAndDescription");
-        String name = "proj0";
-        String description = "proj";
-        CopyProjectController instance = new CopyProjectController(project);
-        boolean expResult = true;
-        boolean result = instance.validateProjectNameAndDescription(name, description);
-        assertEquals(expResult, result);
-        
-    }
-
-    
 }
