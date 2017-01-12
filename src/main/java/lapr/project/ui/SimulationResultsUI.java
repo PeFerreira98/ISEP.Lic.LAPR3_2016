@@ -36,6 +36,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         this.aircraft = aircraft.getDescription();
         this.flightPlan = flightPlan.getName();
         initComponents();
+        super.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 

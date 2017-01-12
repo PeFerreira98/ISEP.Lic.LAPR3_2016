@@ -33,6 +33,7 @@ public class SimulateFlightUI extends javax.swing.JFrame {
         this.ctrlSimulation = new SimulateFlightController(p);
         initComponents();
         initFlightPlansList();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
     }
 

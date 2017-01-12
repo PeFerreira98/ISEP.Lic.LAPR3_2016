@@ -24,6 +24,7 @@ public class CreateProjectUI extends javax.swing.JFrame {
     public CreateProjectUI() {
         this.ctrl_createProj = new CreateProjectController();
         initComponents();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
     }
 

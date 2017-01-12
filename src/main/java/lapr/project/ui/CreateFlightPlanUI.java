@@ -41,6 +41,7 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         this.ctrlFlightPlan = new CreateFlightPlanController(p);
         initComponents();
         initLstAirports();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
 
     }

@@ -5,6 +5,8 @@
  */
 package lapr.project.ui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -26,10 +28,10 @@ public class ProjectListUI extends javax.swing.JFrame {
      */
     public ProjectListUI() {
         this.ctrl_projList = new ProjectListController();
-
         super.setTitle("Load Project");
         initComponents();
         inicializar();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
 
     }

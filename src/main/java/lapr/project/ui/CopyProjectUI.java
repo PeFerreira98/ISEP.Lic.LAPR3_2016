@@ -23,6 +23,7 @@ public class CopyProjectUI extends javax.swing.JFrame {
     public CopyProjectUI(Project project) {
         this.copyProjectController = new CopyProjectController(project);
         initComponents();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
     }
 

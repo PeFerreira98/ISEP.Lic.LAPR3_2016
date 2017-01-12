@@ -118,7 +118,7 @@ public class DatabaseModel {
 
         int flag = 0;
         try {
-            CallableStatement cs = con.prepareCall("{call insertProject(?,?)}");
+            cs = con.prepareCall("{call insertProject(?,?)}");
             cs.setString(1, project.getName());
             cs.setString(2, project.getDescription());
             cs.executeUpdate();
@@ -174,7 +174,7 @@ public class DatabaseModel {
     public void addSegment(Segment segment) {
         try {
 
-            cs = con.prepareCall("{ ? = insertSegment(?,?,?,?,?,?,?)");
+            cs = con.prepareCall("{call insertSegment(?,?,?,?,?,?,?)");
             cs.setString(1, segment.getId());
             cs.setString(2, segment.getDirection());
             cs.setDouble(3, segment.getWind_speed());

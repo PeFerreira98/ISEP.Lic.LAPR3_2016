@@ -34,6 +34,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
 
         initComponents();
         inicializar();
+        super.setLocationRelativeTo(null);
         super.setVisible(true);
     }
 
