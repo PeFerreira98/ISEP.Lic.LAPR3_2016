@@ -559,30 +559,7 @@ public class DatabaseModel {
     
     
     
-    /**
-     * search the id that only DB knows
-     *
-     * @param name
-     * @return id
-     */
-    public int getNodeIdByName(String name) {
-        int id = 0;
-        try {
-            CallableStatement cs1;
-            cs1 = con.prepareCall("{ ? = call getNodeIndex(?,?) }");
-            cs1.setString(2, name);
-            cs1.setString(3, this.project.getName());
-            cs1.registerOutParameter(1, java.sql.Types.INTEGER);
-            cs1.execute();
-
-            id = cs1.getInt(1);
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return id;
-    }
-
+    
     /**
      * return Node by id
      *
@@ -612,6 +589,30 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         return n;
+    }
+    
+    /**
+     * search the id that only DB knows
+     *
+     * @param name
+     * @return id
+     */
+    public int getNodeIdByName(String name) {
+        int id = 0;
+        try {
+            CallableStatement cs1;
+            cs1 = con.prepareCall("{ ? = call getNodeIndex(?,?) }");
+            cs1.setString(2, name);
+            cs1.setString(3, this.project.getName());
+            cs1.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs1.execute();
+
+            id = cs1.getInt(1);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
     }
 
     private int getAirportId(String iataCode) {
@@ -661,10 +662,7 @@ public class DatabaseModel {
         }
         return id;
     }
-    
-    
-    
-    
+       
     private void addSegmentsToFlights(List<Flight> lst_Flight) {
         try {
             for (int i = 0; i < lst_Flight.size(); i++) {
