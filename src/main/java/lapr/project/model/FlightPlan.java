@@ -5,10 +5,7 @@
  */
 package lapr.project.model;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
-import lapr.project.model.network.Segment;
 
 /**
  *
@@ -17,14 +14,14 @@ import lapr.project.model.network.Segment;
 public class FlightPlan {
 
     private int id;
-    private String name;
-    private AircraftModel.Type aircraftType;
-    private Airport origin;
-    private Airport dest;
+    private final String name;
+    private final AircraftModel.Type aircraftType;
+    private final Airport origin;
+    private final Airport dest;
 
-    private double nNormalClass;
-    private double nFirstClass;
-    private double nCrew;
+    private final double nNormalClass;
+    private final double nFirstClass;
+    private final double nCrew;
 
     public FlightPlan(String name, AircraftModel.Type aircraftType, Airport origin, Airport dest, double nNormalClass, double nFirstClass, double nCrew) {
         this.id = 0;
