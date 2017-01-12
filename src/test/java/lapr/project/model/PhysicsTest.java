@@ -7,20 +7,18 @@ package lapr.project.model;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import static lapr.project.model.Physics.calculateSegmentDistance;
-import lapr.project.model.network.AirNetwork;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
 import lapr.project.utils.AircraftStAXParser;
 import lapr.project.utils.AirportStAXParser;
+import lapr.project.utils.ImportFlightPatternCSV;
 import lapr.project.utils.NetworkStAXParser;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -37,6 +35,7 @@ public class PhysicsTest {
         listProjects = new LinkedList<>();
         defaultProject();
     }
+    double[][] matrix = ImportFlightPatternCSV.CSVImport("inOutFiles/Flight_pattern_A380_v1a.csv");
 
     private void defaultProject() {
         Project project = new Project("proj0", "proj");
@@ -183,12 +182,12 @@ public class PhysicsTest {
         System.out.println("calculateDragForceInASegment");
         Project project = listProjects.get(0);
         System.out.println(project.getDescription());
-        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 0, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 320000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
         project.getAircraftRegister().addAircraft(aircraft);
         aircraft.setDescription("aaa");
         double altitude = 0.0;
         double expResult = 426922.82;
-        double result = Physics.calculateDragForceInASegment(aircraft, altitude);
+        double result = Physics.calculateDragForceInASegment(aircraft, altitude, matrix);
         assertEquals(expResult, result, 0.01);
 
     }
@@ -201,13 +200,13 @@ public class PhysicsTest {
         System.out.println("calculateLiftCoeficient");
         Project project = listProjects.get(0);
         System.out.println(project.getDescription());
-        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 0, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 320000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
         project.getAircraftRegister().addAircraft(aircraft);
         aircraft.setDescription("aaa");
 
         double altitude = 0.0;
         double expResult = 1.0;
-        double result = Physics.calculateLiftCoeficient(aircraft, altitude);
+        double result = Physics.calculateLiftCoeficient(aircraft, altitude, matrix);
         assertEquals(expResult, result, 0.01);
 
     }
@@ -220,13 +219,13 @@ public class PhysicsTest {
         System.out.println("calculateDragCoeficient");
         Project project = listProjects.get(0);
         System.out.println(project.getDescription());
-        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 0, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 320000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
         project.getAircraftRegister().addAircraft(aircraft);
         aircraft.setDescription("aaa");
 
         double altitude = 0;
         double expResult = 0.07;
-        double result = Physics.calculateDragCoeficient(aircraft, altitude);
+        double result = Physics.calculateDragCoeficient(aircraft, altitude, matrix);
         assertEquals(expResult, result, 0.01);
 
     }
@@ -504,13 +503,13 @@ public class PhysicsTest {
     public void testCalculateAircraftFinalWeight() {
         System.out.println("calculateAircraftFinalWeight");
         Project project = listProjects.get(0);
-        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 0, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 0, 32000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
         project.getAircraftRegister().addAircraft(aircraft);
         aircraft.setDescription("aaa");
-        double expResult = aircraft.getCargo()+aircraft.getFuel()+
+        double expResult = aircraft.getCargo()+PhysicsConverters.litersToKgConverter(aircraft.getFuel())+
                 (aircraft.getNumberElementsCrew()+aircraft.getNumberFirstClass()+aircraft.getNumberNormalClass())*195+
                 aircraft.getModel().getEmptyWeight() 
-                + aircraft.getModel().getMaxPayload() + PhysicsConverters.litersToKgConverter(aircraft.getModel().getFuelCapacity());
+                + aircraft.getModel().getMaxPayload();
         double result = Physics.calculateAircraftFinalWeight(aircraft);
         assertEquals(expResult, result, expResult*0.01);
     }
@@ -603,9 +602,10 @@ public class PhysicsTest {
         project.getAircraftRegister().addAircraft(aircraft);
         aircraft.setDescription("aaa");
         System.out.print(project.getAircraftRegister().getAircraftRegister().values().toString());
+        double[][] matrix = ImportFlightPatternCSV.CSVImport("inOutFiles/Flight_pattern_A380_v1a.csv");
 
         Airport initialAirport = project.getAirportRegister().getAirportByIATACode("LIS");
-        Airport endAirport = project.getAirportRegister().getAirportByIATACode("PMI");
+        Airport endAirport = project.getAirportRegister().getAirportByIATACode("MIA");
 
         Node voInf = null;
         Node vdInf = null;
@@ -675,41 +675,49 @@ public class PhysicsTest {
         }
 
         System.out.println("\nShortPath" + shortPath);
-
+        
+        
         for (i = 0; i < segments1.length; i++) {
             System.out.println("\nArraySegments" + segments1[i]);
         }
         double totalDistance = 0;
 
         for (i = 0; i <= segments1.length; i++) {
-            totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments1[0]);
+            if(segments1[i]!=null){
+            totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments1[i]);
+            }
+            else break;
         }
         
         System.out.println(Physics.calculateAircraftFinalWeight(aircraft));
         double[] c = new double[8];
         c[0] = 7;
-        c[1] = 923874;
+        c[1] = 1039777;
         c[2] = totalDistance;
-        c[3] = 166000;
-        c[4] = 9176;
+        c[3] = 179420;
+        c[4] = 12300;
         c[5] = 2;
 
         double[] expResult = c;
         for (i = 0; i < expResult.length; i++) {
             System.out.println("\na:" + expResult[i]);
         }
-        double[] result = Physics.allFlightCalculations(aircraft, initialAirport, endAirport, dist, segments1);
+        double[] result = Physics.allFlightCalculations(aircraft, initialAirport, endAirport, dist, segments1, matrix);
 
         for (i = 0; i < result.length; i++) {
             System.out.println("\naa:" + result[i]);
         }
+        
+        System.out.println("\ndistance:"+totalDistance);
+        System.out.println("\ndistance2:"+result[2]);
 
-        assertEquals(expResult[0], result[0], 10);
-        assertEquals(expResult[1], result[1], 10000);
-        assertEquals(expResult[2], result[2], 15000);
-        assertEquals(expResult[3], result[3], 2000);
-        assertEquals(expResult[4], result[4], 360);
-        assertEquals(expResult[5], result[5], 0);
+        System.out.println("\n::::::::"+dist);
+        assertEquals(expResult[0], result[0], expResult[0]*0.01);
+        assertEquals(expResult[1], result[1], expResult[1]*0.01);
+        assertEquals(expResult[2], result[2], expResult[2]*0.01);
+        assertEquals(expResult[3], result[3], expResult[2]*0.01);
+        assertEquals(expResult[4], result[4], expResult[4]*0.01);
+        assertEquals(expResult[5], result[5], expResult[5]*0.01);
 
     }
 }
