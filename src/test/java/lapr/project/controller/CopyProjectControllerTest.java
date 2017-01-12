@@ -28,7 +28,7 @@ public class CopyProjectControllerTest {
     private final Project project;
 
     public CopyProjectControllerTest() {
-         listProjects = new LinkedList<>();
+        listProjects = new LinkedList<>();
         project = new Project("proj0", "proj");
         defaultProject();
     }
@@ -79,4 +79,20 @@ public class CopyProjectControllerTest {
 
     }
 
+    /**
+     * Test of validateProjectNameAndDescription method, of class CopyProjectController.
+     */
+    @Test
+    public void testValidateProjectNameAndDescription() {
+        System.out.println("validateProjectNameAndDescription");
+        String name = "proj0";
+        String description = "proj";
+        CopyProjectController instance = new CopyProjectController(project);
+        boolean expResult = true;
+        boolean result = instance.validateProjectNameAndDescription(name, description);
+        assertEquals(expResult, result);
+        
+    }
+
+    
 }

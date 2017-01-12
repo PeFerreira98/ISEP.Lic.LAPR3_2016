@@ -19,7 +19,7 @@ import lapr.project.model.Project;
  */
 public class CreateFlightPlanController {
 
-    private Project project;
+    private final Project project;
     private FlightPlan flightPlan;
 
     public CreateFlightPlanController(Project proj) {

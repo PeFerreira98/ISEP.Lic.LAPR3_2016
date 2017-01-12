@@ -19,14 +19,30 @@ public class ExportHTML {
     private static SegmentsRegister segmentsRegister;
     
     
+    /**
+     * 
+     * @param airnetwork 
+     */
     public ExportHTML(AirNetwork airnetwork){
         m_airnetwork = airnetwork;
     }
     
+    /**
+     *
+     * @param out
+     * @throws Exception
+     */
     public static void criarFicheiro(Formatter out) throws Exception {
         out.format("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">%n<html>%n");
     }
     
+    /**
+     *
+     * @param out
+     * @param nameFile
+     * @param titulo
+     * @throws Exception
+     */
     public static void headComTitulo(Formatter out, String nameFile, String titulo) throws Exception {
         out.format("<head>"
                 + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
@@ -81,10 +97,26 @@ public class ExportHTML {
         out.format("<body >%n");
     }
 
+    /**
+     * 
+     * @param out
+     * @param x
+     * @param titulo
+     * @param cor
+     * @throws Exception 
+     */
     public static void criarCabeçalho(Formatter out, int x, String titulo, String cor) throws Exception {
         out.format("<center><h%d>%n<font color=\"%s\" size=6>%s</font></h%d>%n%n</center>", x, cor, titulo, x);
     }
 
+    /**
+     * 
+     * @param out
+     * @param caption
+     * @param name1
+     * @param name2
+     * @throws Exception 
+     */
     public static void criarTable(Formatter out, String caption, String name1, String name2) throws Exception {
         out.format("<div>"
                 + "<table id=\"t01\">"
@@ -96,6 +128,10 @@ public class ExportHTML {
     }
 
 
+    /**
+     * 
+     * @param out 
+     */
     public static void fecharTable(Formatter out) {
         out.format("</table>"
                 + "</div>"
@@ -111,6 +147,11 @@ public class ExportHTML {
                 + "<br></span>");
     }
 
+    /**
+     * 
+     * @param out
+     * @param str 
+     */
     public static void imagem(Formatter out, String str) {
         out.format("<div><br>"
                 + "<p class=\"c2\"></p>"
