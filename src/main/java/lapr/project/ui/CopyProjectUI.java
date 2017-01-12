@@ -15,10 +15,11 @@ import lapr.project.model.Project;
  */
 public class CopyProjectUI extends javax.swing.JFrame {
 
-    private CopyProjectController copyProjectController;
+    private final CopyProjectController copyProjectController;
     
     /**
      * Creates new form CopyProjectUI
+     * @param project
      */
     public CopyProjectUI(Project project) {
         this.copyProjectController = new CopyProjectController(project);
@@ -39,9 +40,10 @@ public class CopyProjectUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         nameJText = new javax.swing.JTextField();
-        descJText = new javax.swing.JTextField();
         saveJButton = new javax.swing.JButton();
         verifyJButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtdesc = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -65,25 +67,30 @@ public class CopyProjectUI extends javax.swing.JFrame {
             }
         });
 
+        txtdesc.setColumns(20);
+        txtdesc.setRows(5);
+        jScrollPane1.setViewportView(txtdesc);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2)))
-                .addGap(19, 19, 19)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameJText, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                    .addComponent(descJText))
+                    .addComponent(nameJText, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
-            .addComponent(saveJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(verifyJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(verifyJButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveJButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,21 +100,21 @@ public class CopyProjectUI extends javax.swing.JFrame {
                     .addComponent(nameJText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(descJText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(verifyJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveJButton)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJButtonActionPerformed
-        if (copyProjectController.createProject(nameJText.getText(), descJText.getText())) {
+        if (copyProjectController.createProject(nameJText.getText(), txtdesc.getText())) {
             if (copyProjectController.saveInDataBase()) {
                 JOptionPane.showMessageDialog(this, "Project Saved!");
                 dispose();
@@ -120,9 +127,9 @@ public class CopyProjectUI extends javax.swing.JFrame {
     }//GEN-LAST:event_saveJButtonActionPerformed
 
     private void verifyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyJButtonActionPerformed
-        if(nameJText.getText().isEmpty() || descJText.getText().isEmpty()){
+        if(nameJText.getText().isEmpty() || txtdesc.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "Invalid information");
-        }else if(!this.copyProjectController.validateProjectNameAndDescription(nameJText.getText(), descJText.getText())){
+        }else if(!this.copyProjectController.validateProjectNameAndDescription(nameJText.getText(), txtdesc.getText())){
             JOptionPane.showMessageDialog(this, "Project name already exists");
         }else{
              JOptionPane.showMessageDialog(this, "Project Validated, You can Save");
@@ -131,11 +138,12 @@ public class CopyProjectUI extends javax.swing.JFrame {
     }//GEN-LAST:event_verifyJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField descJText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameJText;
     private javax.swing.JButton saveJButton;
+    private javax.swing.JTextArea txtdesc;
     private javax.swing.JButton verifyJButton;
     // End of variables declaration//GEN-END:variables
 }
