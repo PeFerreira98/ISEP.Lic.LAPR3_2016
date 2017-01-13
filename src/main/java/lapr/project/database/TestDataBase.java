@@ -21,7 +21,8 @@ public class TestDataBase {
     public static void main(String[] args) {
         Project p = testGetProjects();
         System.out.println();
-
+        
+        //System.out.println(testGetProjectID(new Project("tem dias")));
     }
 
     /**
@@ -53,5 +54,21 @@ public class TestDataBase {
         }
     }
     
+    public static void testEditProject(String nome, String desc){
+        System.out.println("editProject");
+        DatabaseModel instance = new DatabaseModel(new Project("cenas", "lapr cenas"));
+        instance.editProject(nome, desc);
+    }
     
+    public static int testGetProjectID(Project p){
+        System.out.println("getProjectID");
+        DatabaseModel instance = new DatabaseModel(p);
+        return instance.getProjectId();
+    }
+    
+    public static int testGetNodeID(Project p){
+        System.out.println("getProjectID");
+        DatabaseModel instance = new DatabaseModel(p);
+        return instance.getNodeId("PT01");
+    }
 }
