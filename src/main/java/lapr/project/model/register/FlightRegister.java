@@ -39,9 +39,6 @@ public class FlightRegister {
     }
 
     public boolean validateFlight(Flight flight) {
-        if (flight.getPathTaken().isEmpty()) {
-            return false;
-        }
         if (mapFlights.containsKey(flight.getId())) {
             return false;
         }

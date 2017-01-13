@@ -46,6 +46,10 @@ public class SimulationResultsController {
     public boolean isReachable() {
         return this.project.isReachable(this.flightPlan.getOrigin(), this.flightPlan.getDest());
     }
+    
+    public Flight getFlight(){
+        return this.flight;
+    }
 
     //TODO: Change this
     public Map<Double, LinkedList<Node>> getPathByAlgorithm(FlightPlan fp, int algorithm) {
@@ -68,7 +72,7 @@ public class SimulationResultsController {
         return 0.0;
     }
 
-    public boolean saveFlightPlan(double time,
+    public boolean saveFlight(double time,
             //            Airport originAeroport, Airport destinationAeroport,
             double energy) {
 
@@ -77,7 +81,7 @@ public class SimulationResultsController {
         try {
             this.flight = new Flight(this.flightPlan, this.aircraft, arrayListSegments, time, energy);
 
-            if (this.flightPlan.equals(this.project.addFlightPlan(flightPlan))) {
+            if (this.flight.equals(this.project.addFlight(flight))) {
                 return true;
             }
 

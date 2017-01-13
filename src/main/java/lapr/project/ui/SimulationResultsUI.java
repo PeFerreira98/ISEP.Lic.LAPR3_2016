@@ -5,11 +5,14 @@
  */
 package lapr.project.ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import lapr.project.controller.SimulationResultsController;
 import lapr.project.model.Aircraft;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
+import lapr.project.utils.ExportHTML;
 
 /**
  *
@@ -17,6 +20,7 @@ import lapr.project.model.Project;
  */
 public class SimulationResultsUI extends javax.swing.JFrame {
 
+    private static final Logger LOG = Logger.getLogger("SimulationResultsUILog");
     private SimulationResultsController simulationResultsController;
 
     private double time = 0;
@@ -28,9 +32,11 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     /**
      * Creates new form SimulationResultsUI
      *
-     * @param path
-     * @param travelingTime
-     * @param energy
+     * @param project
+     * @param flightPlan
+     * @param aircraft
+     * @param pathChoosed
+     * @param flightPattern
      */
     public SimulationResultsUI(Project project, FlightPlan flightPlan, Aircraft aircraft, String pathChoosed, double[][] flightPattern) {
         this.simulationResultsController = new SimulationResultsController(project, flightPlan, aircraft, pathChoosed, flightPattern);
@@ -69,20 +75,24 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         lstSegments = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextFieldTime = new javax.swing.JTextField();
-        jTextFieldEnergy = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jTextFieldAircraft = new javax.swing.JTextField();
-        jTextFieldFlightPlan = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextFieldDistance = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        ExportHTML = new javax.swing.JButton();
+        ExportCSV = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -94,12 +104,6 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         jLabel2.setText("Time:");
 
         jLabel3.setText("Energy consuption:");
-
-        jTextFieldTime.setText(""+this.time);
-        jTextFieldTime.setEnabled(false);
-
-        jTextFieldEnergy.setText(""+this.energy);
-        jTextFieldEnergy.setEnabled(false);
 
         btnSave.setText("Save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -117,79 +121,100 @@ public class SimulationResultsUI extends javax.swing.JFrame {
 
         jLabel4.setText("Simulation results");
 
-        jTextFieldAircraft.setEditable(false);
-        jTextFieldAircraft.setText(this.aircraft);
-        jTextFieldAircraft.setEnabled(false);
-
-        jTextFieldFlightPlan.setEditable(false);
-        jTextFieldFlightPlan.setText(this.flightPlan);
-        jTextFieldFlightPlan.setEnabled(false);
-
         jLabel5.setText("Aircraft:");
 
         jLabel6.setText("FlightPlan:");
 
         jLabel7.setText("Distance:");
 
-        jTextFieldDistance.setText(""+this.distance);
-        jTextFieldDistance.setEnabled(false);
-        jTextFieldDistance.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldDistanceActionPerformed(evt);
-            }
-        });
-
-        jLabel8.setText("jLabel8");
+        jLabel8.setText(String.valueOf(this.time));
 
         jLabel9.setText("Seconds");
 
-        jLabel10.setText("jLabel10");
+        jLabel10.setText("N/N/S");
+
+        ExportHTML.setText("Export HTML");
+        ExportHTML.setEnabled(false);
+        ExportHTML.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExportHTMLActionPerformed(evt);
+            }
+        });
+
+        ExportCSV.setText("Export CSV");
+        ExportCSV.setEnabled(false);
+        ExportCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExportCSVActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Meters");
+
+        jLabel12.setText(String.valueOf(this.energy));
+
+        jLabel13.setText(String.valueOf(this.distance));
+
+        jLabel14.setText(this.aircraft);
+
+        jLabel15.setText(this.flightPlan);
+
+        jTextField1.setText("CSV_File_Name.csv");
+
+        jTextField2.setText("HTML_File_Name.html");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(25, 25, 25)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(53, 53, 53)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jTextField1)
+                            .addComponent(jTextField2))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextFieldAircraft, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDistance, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldEnergy, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldTime, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldFlightPlan))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnCancel))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel8)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel9)))
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel9)
+                                    .addComponent(jLabel11)))
+                            .addComponent(ExportHTML)
+                            .addComponent(ExportCSV, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel4))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(jLabel1)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCancel)))
+                .addGap(54, 54, 54))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel1)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,37 +225,44 @@ public class SimulationResultsUI extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextFieldTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)
                             .addComponent(jLabel9))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextFieldEnergy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel10)))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel10))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel11)
                             .addComponent(jLabel7))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel14))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldAircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(ExportCSV)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldFlightPlan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
+                            .addComponent(ExportHTML)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnSave)
                             .addComponent(btnCancel)))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)))
                 .addGap(25, 25, 25))
         );
 
@@ -238,21 +270,20 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (true) {
+        if (simulationResultsController.saveFlight(time, energy)) {
+            ExportCSV.setEnabled(true);
+            ExportHTML.setEnabled(true);
 
             int option = JOptionPane.showConfirmDialog(this, "Want add to database?", "Confirm", 0);
-
             if (option == 0) {
                 if (true) {
                     JOptionPane.showMessageDialog(this, "Flight saved");
-                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Error Adding Flight to database!");
                 }
             }
             if (option == 1) {
                 JOptionPane.showMessageDialog(this, "Flight saved");
-                dispose();
             }
 
         } else {
@@ -269,15 +300,39 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void jTextFieldDistanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDistanceActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldDistanceActionPerformed
+    private void ExportHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportHTMLActionPerformed
+        try {
+            new ExportHTML(jTextField2.getText(), this.simulationResultsController.getFlight());
+            JOptionPane.showMessageDialog(this, "HTML File Created!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error Creating HTML File!");
+            LOG.log(Level.INFO, "Error Creating HTML File! > " + jTextField2.getText(), e);
+        }
+    }//GEN-LAST:event_ExportHTMLActionPerformed
+
+    private void ExportCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportCSVActionPerformed
+        try {
+            JOptionPane.showMessageDialog(this, "Incomplete!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Incomplete!");
+            LOG.log(Level.INFO, "Error Creating CSV File! > " + jTextField1.getText(), e);
+        }
+        
+        
+    }//GEN-LAST:event_ExportCSVActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ExportCSV;
+    private javax.swing.JButton ExportHTML;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -287,11 +342,8 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextFieldAircraft;
-    private javax.swing.JTextField jTextFieldDistance;
-    private javax.swing.JTextField jTextFieldEnergy;
-    private javax.swing.JTextField jTextFieldFlightPlan;
-    private javax.swing.JTextField jTextFieldTime;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JList<String> lstSegments;
     // End of variables declaration//GEN-END:variables
 }
