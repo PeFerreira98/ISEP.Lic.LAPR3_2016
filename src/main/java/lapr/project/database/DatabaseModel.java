@@ -356,9 +356,9 @@ public class DatabaseModel {
             cs.setString(2, segment.getDirection());
             cs.setDouble(3, segment.getWind_speed());
             cs.setDouble(4, segment.getWind_direction());
-            cs.setInt(5, getNodeIdByName(segment.getBeginningNode().getName()));
-            cs.setInt(6, getNodeIdByName(segment.getEndNode().getName()));
-            cs.setString(7, this.project.getName());
+            cs.setInt(5, getNodeId(segment.getBeginningNode().getName()));
+            cs.setInt(6, getNodeId(segment.getEndNode().getName()));
+            cs.setInt(7, getProjectId());
 
             cs.executeUpdate();
         } catch (SQLException ex) {
@@ -399,7 +399,7 @@ public class DatabaseModel {
             cs.setDouble(22, air.getWingSpan());
             cs.setDouble(23, air.getAspectRatio());
             cs.setDouble(24, air.getE());
-            cs.setString(25, this.project.getName());
+            cs.setInt(25, getProjectId());
             cs.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -413,14 +413,15 @@ public class DatabaseModel {
      */
     public void addAircraft(Aircraft air) {
         try {
-            this.st.execute("insert into Aircraft(id, model, company, numberFirstClass, numberNormalClass, numberElementsCrew, project_id) "
-                    + "values ('"
-                    + air.getId() + "', '"
-                    + air.getModel().getId() + "', "
-                    + air.getNumberFirstClass() + ", "
-                    + air.getNumberNormalClass() + ", "
-                    + air.getNumberElementsCrew() + ", '"
-                    + this.project.getName() + "')");
+            cs = con.prepareCall("{call insertAircraft(?,?,?,?,?,?,?)}");
+            cs.setString(1, air.getId());
+            cs.setString(2, air.getDescription());
+            cs.setDouble(3, air.getNumberFirstClass());
+            cs.setDouble(4, air.getNumberNormalClass());
+            cs.setDouble(5, air.getNumberElementsCrew());
+            //cs.setString(6, );
+            cs.setInt(7, getProjectId());
+            cs.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -518,41 +519,19 @@ public class DatabaseModel {
     }
 
 // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc=" EDITS ">
-    //FIXME falta DAL
-    public void EditAirport(String iata, String name, String town, String country, double latitude, double longitude, double altitude) {
+    // <editor-fold defaultstate="collapsed" desc=" EDIT ">
+    //DONE
+    public void EditProject(String name, String description) {
         try {
-            this.rs = this.st.executeQuery("UPDATE AIRPORT set name = '" + name
-                    + "' && town = '" + town
-                    + "' && country = '" + country
-                    + "' && latitude = " + latitude
-                    + " && longitude = " + longitude
-                    + " && altitude = " + altitude
-                    + " WHERE project_name = '" + this.project.getName() + "' "
-                    + "AND cod_iata = '" + iata);
-
-            this.rs.close();
-
+            cs = con.prepareCall("{ call updateProject(?,?) }");
+            cs.setInt(1, getProjectId());
+            cs.setString(2, name);
+            cs.setString(3, description);
+            
+            cs.execute();
         } catch (Exception ex) {
 
         }
-    }
-
-    public void EditAircraftModel(String id, String description, String maker, String type, String motor, double numberMotors, String motorType, double cruiseAltitude, double cruiseSpeed, double TSFC, double lapseRateFactor,
-            double thrust_0,
-            double thrustMaxSpeed,
-            double maxSpeed,
-            double emptyWeight,
-            double MTOW,
-            double maxPayload,
-            double fuelCapacity,
-            double VMO,
-            double MMO,
-            double wingArea,
-            double wingSpan,
-            double aspectRatio,
-            double e) {
-
     }
 
     // </editor-fold>
@@ -597,7 +576,7 @@ public class DatabaseModel {
      * @param name
      * @return id
      */
-    public int getNodeIdByName(String name) {
+    public int getNodeId(String name) {
         int id = 0;
         try {
             CallableStatement cs1;
@@ -620,7 +599,7 @@ public class DatabaseModel {
         try {
             cs = con.prepareCall("{ ? = call getAirportIndex(?,?) }");
             cs.setString(2, iataCode);
-            cs.setString(3, this.project.getName());
+            cs.setInt(3, getProjectId());
             cs.registerOutParameter(1, OracleTypes.INTEGER);
             cs.execute();
             
@@ -636,7 +615,7 @@ public class DatabaseModel {
         try{
             cs = con.prepareCall("{? = getFlightPlanIndex(?,?) }");
             cs.setString(2, fName);
-            cs.setString(3, this.project.getName());
+            cs.setInt(3, getProjectId());
             cs.registerOutParameter(1, OracleTypes.INTEGER);
             cs.execute();
             
@@ -652,7 +631,7 @@ public class DatabaseModel {
         try{
             cs = con.prepareCall("{ ? = getAircraftIndex(?,?) }");
             cs.setString(2, aName);
-            cs.setString(3, this.project.getName());
+            cs.setInt(3, getProjectId());
             cs.registerOutParameter(1, OracleTypes.INTEGER);
             cs.execute();
             
@@ -687,6 +666,21 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public int getProjectId(){
+        int id = 0;
+        try{
+            cs = con.prepareCall("{ ? = getProjectIndex(?) }");
+            cs.setString(2, this.project.getName());
+            cs.registerOutParameter(1, OracleTypes.INTEGER);
+            cs.execute();
+            
+            id = cs.getInt(1);
+        }catch(Exception ex){
+            
+        }
+        return id;
     }
 
     public boolean validateName(String name) {
