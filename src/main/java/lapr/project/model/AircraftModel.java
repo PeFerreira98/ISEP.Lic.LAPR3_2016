@@ -335,9 +335,14 @@ public class AircraftModel {
         return Objects.equals(this.id, other.id);
     }
 
+//    @Override
+//    public String toString() {
+//        return "AircraftModel{" + "id=" + id + ", description=" + description + ", maker=" + maker + ", type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", cruiseAltitude=" + cruiseAltitude + ", cruiseSpeed=" + cruiseSpeed + ", TSFC=" + TSFC + ", lapseRateFactor=" + lapseRateFactor + ", thrust_0=" + thrust_0 + ", thrustMaxSpeed=" + thrustMaxSpeed + ", maxSpeed=" + maxSpeed + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", aspectRatio=" + aspectRatio + ", e=" + e + ", \ncdragRegister=" + cdragRegister + '}';
+//    }
+    
     @Override
     public String toString() {
-        return "AircraftModel{" + "id=" + id + ", description=" + description + ", maker=" + maker + ", type=" + type + ", numberMotors=" + numberMotors + ", motor=" + motor + ", motorType=" + motorType + ", cruiseAltitude=" + cruiseAltitude + ", cruiseSpeed=" + cruiseSpeed + ", TSFC=" + TSFC + ", lapseRateFactor=" + lapseRateFactor + ", thrust_0=" + thrust_0 + ", thrustMaxSpeed=" + thrustMaxSpeed + ", maxSpeed=" + maxSpeed + ", emptyWeight=" + emptyWeight + ", MTOW=" + MTOW + ", maxPayload=" + maxPayload + ", fuelCapacity=" + fuelCapacity + ", VMO=" + VMO + ", MMO=" + MMO + ", wingArea=" + wingArea + ", wingSpan=" + wingSpan + ", aspectRatio=" + aspectRatio + ", e=" + e + ", \ncdragRegister=" + cdragRegister + '}';
+        return maker + '('+id+')';
     }
       
 }

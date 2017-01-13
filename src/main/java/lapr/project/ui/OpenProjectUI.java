@@ -43,7 +43,7 @@ public class OpenProjectUI extends javax.swing.JFrame {
         try {
             List<Airport> lst_a = new ArrayList<>();
             if (this.project.getAirportRegister().getAirportRegister().isEmpty()) {
-                this.lst_Nodes.setModel(new DefaultListModel());
+                this.lst_airports.setModel(new DefaultListModel());
                 return;
             }
             
@@ -318,6 +318,11 @@ public class OpenProjectUI extends javax.swing.JFrame {
         jMenu1.setText("File");
 
         jMenuItem1.setText("Edit project");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
@@ -463,6 +468,10 @@ public class OpenProjectUI extends javax.swing.JFrame {
             new EditAircraftModelUI(this.project, airM);
         }
     }//GEN-LAST:event_btnEditAircraftModelsActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new EditProjectUI(this.project);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnEditAircraftModels;

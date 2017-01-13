@@ -78,7 +78,7 @@ public class Airport {
 
     @Override
     public String toString() {
-        return "Airport{" + "IATAcode=" + IATAcode +'}';
+        return IATAcode +'(' + country + ')';
     }
 
 }

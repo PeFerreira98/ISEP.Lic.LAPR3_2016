@@ -160,7 +160,8 @@ public class ProjectListUI extends javax.swing.JFrame {
         if (selectedIndex == -1) {
             JOptionPane.showMessageDialog(this, "Select one project");
         } else {
-            new OpenProjectUI(this.ctrl_projList.getListProjects().get(selectedIndex));
+            new ProjectUI(this.ctrl_projList.getListProjects().get(selectedIndex));
+//            new OpenProjectUI(this.ctrl_projList.getListProjects().get(selectedIndex));
         }
     }//GEN-LAST:event_btn_OpenActionPerformed
 

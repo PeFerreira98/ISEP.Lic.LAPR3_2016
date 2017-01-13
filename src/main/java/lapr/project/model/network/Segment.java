@@ -98,7 +98,7 @@ public class Segment {
 
     @Override
     public String toString() {
-        return "Segment{" + "id=" + id + ", bNode=" + beginningNode + ", eNode=" + endNode + ", d=" + distance + '}';
+        return id;
     }
     
     

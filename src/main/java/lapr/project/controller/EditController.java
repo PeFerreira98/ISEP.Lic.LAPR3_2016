@@ -20,6 +20,15 @@ public class EditController {
         this.project = p;
     }
     
+    public boolean editProject(String name, String desc){
+        DatabaseModel db = new DatabaseModel(project);
+        if(db.validateName(name)){
+            db.editProject(name, desc);
+            return true;
+        }
+        return false;
+    }
+    
     public void editAirport(String iata, String name, String town, String country, double latitude, double longitude, double altitude){
         DatabaseModel db = new DatabaseModel(this.project);
     }
