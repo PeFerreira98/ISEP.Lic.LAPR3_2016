@@ -13,6 +13,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lapr.project.database.DatabaseModel;
 import lapr.project.model.Aircraft;
 import lapr.project.model.Airport;
 import lapr.project.model.Flight;
@@ -21,6 +24,8 @@ import lapr.project.model.Physics;
 import lapr.project.model.Project;
 import lapr.project.model.network.Node;
 import lapr.project.model.network.Segment;
+import lapr.project.utils.ExportCSV;
+import lapr.project.utils.ExportHTML;
 
 /**
  *
@@ -28,12 +33,14 @@ import lapr.project.model.network.Segment;
  */
 public class SimulationResultsController {
 
+    private static final Logger LOG = Logger.getLogger("SimulationResultsControllerLog");
     private Project project;
     private FlightPlan flightPlan;
     private Aircraft aircraft;
     private String flightPath;
     private double[][] flightPattern;
     private Flight flight;
+    private ArrayList<Segment> arrayListSegments;
 
     public SimulationResultsController(Project project, FlightPlan flightPlan, Aircraft aircraft, String flightPath, double[][] flightPattern) {
         this.project = project;
@@ -41,14 +48,6 @@ public class SimulationResultsController {
         this.aircraft = aircraft;
         this.flightPath = flightPath;
         this.flightPattern = flightPattern;
-    }
-
-    public boolean isReachable() {
-        return this.project.isReachable(this.flightPlan.getOrigin(), this.flightPlan.getDest());
-    }
-    
-    public Flight getFlight(){
-        return this.flight;
     }
 
     //TODO: Change this
@@ -66,16 +65,47 @@ public class SimulationResultsController {
         }
         return null;
     }
-
-    public double getEnergyByPath(LinkedList<Node> path) {
-        //TODO metodo calcular energia
-        return 0.0;
+    
+    public boolean exportHTML(String filePath){
+        try {
+            new ExportHTML(filePath, this.flight);
+            return true;
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "Error Creating HTML File! > " + filePath, e);
+            return false;
+        }
+    }
+    
+    public boolean exportCSV(String filePath){
+        try {
+            ExportCSV.writeCSVFile(filePath, this.flight);
+            return true;
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "Error Creating CSV File! > " + filePath, e);
+            return false;
+        }
     }
 
-    public boolean saveFlight(double time,
-            //            Airport originAeroport, Airport destinationAeroport,
-            double energy) {
+    public boolean isReachable() {
+        return this.project.isReachable(this.flightPlan.getOrigin(), this.flightPlan.getDest());
+    }
 
+    public Flight getFlight() {
+        return this.flight;
+    }
+    
+    public boolean saveFlightToDatabase() {
+        DatabaseModel db = new DatabaseModel();
+        try {
+            db.addFlight(flight);
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error adding to database > " + e);
+            return false;
+        }
+    }
+
+    public boolean saveFlight(double time, double energy) {
         ArrayList<Segment> arrayListSegments = new ArrayList<>(); //TODO: Change to segments list
 
         try {

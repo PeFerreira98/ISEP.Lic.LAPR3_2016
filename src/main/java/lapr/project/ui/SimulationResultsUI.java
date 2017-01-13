@@ -5,14 +5,11 @@
  */
 package lapr.project.ui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import lapr.project.controller.SimulationResultsController;
 import lapr.project.model.Aircraft;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
-import lapr.project.utils.ExportHTML;
 
 /**
  *
@@ -20,9 +17,7 @@ import lapr.project.utils.ExportHTML;
  */
 public class SimulationResultsUI extends javax.swing.JFrame {
 
-    private static final Logger LOG = Logger.getLogger("SimulationResultsUILog");
     private SimulationResultsController simulationResultsController;
-
     private double time = 0;
     private double energy = 0;
     private double distance = 0;
@@ -276,7 +271,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
 
             int option = JOptionPane.showConfirmDialog(this, "Want add to database?", "Confirm", 0);
             if (option == 0) {
-                if (true) {
+                if (simulationResultsController.saveFlightToDatabase()) {
                     JOptionPane.showMessageDialog(this, "Flight saved");
                 } else {
                     JOptionPane.showMessageDialog(this, "Error Adding Flight to database!");
@@ -301,24 +296,19 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void ExportHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportHTMLActionPerformed
-        try {
-            new ExportHTML(jTextField2.getText(), this.simulationResultsController.getFlight());
+        if (this.simulationResultsController.exportHTML(jTextField2.getText())) {
             JOptionPane.showMessageDialog(this, "HTML File Created!");
-        } catch (Exception e) {
+        }else{
             JOptionPane.showMessageDialog(this, "Error Creating HTML File!");
-            LOG.log(Level.INFO, "Error Creating HTML File! > " + jTextField2.getText(), e);
         }
     }//GEN-LAST:event_ExportHTMLActionPerformed
 
     private void ExportCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportCSVActionPerformed
-        try {
-            JOptionPane.showMessageDialog(this, "Incomplete!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Incomplete!");
-            LOG.log(Level.INFO, "Error Creating CSV File! > " + jTextField1.getText(), e);
+        if (this.simulationResultsController.exportCSV(jTextField1.getText())) {
+            JOptionPane.showMessageDialog(this, "CSV File Created!");
+        }else{
+            JOptionPane.showMessageDialog(this, "Error Creating CSV File!");
         }
-        
-        
     }//GEN-LAST:event_ExportCSVActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

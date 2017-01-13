@@ -44,7 +44,7 @@ public class ExportHTML {
             ExportHTML.fecharTable(out);
 
             ExportHTML.criarTable(out);
-            ExportHTML.finalTable(out, flight.getEnergyConsumption(), flight.getTravelingTime());
+            ExportHTML.finalTable(out, calculateTotalDistance(flight), flight.getTravelingTime());
             ExportHTML.fecharTable(out);
 
             ExportHTML.fecharFx(out, "Projecto realizado por: Ana Neves, Marcos Dourado, Pedro Ferreira, Joao Fernandes, Tiago Lameirao");
@@ -53,6 +53,14 @@ public class ExportHTML {
             LOG.log(Level.INFO, filePath, e);
         }
 
+    }
+    
+    private static double calculateTotalDistance(Flight flight){
+        double totalDistance = 0;
+        for (Segment segment : flight.getPathTaken()) {
+            totalDistance += segment.getDistance();
+        }
+        return totalDistance;
     }
 
     /**
@@ -162,7 +170,7 @@ public class ExportHTML {
                 segment.getId(),
                 segment.getBeginningNode().getName(),
                 segment.getEndNode().getName(),
-                segment.getDistance()
+                String.valueOf(segment.getDistance())
         //                0, 0, 0, 0, 0, 0
         );
     }
