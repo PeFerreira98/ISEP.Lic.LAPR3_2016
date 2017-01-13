@@ -15,32 +15,30 @@ import lapr.project.model.PhysicsConverters;
  */
 public class Physics {
 
-
-
     public static double calculateSpeedDueAltitudeClimbing(double altitude, double[][] matrix) {
-        
-        if(altitude==0){
+
+        if (altitude == 0) {
             return matrix[1][0];
         }
-        for (int i = 0; i<matrix[0].length; i++){
-            if(matrix[0][i]>altitude){
-               return matrix[1][i-1];
-           }
+        for (int i = 0; i < matrix[0].length; i++) {
+            if (matrix[0][i] > altitude) {
+                return matrix[1][i - 1];
+            }
         }
-        return matrix[1][matrix[0].length-1];
+        return matrix[1][matrix[0].length - 1];
     }
 
     public static double calculateSpeedDueAltitudeDescending(double altitude, double[][] matrix) {
 
-        if(altitude==0){
+        if (altitude == 0) {
             return matrix[2][0];
         }
-        for (int i = 0; i<matrix[0].length; i++){
-            if(matrix[0][i]>altitude){
-               return matrix[2][i-1];
-           }
+        for (int i = 0; i < matrix[0].length; i++) {
+            if (matrix[0][i] > altitude) {
+                return matrix[2][i - 1];
+            }
         }
-        return matrix[2][matrix[0].length-1];
+        return matrix[2][matrix[0].length - 1];
     }
 
     //__________________________________________Variations with altitude formulas___________________________
@@ -143,28 +141,130 @@ public class Physics {
         //Cdrag 0 varia consoante a velocidade, falta depois compor, no excel o drag é sempre o mesmo
     }
 
-    public static double calculateRangeEachSegment(Aircraft aircraft, Segment segment, double altitude, double[][] matrix) {
-        if (altitude == -1) {
-            altitude = aircraft.getModel().getCruiseAltitude();
+//    public static double calculateRangeEachSegment(Aircraft aircraft, Segment segment, double altitude, double[][] matrix) {
+//        if (altitude == -1) {
+//            altitude = aircraft.getModel().getCruiseAltitude();
+//        }
+//
+//        double distance = calculateSegmentDistance(aircraft, segment);
+//
+//        double time = calculateTravelTimeInASegment(aircraft, segment);
+//
+//        double fuelComsuption = time * aircraft.getModel().getTSFC(); //(Consumo no segment)
+//
+//        //Falta calcular o consumo nesta distancia à velocidade cruseiro
+//        return (aircraft.getModel().getCruiseSpeed() / aircraft.getModel().getTSFC())
+//                * (calculateLiftCoeficient(aircraft, altitude, matrix) / calculateDragCoeficient(aircraft, altitude, matrix)
+//                * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
+//    }
+    public static double calculateTravelTimeInASegment(Aircraft aircraft, Airport airport, Segment[] segments, double[] values,
+            double[][] matrix, double[] valuesAcumulated) {
+
+        int z = (int) values[5];
+        Segment segment = segments[z];
+        double time = 0;
+        double distance = calculateSegmentDistance(aircraft, segment);
+        double percAux = 0;
+        double valuesVec[] = new double[9];
+
+        if (values[9] == 0) { //ver se ainda está a subir
+            valuesVec = aircraftClimb(aircraft, values, airport, segments, matrix);
+            if (valuesVec[2] < distance) {
+
+                percAux = (valuesVec[2]) / distance;
+                values[0] = valuesVec[0];
+                values[1] = valuesVec[1];
+                values[2] = valuesVec[2];
+                values[3] = valuesVec[3];
+                values[4] = valuesVec[4];
+                time = valuesVec[4];
+                values[5] = valuesVec[5];
+                values[6] = valuesVec[6];
+                values[7] = valuesVec[7];
+                values[8] = 0;
+
+                valuesVec=aircraftCruiseAltitudeCalculations(aircraft, values, distance, 0, segments, matrix);
+
+                if (valuesVec[2] > distance) {
+                    percAux = (valuesVec[2] - distance) / valuesVec[2];
+                    values[0] = valuesVec[0] + valuesVec[0] * percAux;
+                    values[1] = valuesVec[1] + valuesVec[1] * percAux;
+                    values[2] = valuesVec[2] + valuesVec[2] * percAux;
+                    values[3] = valuesVec[3] + valuesVec[3] * percAux;
+                    values[4] = valuesVec[4];
+                    time = valuesVec[4];
+                    //values[5] = values[5]+1;
+                    values[8] = 1;
+                }
+
+            } else if (valuesVec[2] > distance) {
+                percAux = (valuesVec[2] - distance) / valuesVec[2];
+                values[0] = valuesVec[0] + valuesVec[0] * percAux;
+                values[1] = valuesVec[1] + valuesVec[1] * percAux;
+                values[2] = valuesVec[2] + valuesVec[2] * percAux;
+                values[3] = valuesVec[3] + valuesVec[3] * percAux;
+                values[4] = valuesVec[4];
+                time = valuesVec[4];
+                //values[5] = values[5]+1;
+                values[8] = 1;
+                valuesAcumulated = values;
+            }
+        } else {
+
+            valuesVec = aircraftCruiseAltitudeCalculations(aircraft, values, distance, 0, segments, matrix);
+
+            if (valuesVec[2] < distance) {
+                percAux = (valuesVec[2]) / distance;
+                values[0] = valuesVec[0];
+                values[1] = valuesVec[1];
+                values[2] = valuesVec[2];
+                values[3] = valuesVec[3];
+                values[4] = valuesVec[4];
+                time = valuesVec[4];
+                values[5] = valuesVec[5];
+                values[6] = valuesVec[6];
+                values[7] = valuesVec[7];
+                values[8] = 0;
+            } else if (valuesVec[2] > distance) {
+                percAux = (valuesVec[2] - distance) / valuesVec[2];
+                values[0] = valuesVec[0] + valuesVec[0] * percAux;
+                values[1] = valuesVec[1] + valuesVec[1] * percAux;
+                values[2] = valuesVec[2] + valuesVec[2] * percAux;
+                values[3] = valuesVec[3] + valuesVec[3] * percAux;
+                values[4] = valuesVec[4] * percAux;
+                time = valuesVec[4];
+                //values[5] = valuesVec[5];
+                valuesAcumulated = values;
+            }
         }
-
-        double distance = calculateSegmentDistance(aircraft, segment);
-
-        double time = calculateTravelTimeInASegment(aircraft, segment);
-
-        double fuelComsuption = time * aircraft.getModel().getTSFC(); //(Consumo no segment)
-
-        //Falta calcular o consumo nesta distancia à velocidade cruseiro
-        return (aircraft.getModel().getCruiseSpeed() / aircraft.getModel().getTSFC())
-                * (calculateLiftCoeficient(aircraft, altitude, matrix) / calculateDragCoeficient(aircraft, altitude, matrix)
-                * Math.log(aircraft.getModel().getEmptyWeight() / calculateAircraftFinalWeight(aircraft)));
+        return time;
     }
-
-    public static double calculateTravelTimeInASegment(Aircraft aircraft, Segment segment) {
+    
+    public static double calculateTravelTimeInASegmentDescending(Aircraft aircraft, Airport airport, Segment[] segments,
+            double[] values, double[][] matrix, double[] valuesAcumulated, Airport endAirport) {
+        Segment segment = segments[(int) values[5]];
         double distance = calculateSegmentDistance(aircraft, segment);
-        //calculateSegmentDistanceInMiles(distance) / speedAndMMOConverterMachToKmsHour(aircraft.getModel().getRegimeRegister().getRegime("Cruise").getSpeed());
-        return distance / PhysicsConverters.converterMachToKmsHour(aircraft.getModel().getCruiseSpeed()); //tempo(s)=distance(m)/speed(miles/sec?)
+        double[] valuesVec = new double[9];
+        double[] valuesVecAux = new double[9];
+        double totalDistance = values[2] + distance;
+
+        valuesVecAux = aircraftDistanceToDescent(aircraft, valuesVec, totalDistance, valuesAcumulated, segments, matrix); //este método é para saber os valores do vec até 120km antes do aeropor(valor dos slides para quando aviao costuma começar a descer)
+        valuesVecAux = aircraftDescent(aircraft, valuesVecAux, endAirport, segments, matrix);
+        valuesVec = aircraftCruiseAltitudeCalculations(aircraft, valuesVec, totalDistance, valuesVecAux[7], segments, matrix);
+        valuesVec = aircraftDescent(aircraft, valuesVec, endAirport, segments, matrix);
+
+        return valuesVec[4];
     }
+    
+    public static double calculateTravelTimeInASegment2(Aircraft aircraft, Segment segment, double speed) {
+        
+        double time =calculateSegmentDistance(aircraft, segment)/speed;
+        
+        return time;
+    }
+    
+    
+    
 
     public static double calculateSegmentDistance(Aircraft aircraft, Segment segment) {
 
@@ -213,9 +313,9 @@ public class Physics {
         double pressure = calculatePressureDueAltitude(altitude);
         double AirDensity = calculateDensityDueAltitude(altitude, pressure, temperature);
         double thrustSeaLevelMach0 = aircraft.getModel().getThrust_0(); // em newtons
-        double thrustChangeRate = (thrustSeaLevelMach0 - aircraft.getModel().getThrustMaxSpeed()) / aircraft.getModel().getMaxSpeed(); //duvida no Lapse Rate
+        double lambda = 1.87E+05;
 
-        return thrustSeaLevelMach0 - thrustChangeRate * trueMachNumber;
+        return (thrustSeaLevelMach0 - lambda * trueMachNumber) * Math.pow(AirDensity / 1.225, aircraft.getModel().getLapseRateFactor());
 
     }
 
@@ -579,7 +679,7 @@ public class Physics {
     }
 
     public static double[] allFlightCalculations(Aircraft aircraft, Airport initialAirport, Airport endAirport, double dist, Segment[] segments, double[][] matrix) {
-        
+
         double[] valuesVec = new double[8];
         double[] valuesVecAux = new double[8];
         valuesVec[5] = 0;
@@ -588,18 +688,17 @@ public class Physics {
         for (int i = 0; i <= segments.length; i++) {
             if (segments[i] != null) {
                 totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments[i]);
+            } else {
+                break;
             }
-            else break;
         }
-        //distance=dist;
+
         valuesVec = aircraftClimb(aircraft, valuesVec, initialAirport, segments, matrix);
         valuesVecAux = aircraftDistanceToDescent(aircraft, valuesVec, totalDistance, valuesVecAux, segments, matrix); //este método é para saber os valores do vec até 120km antes do aeropor(valor dos slides para quando aviao costuma começar a descer)
         valuesVecAux = aircraftDescent(aircraft, valuesVecAux, endAirport, segments, matrix);
         valuesVec = aircraftCruiseAltitudeCalculations(aircraft, valuesVec, totalDistance, valuesVecAux[7], segments, matrix);
         valuesVec = aircraftDescent(aircraft, valuesVec, endAirport, segments, matrix);
 
-        // falta mudar a altitude da velocidade (tem que se ter em consideração a altitude do aeroporto onde começa, 0 a partir dessa altura, que é diferente da altitude para os outros calculos)
         return valuesVec;
     }
-
 }
