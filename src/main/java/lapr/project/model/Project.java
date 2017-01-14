@@ -27,13 +27,6 @@ public class Project {
     private FlightRegister flightRegister;
 
     public Project() {
-
-    }
-
-    public Project(String name, String description) {
-        this.name = name;
-        this.description = description;
-
         this.airNetwork = new AirNetwork();
 
         this.aircraftModelRegister = new AircraftModelRegister();
@@ -42,6 +35,12 @@ public class Project {
 
         this.flightPlanRegister = new FlightPlanRegister();
         this.flightRegister = new FlightRegister();
+    }
+
+    public Project(String name, String description) {
+        this();
+        this.name = name;
+        this.description = description;
     }
 
     public Project(String name, String description, AirNetwork airNetwork, AircraftModelRegister aircraftModelRegister, AirportRegister airportRegister, AircraftRegister aircraftRegister, FlightPlanRegister flightPlanRegister) {

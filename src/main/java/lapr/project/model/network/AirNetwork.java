@@ -36,7 +36,7 @@ public class AirNetwork {
     }
     
     public AirNetwork(AirNetwork an){
-        super();
+        this();
         for (Node node : an.map_Nodes.values()) {
             this.addNode(new Node(node));
         }
