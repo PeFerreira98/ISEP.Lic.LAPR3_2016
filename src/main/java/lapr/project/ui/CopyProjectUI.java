@@ -7,6 +7,7 @@ package lapr.project.ui;
 
 import javax.swing.JOptionPane;
 import lapr.project.controller.CopyProjectController;
+import lapr.project.controller.OpenProjectController;
 import lapr.project.model.Project;
 
 /**
@@ -16,14 +17,18 @@ import lapr.project.model.Project;
 public class CopyProjectUI extends javax.swing.JFrame {
 
     private final CopyProjectController copyProjectController;
+    private final OpenProjectController ctrl_open;
     
     /**
      * Creates new form CopyProjectUI
      * @param project
      */
     public CopyProjectUI(Project project) {
+        this.ctrl_open = new OpenProjectController(project);
+        this.ctrl_open.LoadInformation();
         this.copyProjectController = new CopyProjectController(project);
         initComponents();
+        
         super.setLocationRelativeTo(null);
         super.setVisible(true);
     }

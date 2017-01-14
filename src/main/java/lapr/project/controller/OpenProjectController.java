@@ -73,7 +73,7 @@ public class OpenProjectController {
     
     public List<Airport> getAirportsDB(){
         DatabaseModel db = new DatabaseModel(this.p);
-        List<Airport> lst = db.getListAirports(this.p);
+        List<Airport> lst = db.getListAirports();
         
         for(Airport a : lst){
             this.p.getAirportRegister().addAirport(a);
@@ -107,7 +107,7 @@ public class OpenProjectController {
     public List<Node> getNodesDB(){
         
         DatabaseModel db = new DatabaseModel(this.p);
-        List<Node> lst = db.getListNodes(this.p);
+        List<Node> lst = db.getListNodes();
         
         for(Node n : lst){
             this.p.getAirNetwork().addNode(n);

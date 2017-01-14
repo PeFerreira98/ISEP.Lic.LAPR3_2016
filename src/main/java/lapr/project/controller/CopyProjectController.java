@@ -20,6 +20,7 @@ public class CopyProjectController {
 
     public CopyProjectController(Project project) {
         this.oldProject = project;
+        System.out.println(project.getAirNetwork().getMapNodes());
     }
 
     public boolean validateProjectNameAndDescription(String name, String description) {

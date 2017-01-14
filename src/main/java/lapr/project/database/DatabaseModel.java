@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr.project.model.*;
 import lapr.project.model.network.*;
+import lapr.project.model.register.CDragRegister;
 import oracle.jdbc.OracleTypes;
 
 /**
@@ -176,7 +177,8 @@ public class DatabaseModel {
                         cs1.getDouble("fuel_capacity"), cs1.getDouble("VMO"),
                         cs1.getDouble("MMO"), cs1.getDouble("wing_area"),
                         cs1.getDouble("wing_span"), cs1.getDouble("aspect_ratio"),
-                        cs1.getDouble("e"));
+                        cs1.getDouble("e"), 
+                        getListCDrag(cs1.getString("name")));
                 lst_a.add(am);
             }
         } catch (SQLException ex) {
@@ -192,7 +194,7 @@ public class DatabaseModel {
      * @param p
      * @return
      */
-    public List<Airport> getListAirports(Project p) {
+    public List<Airport> getListAirports() {
         List<Airport> lst_airports = new ArrayList<>();
 
         try {
@@ -227,7 +229,7 @@ public class DatabaseModel {
      * @param p
      * @return
      */
-    public List<Node> getListNodes(Project p) {
+    public List<Node> getListNodes() {
         List<Node> lst_nodes = new ArrayList<>();
 
         try {
@@ -260,11 +262,11 @@ public class DatabaseModel {
      * @param p
      * @return
      */
-    public List<Node> getListAircrafts(Project p) {
-        List<Node> lst_nodes = new ArrayList<>();
+    public List<Aircraft> getListAircrafts() {
+        List<Aircraft> lst_aircraft = new ArrayList<>();
 
         try {
-            this.cs = this.con.prepareCall("{ ? = call GETPROJECTNODES(?) }");
+            this.cs = this.con.prepareCall("{ ? = call getProjectAircrafts(?) }");
 
             this.cs.setInt(2, getProjectId());
             cs.registerOutParameter(1, OracleTypes.CURSOR);
@@ -272,19 +274,22 @@ public class DatabaseModel {
 
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
-            while (cs1.next()) {
-                Node n = new Node(cs1.getString("name"),
-                        cs1.getDouble("latitude"),
-                        cs1.getDouble("longitude"));
-                lst_nodes.add(n);
-            }
+//            while (cs1.next()) {
+//                Aircraft a = new Aircraft(cs1.getString("name"),
+//                        cs1.getString("description"),
+//                        cs1.getDouble("firstclass"),
+//                        cs1.getDouble("normalclass"), 
+//                        cs1.getDouble("crewelements"), 
+//                        getAircraftModel(cs1.getInt("aircraftmodel_id")));
+//                lst_aircraft.add(a);
+//            }
 
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         closeDBDAL();
-        return lst_nodes;
+        return lst_aircraft;
     }
 
     //Falta DAL
@@ -314,6 +319,32 @@ public class DatabaseModel {
         return lst_flights;
     }
 
+    public CDragRegister getListCDrag(String aircraftModelName){
+        CDragRegister lst_cdrag = new CDragRegister();
+
+        try {
+            this.cs = this.con.prepareCall("{ ? = call getProjectCDrags(?) }");
+
+            this.cs.setInt(2, getAircraftModelId(aircraftModelName));
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                CDrag cd = new CDrag(cs1.getDouble("speed"),
+                        cs1.getDouble("cdrag_0"));
+                lst_cdrag.addCDrag(cd);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        closeDBDAL();
+        return lst_cdrag;
+    }
+    
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" INSERTS">
     /**
