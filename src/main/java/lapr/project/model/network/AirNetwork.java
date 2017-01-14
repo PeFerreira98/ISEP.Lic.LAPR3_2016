@@ -60,6 +60,10 @@ public class AirNetwork {
     public Node getNode(String nodeId) {
         return this.map_Nodes.get(nodeId);
     }
+    
+    public Segment getSegment(String segmentId){
+        return this.map_Segment.get(segmentId);
+    }
 
     public Node getNodeByLocation(double latitude, double longitude) {
         for (Node node : this.map_Nodes.values()) {
