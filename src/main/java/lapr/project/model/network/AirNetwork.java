@@ -5,11 +5,15 @@
  */
 package lapr.project.model.network;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lapr.project.model.Aircraft;
 import lapr.project.model.Airport;
 import lapr.project.model.Physics;
@@ -158,7 +162,7 @@ public class AirNetwork {
 
     //___________________________________________________fastestPath_______________________________________________
     public static <Node, Segment> double fastestPathLength(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, Airport initialAirport,
-            Airport endAirport, double[][] matrix) {
+            Airport endAirport, double[][] matrix, double altitude) {
 
         Vertex<Node, Segment> vOrig = g.getVertex(voInf);
         Vertex<Node, Segment> vDest = g.getVertex(vdInf);
@@ -177,7 +181,7 @@ public class AirNetwork {
             pathKeys[i] = -1;
         }
 
-        fastestPathLength(g, vOrig, vDest, visited, pathKeys, time, aircraft, initialAirport, endAirport, matrix);
+        fastestPathLength(g, vOrig, vDest, visited, pathKeys, time, aircraft, initialAirport, endAirport, matrix, altitude);
 
         double lengthPath = time[vDest.getKey()];
 
@@ -189,90 +193,125 @@ public class AirNetwork {
 
     }
 
-    private static <V, E> void fastestPathLength(Graph<V, E> g, Vertex<V, E> vOrig, Vertex<V, E> vDest,
-            boolean[] visited, int[] pathKeys, double[] time, Aircraft aircraft, Airport initialAirport, Airport endAirport, double[][] matrix) {
-
-        Vertex<V, E> vAux;
-        //vAux=(Vertex<V,E>)endAirport;
-        double[] values = new double[10];
-        double[] valuesAcumulated = new double[10];
-        double[] vecAux = new double[10];
-        double[] valuesKeys = new double[100];
-        Map<Integer, double[]> mapValues = new HashMap<>();
-        Segment[] segments = new Segment[30];
-        int aux = 0;
-        for (int j = 0; j < values.length; j++) {
-            values[j] = 0;
-        }
-        int a = -1;
-        int vkeyOrig = vOrig.getKey();
-        Edge edgeAux = null;
-        Segment segment = null;
-        Segment segment2 = null;
-        time[vkeyOrig] = -1;
-        while (vkeyOrig != -1) {
-            visited[vkeyOrig] = true;
-            vOrig = g.getVertex(vkeyOrig);
-            if (a != -1) {
-                if (segments[a] == null && a + 1 <= segments.length) {
-                    //Segment segment = (Segment) edgeAux.getElement();
-                    segments[a] = segment;
-                }
-            }
-            for (Edge<V, E> edge : g.outgoingEdges(vOrig)) {
-                Vertex<V, E> vAdj = g.opposite(vOrig, edge);
-                int vkeyAdj = vAdj.getKey();
-                if (a <= segments.length) {
-                    segment2 = (Segment) edge.getElement();
-                    segments[a + 1] = segment2;
-                }
-                for (int k = 0; k < values.length; k++) {
-                    vecAux[k] = values[k];
-                }
-                if (vAdj.getElement().equals(vDest) && !visited[vkeyAdj] && time[vkeyAdj] > time[vkeyOrig] + Physics.calculateTravelTimeInASegmentDescending(aircraft, initialAirport, segments,
-                        values, matrix, valuesAcumulated, endAirport)) {
-                    for (int k = 0; k < values.length; k++) {
-                        values[k] = vecAux[k];
-                    }
-
-                    if (mapValues.get(vkeyAdj) == null) {
-                        mapValues.put(vkeyAdj, values);
-                    }
-                    time[vkeyAdj] = time[vkeyOrig] + Physics.calculateTravelTimeInASegmentDescending(aircraft, initialAirport, segments,
-                            values, matrix, mapValues.get(vkeyAdj), endAirport);
-                    pathKeys[vkeyAdj] = vkeyOrig;
-
-                    int v = 0;
-                    for (double value : mapValues.get(vkeyAdj)) {
-                        value = value + valuesAcumulated[v];
-                        v++;
-                    }
-                    aux = 1;
-                }
-                for (int k = 0; k < values.length; k++) {
-                    vecAux[k] = values[k];
-                }
-                if (aux == 0 && !visited[vkeyAdj] && time[vkeyAdj] > time[vkeyOrig] + Physics.calculateTravelTimeInASegment2(aircraft, initialAirport, segments,
-                        values, matrix, valuesAcumulated)) {
-                    for (int k = 0; k < values.length; k++) {
-                        values[k] = vecAux[k];
-                    }
-                    if (mapValues.get(vkeyAdj) == null) {
-                        mapValues.put(vkeyAdj, values);
-                    }
-
-                    time[vkeyAdj] = time[vkeyOrig] + Physics.calculateTravelTimeInASegment2(aircraft, initialAirport, segments,
-                            values, matrix, mapValues.get(vkeyAdj));
-                    pathKeys[vkeyAdj] = vkeyOrig;
-                    int v = 0;
+//    private static <V, E> void fastestPathLength(Graph<V, E> g, Vertex<V, E> vOrig, Vertex<V, E> vDest,
+//            boolean[] visited, int[] pathKeys, double[] time, Aircraft aircraft, Airport initialAirport, Airport endAirport, double[][] matrix) {
+//
+//        Vertex<V, E> vAux;
+//        //vAux=(Vertex<V,E>)endAirport;
+//        double[] values = new double[10];
+//        double[] valuesAcumulated = new double[10];
+//        double[] vecAux = new double[10];
+//        double[] valuesKeys = new double[100];
+//        Map<Integer, double[]> mapValues = new HashMap<>();
+//        Segment[] segments = new Segment[30];
+//        int aux = 0;
+//        for (int j = 0; j < values.length; j++) {
+//            values[j] = 0;
+//        }
+//        int a = -1;
+//        int vkeyOrig = vOrig.getKey();
+//        Edge edgeAux = null;
+//        Segment segment = null;
+//        Segment segment2 = null;
+//        time[vkeyOrig] = -1;
+//        while (vkeyOrig != -1) {
+//            visited[vkeyOrig] = true;
+//            vOrig = g.getVertex(vkeyOrig);
+//            if (a != -1) {
+//                if (segments[a] == null && a + 1 <= segments.length) {
+//                    //Segment segment = (Segment) edgeAux.getElement();
+//                    segments[a] = segment;
+//                }
+//            }
+//            for (Edge<V, E> edge : g.outgoingEdges(vOrig)) {
+//                Vertex<V, E> vAdj = g.opposite(vOrig, edge);
+//                int vkeyAdj = vAdj.getKey();
+//                if (a <= segments.length) {
+//                    segment2 = (Segment) edge.getElement();
+//                    segments[a + 1] = segment2;
+//                }
+//                for (int k = 0; k < values.length; k++) {
+//                    vecAux[k] = values[k];
+//                }
+//                if (vAdj.getElement().equals(vDest) && !visited[vkeyAdj] && time[vkeyAdj] > time[vkeyOrig] + Physics.calculateTravelTimeInASegmentDescending(aircraft, initialAirport, segments,
+//                        values, matrix, valuesAcumulated, endAirport)) {
+//                    for (int k = 0; k < values.length; k++) {
+//                        values[k] = vecAux[k];
+//                    }
+//
 //                    if (mapValues.get(vkeyAdj) == null) {
 //                        mapValues.put(vkeyAdj, values);
 //                    }
+//                    time[vkeyAdj] = time[vkeyOrig] + Physics.calculateTravelTimeInASegmentDescending(aircraft, initialAirport, segments,
+//                            values, matrix, mapValues.get(vkeyAdj), endAirport);
+//                    pathKeys[vkeyAdj] = vkeyOrig;
+//
+//                    int v = 0;
+//                    for (double value : mapValues.get(vkeyAdj)) {
+//                        value = value + valuesAcumulated[v];
+//                        v++;
+//                    }
+//                    aux = 1;
+//                }
+//                for (int k = 0; k < values.length; k++) {
+//                    vecAux[k] = values[k];
+//                }
+//                if (aux == 0 && !visited[vkeyAdj] && time[vkeyAdj] > time[vkeyOrig] + Physics.calculateTravelTimeInASegment2(aircraft, initialAirport, segments,
+//                        values, matrix, valuesAcumulated)) {
+//                    for (int k = 0; k < values.length; k++) {
+//                        values[k] = vecAux[k];
+//                    }
+//                    if (mapValues.get(vkeyAdj) == null) {
+//                        mapValues.put(vkeyAdj, values);
+//                    }
+//
+//                    time[vkeyAdj] = time[vkeyOrig] + Physics.calculateTravelTimeInASegment2(aircraft, initialAirport, segments,
+//                            values, matrix, mapValues.get(vkeyAdj));
+//                    pathKeys[vkeyAdj] = vkeyOrig;
+//                    int v = 0;
+////                    if (mapValues.get(vkeyAdj) == null) {
+////                        mapValues.put(vkeyAdj, values);
+////                    }
+//
+//                    for (double value : mapValues.get(vkeyAdj)) {
+//                        value = value + valuesAcumulated[v];
+//                        v++;
+//                    }
+//                }
+//            }
+//            double minTime = Double.MAX_VALUE;
+//            vkeyOrig = -1;
+//            for (int i = 0; i < g.numVertices(); i++) {
+//                if (!visited[i] && time[i] < minTime) {
+//                    minTime = time[i];
+//                    vkeyOrig = i;
+//                }
+//            }
+//            if (minTime == Double.MAX_VALUE) {
+//                vkeyOrig = -1;
+//            }
+//            a++;
+//            segment = segment2;
+//            values[5] = a;
+//            values[9] = 1;
+//
+//        }
+//
+//    }
+    private static <V, E> void fastestPathLength(Graph<V, E> g, Vertex<V, E> vOrig, Vertex<V, E> vDest,
+            boolean[] visited, int[] pathKeys, double[] time, Aircraft aircraft, Airport initialAirport, Airport endAirport, double[][] matrix, double altitude) {
 
-                    for (double value : mapValues.get(vkeyAdj)) {
-                        value = value + valuesAcumulated[v];
-                        v++;
-                    }
+        int vkeyOrig = vOrig.getKey();
+        time[vkeyOrig] = 0;
+        while (vkeyOrig != -1) {
+            visited[vkeyOrig] = true;
+            vOrig = g.getVertex(vkeyOrig);
+            for (Edge<V, E> edge : g.outgoingEdges(vOrig)) {
+                Vertex<V, E> vAdj = g.opposite(vOrig, edge);
+                int vkeyAdj = vAdj.getKey();
+                if (!visited[vkeyAdj] && time[vkeyAdj] > time[vkeyOrig] + Physics.calculateTravelTimeInASegment2(aircraft, (Segment) edge.getElement(), altitude, matrix)) {
+                    time[vkeyAdj] = time[vkeyOrig] + Physics.calculateTravelTimeInASegment2(aircraft, (Segment) edge.getElement(), altitude, matrix);
+                    pathKeys[vkeyAdj] = vkeyOrig;
                 }
             }
             double minTime = Double.MAX_VALUE;
@@ -286,13 +325,75 @@ public class AirNetwork {
             if (minTime == Double.MAX_VALUE) {
                 vkeyOrig = -1;
             }
-            a++;
-            segment = segment2;
-            values[5] = a;
-            values[9] = 1;
-
         }
 
+    }
+
+    public static Map<Double, LinkedList<Node>> getFastestPath0(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, Airport initialAirport,
+            Airport endAirport, double[][] matrix) {
+
+        //new HashMap<>();
+        Map<Double, LinkedList<Node>> finalTime = new HashMap<>();
+        double[] valuesVec = new double[10];
+        double time2 = 0;
+        valuesVec = Physics.aircraftClimb3(aircraft, valuesVec, initialAirport, matrix);
+        time2 = valuesVec[4];
+        double altitude = valuesVec[0];
+        valuesVec = Physics.aircraftDescent3(aircraft, valuesVec, endAirport, matrix);
+        time2 = time2 + valuesVec[4];
+        Map<Double, LinkedList<Node>> finalTimeAux= getFastestPath(g, voInf, vdInf, shortPath, aircraft, initialAirport, endAirport, matrix, altitude);
+        
+        Set<Double> a = finalTimeAux.keySet();
+        
+        LinkedList<Node> b = new LinkedList<>();
+        Iterator<Double> it = a.iterator();
+
+        LinkedList<Node> lNodes = new LinkedList<>();
+        double time = 0;
+        while (it.hasNext()) {
+            time = it.next();
+        }
+        
+        lNodes = finalTimeAux.get(time);
+        
+
+        Iterator<Node> nodess = lNodes.iterator();
+
+        List<Node> listNodes2 = new ArrayList<>();
+
+        while (nodess.hasNext()) {
+            listNodes2.add(nodess.next());
+        }
+        int i = 0;
+        Node node1 = new Node();
+        Node node2 = new Node();
+
+        for (Node node : listNodes2) {
+            if (node.getLatitude() == initialAirport.getLocation().getLatitude() && node.getLongitude() == initialAirport.getLocation().getLongitude()) {
+                node1 = node;
+            } else if (node.getLatitude() == endAirport.getLocation().getLatitude() && node.getLongitude() == endAirport.getLocation().getLongitude()) {
+                node2 = node;
+            }
+        }
+
+        Segment seg1 = new Segment();
+        Segment seg2 = new Segment();
+
+        for (Node node : listNodes2) {
+            if (listNodes2.get(i).equals(node1)) {
+                Edge edge1 = g.getEdge(g.getVertex(node), g.getVertex(listNodes2.get(i + 1)));
+                seg1 = (Segment) edge1.getElement();
+            } else if (listNodes2.get(i).equals(node2)) {
+                Edge edge2 = g.getEdge(g.getVertex(listNodes2.get(i-1)), g.getVertex(node2));
+                seg2 = (Segment) edge2.getElement();
+            }
+            i++;
+        }
+
+        time2 = time2 - Physics.calculateTravelTimeInASegment2(aircraft, seg1, altitude/2, matrix) - Physics.calculateTravelTimeInASegment2(aircraft, seg2, altitude/2, matrix);
+
+        finalTime.put(time + time2, lNodes);
+        return finalTime;
     }
 
     private static <V, E> void getPathFastest(Graph<V, E> g, V voInf, V vdInf, int[] pathKeys, Deque<V> path) {
@@ -314,16 +415,16 @@ public class AirNetwork {
     }
     // para apagar
 
-    public Map<Double, LinkedList<Node>> getFastestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, Airport initialAirport,
-            Airport endAirport, double[][] matrix) {
+    public static Map<Double, LinkedList<Node>> getFastestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, Airport initialAirport,
+            Airport endAirport, double[][] matrix, double altitude) {
         LinkedList<Node> path = new LinkedList<>();
         Map<Double, LinkedList<Node>> map = new LinkedHashMap<>();
 
-        double time = fastestPathLength(g, voInf, vdInf, shortPath, aircraft, initialAirport, endAirport, matrix);
+        double time = fastestPathLength(g, voInf, vdInf, shortPath, aircraft, initialAirport, endAirport, matrix, altitude);
         for (Node a : shortPath) {
             path.add(a);
         }
-        map.put(time * 60, path);
+        map.put(time, path);
 
         System.out.println(map);
         return map;
@@ -340,7 +441,6 @@ public class AirNetwork {
         }
         map.put(distance, path);
 
-        //System.out.println(map);
         return map;
     }
 
@@ -406,22 +506,22 @@ public class AirNetwork {
     }
 
     //__________________________________________Best Path_____________________________________________________
-    public Map<Double, LinkedList<Node>> getBestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
+    public static Map<Double, LinkedList<Node>> getBestPath(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, double[][] matrix, double altitude) {
         LinkedList<Node> path = new LinkedList<>();
         Map<Double, LinkedList<Node>> map = new LinkedHashMap<>();
 
-        double distance = shortestPathLength(g, voInf, vdInf, shortPath, aircraft);
+        double consumption = bestPathLength(g, voInf, vdInf, shortPath, aircraft, matrix, altitude);
         for (Node a : shortPath) {
             path.add(a);
         }
-        map.put(distance, path);
+        map.put(consumption, path);
 
         System.out.println(map);
         return map;
     }
 
     private static <V, E> void bestPathLength(Graph<V, E> g, Vertex<V, E> vOrig,
-            boolean[] visited, int[] pathKeys, double[] fuelComsuption, Aircraft aircraft) {
+            boolean[] visited, int[] pathKeys, double[] fuelComsuption, Aircraft aircraft, double[][] matrix, double altitude) {
 
         int vkeyOrig = vOrig.getKey();
         fuelComsuption[vkeyOrig] = 0;
@@ -431,8 +531,8 @@ public class AirNetwork {
             for (Edge<V, E> edge : g.outgoingEdges(vOrig)) {
                 Vertex<V, E> vAdj = g.opposite(vOrig, edge);
                 int vkeyAdj = vAdj.getKey();
-                if (!visited[vkeyAdj] && fuelComsuption[vkeyAdj] > fuelComsuption[vkeyOrig] + Physics.calculateFuelComsuptionEachSegment(aircraft, (Segment) edge.getElement())) {
-                    fuelComsuption[vkeyAdj] = fuelComsuption[vkeyOrig] + Physics.calculateFuelComsuptionEachSegment(aircraft, (Segment) edge.getElement());
+                if (!visited[vkeyAdj] && fuelComsuption[vkeyAdj] > fuelComsuption[vkeyOrig] + Physics.calculateFuelComsuptionEachSegment(aircraft, (Segment) edge.getElement(), matrix, altitude)) {
+                    fuelComsuption[vkeyAdj] = fuelComsuption[vkeyOrig] + Physics.calculateFuelComsuptionEachSegment(aircraft, (Segment) edge.getElement(), matrix, altitude);
                     pathKeys[vkeyAdj] = vkeyOrig;
                 }
             }
@@ -450,7 +550,7 @@ public class AirNetwork {
         }
     }
 
-    public static <Node, Segment> double bestPathLength(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft) {
+    public static <Node, Segment> double bestPathLength(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, double matrix[][], double altitude) {
 
         Vertex<Node, Segment> vOrig = g.getVertex(voInf);
         Vertex<Node, Segment> vDest = g.getVertex(vdInf);
@@ -462,16 +562,16 @@ public class AirNetwork {
         int nverts = g.numVertices();
         boolean[] visited = new boolean[nverts]; //default value: false
         int[] pathKeys = new int[nverts];
-        double[] time = new double[nverts];
+        double[] fuelConsumption = new double[nverts];
 
         for (int i = 0; i < nverts; i++) {
-            time[i] = Double.MAX_VALUE;
+            fuelConsumption[i] = Double.MAX_VALUE;
             pathKeys[i] = -1;
         }
 
-        bestPathLength(g, vOrig, visited, pathKeys, time, aircraft);
+        bestPathLength(g, vOrig, visited, pathKeys, fuelConsumption, aircraft, matrix, altitude);
 
-        double lengthPath = time[vDest.getKey()];
+        double lengthPath = fuelConsumption[vDest.getKey()];
 
         if (lengthPath != Double.MAX_VALUE) {
             getPath(g, voInf, vdInf, pathKeys, shortPath);
@@ -480,6 +580,74 @@ public class AirNetwork {
         return 0;
 
     }
+    
+    public static Map<Double, LinkedList<Node>> getBestPath0(Graph<Node, Segment> g, Node voInf, Node vdInf, Deque<Node> shortPath, Aircraft aircraft, Airport initialAirport,
+            Airport endAirport, double[][] matrix) {
+
+        //new HashMap<>();
+        Map<Double, LinkedList<Node>> finalConsumption = new HashMap<>();
+        double[] valuesVec = new double[10];
+        double consumption2 = 0;
+        valuesVec = Physics.aircraftClimb3(aircraft, valuesVec, initialAirport, matrix);
+        consumption2 = valuesVec[3];
+        double altitude = valuesVec[0];
+        valuesVec = Physics.aircraftDescent3(aircraft, valuesVec, endAirport, matrix);
+        consumption2 = consumption2 + valuesVec[3];
+        Map<Double, LinkedList<Node>> finalConsumptionAux= getBestPath(g, voInf, vdInf, shortPath, aircraft, matrix, altitude);
+        
+        Set<Double> a = finalConsumptionAux.keySet();
+        
+        LinkedList<Node> b = new LinkedList<>();
+        Iterator<Double> it = a.iterator();
+
+        LinkedList<Node> lNodes = new LinkedList<>();
+        double consumption = 0;
+        while (it.hasNext()) {
+            consumption = it.next();
+        }
+        
+        lNodes = finalConsumptionAux.get(consumption);
+        
+
+        Iterator<Node> nodess = lNodes.iterator();
+
+        List<Node> listNodes2 = new ArrayList<>();
+
+        while (nodess.hasNext()) {
+            listNodes2.add(nodess.next());
+        }
+        int i = 0;
+        Node node1 = new Node();
+        Node node2 = new Node();
+
+        for (Node node : listNodes2) {
+            if (node.getLatitude() == initialAirport.getLocation().getLatitude() && node.getLongitude() == initialAirport.getLocation().getLongitude()) {
+                node1 = node;
+            } else if (node.getLatitude() == endAirport.getLocation().getLatitude() && node.getLongitude() == endAirport.getLocation().getLongitude()) {
+                node2 = node;
+            }
+        }
+
+        Segment seg1 = new Segment();
+        Segment seg2 = new Segment();
+
+        for (Node node : listNodes2) {
+            if (listNodes2.get(i).equals(node1)) {
+                Edge edge1 = g.getEdge(g.getVertex(node), g.getVertex(listNodes2.get(i + 1)));
+                seg1 = (Segment) edge1.getElement();
+            } else if (listNodes2.get(i).equals(node2)) {
+                Edge edge2 = g.getEdge(g.getVertex(listNodes2.get(i-1)), g.getVertex(node2));
+                seg2 = (Segment) edge2.getElement();
+            }
+            i++;
+        }
+
+        consumption2 = consumption2 - Physics.calculateFuelComsuptionEachSegment(aircraft, seg1, matrix, altitude/2) - Physics.calculateFuelComsuptionEachSegment(aircraft, seg2, matrix, altitude/0.95);
+        // a subir o aviao gasta muito mais, daí considerar valores diferentes na altitude, porque a altitude muda a velocidade
+        finalConsumption.put(consumption + consumption2, lNodes);
+        return finalConsumption;
+    }
+    
 
     @Override
     public String toString() {
