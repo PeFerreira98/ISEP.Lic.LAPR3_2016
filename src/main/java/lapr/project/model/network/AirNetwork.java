@@ -34,6 +34,16 @@ public class AirNetwork {
         this.map_Segment = new LinkedHashMap<>();
 
     }
+    
+    public AirNetwork(AirNetwork an){
+        super();
+        for (Node node : an.map_Nodes.values()) {
+            this.addNode(new Node(node));
+        }
+        for (Segment segment : an.map_Segment.values()) {
+            this.addSegment(new Segment(segment));
+        }
+    }
 
     /**
      * Devolve o objecto airNetwork

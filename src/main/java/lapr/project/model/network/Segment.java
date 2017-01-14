@@ -45,6 +45,16 @@ public class Segment {
         this.wind_direction = 0;
         this.wind_speed = 0;
     }
+    
+    public Segment(Segment s) {
+        this.id = s.getId();
+        this.beginningNode = new Node(s.getBeginningNode());
+        this.endNode = new Node(s.getEndNode());
+        this.direction = s.getDirection();
+        this.wind_direction = s.getWind_direction();
+        this.wind_speed = s.getWind_speed();
+        this.distance = distanceBetweenNodes(this.beginningNode, this.endNode);
+    }
 
     public String getId() {
         return this.id;

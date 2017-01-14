@@ -23,6 +23,12 @@ public class Node implements Comparable<Node> {
         
     }
     
+    public Node(Node n){
+        this.name = n.getName();
+        this.latitude = n.getLatitude();
+        this.longitude = n.getLongitude();
+    }
+    
 
     /**
      * Clona um determinado Node
