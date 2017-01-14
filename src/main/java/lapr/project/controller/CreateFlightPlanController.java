@@ -54,7 +54,7 @@ public class CreateFlightPlanController {
     }
 
     public boolean saveFlightPlanToDatabase() {
-        DatabaseModel db = new DatabaseModel();
+        DatabaseModel db = new DatabaseModel(this.project);
         try {
             db.addFlightPlan(flightPlan);
             return true;

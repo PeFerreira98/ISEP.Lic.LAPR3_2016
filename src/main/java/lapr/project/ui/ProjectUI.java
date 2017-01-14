@@ -218,7 +218,7 @@ public class ProjectUI extends javax.swing.JFrame {
         lblNameProject.setText(this.project.getName());
         initAirportsList();
         initAircraftsList();
-        //initFlightPlansList();
+        initFlightPlansList();
         initNodeList();
         initSegmentsList();
     }
@@ -1108,7 +1108,7 @@ public class ProjectUI extends javax.swing.JFrame {
             }
         });
 
-        jButton7.setText("Create Flight");
+        jButton7.setText("Create Flight Plan");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);

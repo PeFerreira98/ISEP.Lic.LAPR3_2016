@@ -92,17 +92,17 @@ public class OpenProjectController {
         return lst;
     }
     
-//    public List<FlightPlan> getFlightPlansDB() {
-//        
-//        DatabaseModel db = new DatabaseModel(this.p);
-//        List<FlightPlan> lst = db.getListFlightPlans(this.p);
-//        
-//        for(FlightPlan fp : lst){
-//            this.p.getFlightPlanRegister().addFlightPlan(fp);
-//        }
-//         
-//        return lst;
-//    }
+    public List<FlightPlan> getFlightPlansDB() {
+        
+        DatabaseModel db = new DatabaseModel(this.p);
+        List<FlightPlan> lst = db.getListFlightPlans();
+        
+        for(FlightPlan fp : lst){
+            this.p.getFlightPlanRegister().addFlightPlan(fp);
+        }
+         
+        return lst;
+    }
     
     public List<Node> getNodesDB(){
         
@@ -129,7 +129,7 @@ public class OpenProjectController {
     public void LoadInformation(){
         getAircraftModelDB();
         getAirportsDB();
-//        getFlightPlansDB();
+        getFlightPlansDB();
         getNodesDB();
         getSegmentDB();
     }

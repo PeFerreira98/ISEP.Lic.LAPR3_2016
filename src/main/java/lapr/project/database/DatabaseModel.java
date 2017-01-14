@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.RowSorterEvent;
 import lapr.project.model.*;
 import lapr.project.model.network.*;
 import lapr.project.model.register.CDragRegister;
@@ -28,7 +27,6 @@ public class DatabaseModel {
     Connection con;
     CallableStatement cs;
     Statement st;
-    ResultSet rs;
     Project project;
 
     public DatabaseModel() {
@@ -54,28 +52,14 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    /**
-     * Método utilizado para desligar a base de dados.
-     *
-     */
+    
     public void closeDB() {
-        try {
-            this.con.close();
-            this.rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void closeDBDAL() {
         try {
             this.con.close();
             this.cs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc=" LISTS ">
@@ -107,7 +91,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+        closeDB();
         return list_projects;
     }
 
@@ -142,7 +126,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDBDAL();
+        closeDB();
         return lst_seg;
     }
 
@@ -185,7 +169,7 @@ public class DatabaseModel {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        closeDBDAL();
+        closeDB();
         return lst_a;
     }
 
@@ -220,7 +204,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+        closeDB();
         return lst_airports;
     }
 
@@ -253,7 +237,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+        closeDB();
         return lst_nodes;
     }
     
@@ -289,7 +273,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+        closeDB();
         return lst_aircraft;
     }
 
@@ -307,8 +291,8 @@ public class DatabaseModel {
 
             while (cs1.next()) {
                 FlightPlan fp = new FlightPlan(cs1.getString("name"), AircraftModel.Type.valueOf(cs1.getString("type")),
-                        getAirport(cs1.getInt("")), getAirport(cs1.getInt("")),
-                        cs1.getDouble(""), cs1.getDouble(""), cs1.getDouble(""));
+                        getAirport(cs1.getInt("Airport_start")), getAirport(cs1.getInt("Airport_end")),
+                        cs1.getDouble("normalclass"), cs1.getDouble("firstclass"), cs1.getDouble("crewelement"));
                 lst_fp.add(fp);
             }
 
@@ -316,7 +300,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+        closeDB();
         return lst_fp;
     }
     
@@ -342,7 +326,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+        closeDB();
         return lst_flights;
     }
 
@@ -368,12 +352,13 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-//        closeDBDAL();
+//        closeDB();
         return lst_cdrag;
     }
     
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" INSERTS">
+    
     /**
      * add the project and the lists to Database.(DAL)
      *
@@ -405,7 +390,7 @@ public class DatabaseModel {
 
             if (!project.getAirportRegister().getAirportRegister().isEmpty()) {
                 project.getAirportRegister().getAirportRegister().values().stream().forEach((airport) -> {
-                    addAirport2(airport);
+                    addAirport(airport);
                 });
                 flag = 1;
             }
@@ -427,7 +412,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (flag == 1) {
-            closeDBDAL();
+            closeDB();
         }
     }
 
@@ -507,14 +492,16 @@ public class DatabaseModel {
             cs.setDouble(3, air.getNumberFirstClass());
             cs.setDouble(4, air.getNumberNormalClass());
             cs.setDouble(5, air.getNumberElementsCrew());
-            cs.setInt(6, getAircraftModelId(air.getId()));
-            cs.setInt(7, getProjectId());
+            cs.setDouble(6, air.getCargo());
+            cs.setDouble(7, air.getFuel());
+            cs.setInt(8, getAircraftModelId(air.getId()));
+            cs.setInt(9, getProjectId());
             cs.executeUpdate();
+            
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         //closeDB();
-        //return getLastInsertedProjectCod();
     }
 
     /**
@@ -522,7 +509,7 @@ public class DatabaseModel {
      *
      * @param air
      */
-    public void addAirport2(Airport air) {
+    public void addAirport(Airport air) {
         try {
             this.cs = con.prepareCall("{call insertAirport(?,?,?,?,?,?,?,?)}");
             this.cs.setString(1, air.getIATAcode());
@@ -547,7 +534,7 @@ public class DatabaseModel {
      */
     public void addFlightPlan(FlightPlan fp) {
         try {
-            cs = con.prepareCall("{ call insertFlightPlan(?,?,?,?,?,?,?) }");
+            cs = con.prepareCall("{ call insertFlightPlan(?,?,?,?,?,?,?,?) }");
             cs.setString(1, fp.getName());
             cs.setString(2, fp.getAircraftType().toString());
             cs.setDouble(3, fp.getnNormalClass());
@@ -556,12 +543,8 @@ public class DatabaseModel {
             cs.setInt(6, getAirportId(fp.getOrigin().getIATAcode()));
             cs.setInt(7, getAirportId(fp.getDest().getIATAcode()));
             cs.setInt(8, getProjectId());
-            cs.registerOutParameter(1, OracleTypes.CURSOR);
-
-            ResultSet cs1 = (ResultSet) cs.getObject(1);
-            while (cs1.next()) {
-
-            }
+            
+            cs.execute();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -619,7 +602,7 @@ public class DatabaseModel {
             cs.setString(3, description);
 
             cs.execute();
-            closeDBDAL();
+            closeDB();
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -627,6 +610,7 @@ public class DatabaseModel {
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" GETID ">
+    
     /**
      * search the id that only DB knows
      *
@@ -820,6 +804,7 @@ public class DatabaseModel {
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" GETINFO ">
+    
     /**
      * return Node by id
      *
@@ -976,32 +961,6 @@ public class DatabaseModel {
     
     // </editor-fold>
 
-    private void addSegmentsToFlights(List<Flight> lst_Flight) {
-        try {
-            for (int i = 0; i < lst_Flight.size(); i++) {
-                this.rs = this.st.executeQuery("SELECT S.* FROM SEgMENT S, FLIgHTPLAN FP, FLIgHT F WHERE S.project_name = " + this.project.getName()
-                        + " AND S.segment_id = FP.segment_id"
-                        + "AND FP.flight_id = F.flight_id"
-                        + "AND F.flight_id = " + lst_Flight.get(i).getId());
-
-                while (rs.next()) {
-                    Node n1 = getNode(rs.getInt("Node_Id_Start"));
-                    Node n2 = getNode(rs.getInt("Node_Id_End"));
-                    Segment s = new Segment(rs.getString("Segment_name"),
-                            n1,
-                            n2,
-                            null,
-                            rs.getString("direction"),
-                            rs.getDouble("wind_direction"),
-                            rs.getDouble("wind_instensity"));
-                    lst_Flight.get(i).getPathTaken().add(s);
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     public boolean validateName(String name) {
         for (Project p : getProjects()) {
             if (p.getName().equals(name)) {

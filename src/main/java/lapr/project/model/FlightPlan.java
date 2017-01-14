@@ -98,7 +98,7 @@ public class FlightPlan {
 
     @Override
     public String toString() {
-        return "FlightPlan{" + "id=" + id + ", name=" + name + ", aircraftType=" + aircraftType + ", origin=" + origin + ", dest=" + dest + ", nNormalClass=" + nNormalClass + ", nFirstClass=" + nFirstClass + ", nCrew=" + nCrew + '}';
+        return this.name /*+ " ("+this.origin.getTown() +"-" + this.dest.getTown() +")"*/;
     }
 
 }

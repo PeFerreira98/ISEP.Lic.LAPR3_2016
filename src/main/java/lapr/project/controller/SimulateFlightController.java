@@ -49,6 +49,7 @@ public class SimulateFlightController {
     }
 
     public void initializeaircraftModelsList(AircraftModel.Type aircraftType) {
+        this.aircraftModelsList = new ArrayList<>();
         for (AircraftModel aircraftModel : this.project.getAircraftModelRegister().getAircraftsByType(aircraftType).values()) {
             this.aircraftModelsList.add(aircraftModel);
         }
