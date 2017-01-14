@@ -114,7 +114,6 @@ public class DatabaseModel {
      *
      * @return
      */
-    //FIXME falta meter o metodo getNode atraves de DAL
     public List<Segment> getSegments() {
         List<Segment> lst_seg = new ArrayList<>();
 
@@ -254,6 +253,39 @@ public class DatabaseModel {
         closeDBDAL();
         return lst_nodes;
     }
+    
+    /**
+     * return the list of nodes by project(DAL)
+     *
+     * @param p
+     * @return
+     */
+    public List<Node> getListAircrafts(Project p) {
+        List<Node> lst_nodes = new ArrayList<>();
+
+        try {
+            this.cs = this.con.prepareCall("{ ? = call GETPROJECTNODES(?) }");
+
+            this.cs.setInt(2, getProjectId());
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                Node n = new Node(cs1.getString("name"),
+                        cs1.getDouble("latitude"),
+                        cs1.getDouble("longitude"));
+                lst_nodes.add(n);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        closeDBDAL();
+        return lst_nodes;
+    }
 
     //Falta DAL
     public List<Flight> getListFlights() {
@@ -268,8 +300,8 @@ public class DatabaseModel {
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
 //            while (cs1.next()) {
-//                Flight f = new Flight(getFlightPlan(cs1.getString("FLIGHTPLAN_ID")),
-//                        getAircraft(cs1.getString("AIRCRAFT_ID")), pathTaken,
+//                Flight f = new Flight(getFlightPlan(cs1.getInt("FLIGHTPLAN_ID")),
+//                        getAircraft(cs1.getInt("AIRCRAFT_ID")), pathTaken,
 //                        cs1.getDouble("TRAVALINGTIME"),
 //                        cs1.getDouble("ENERGYCONSUNPTION"));
 //                lst_flights.add(f);
@@ -522,12 +554,14 @@ public class DatabaseModel {
     //DONE
     public void editProject(String name, String description) {
         try {
+            openDB();
             cs = con.prepareCall("{ call updateProject(?,?,?) }");
             cs.setInt(1, getProjectId());
             cs.setString(2, name);
             cs.setString(3, description);
 
             cs.execute();
+            closeDBDAL();
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -535,7 +569,6 @@ public class DatabaseModel {
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" GETID ">
-    
     /**
      * search the id that only DB knows
      *
@@ -551,9 +584,11 @@ public class DatabaseModel {
             cs1.execute();
 
             id = cs1.getInt(1);
+            cs1.close();
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return id;
     }
 
@@ -604,7 +639,7 @@ public class DatabaseModel {
         }
         return id;
     }
-    
+
     /**
      * search the id that only DB knows
      *
@@ -628,7 +663,7 @@ public class DatabaseModel {
         }
         return id;
     }
-    
+
     /**
      * search the id that only DB knows
      *
@@ -652,7 +687,7 @@ public class DatabaseModel {
         }
         return id;
     }
-    
+
     /**
      * search the id that only DB knows
      *
@@ -676,7 +711,7 @@ public class DatabaseModel {
         }
         return id;
     }
-    
+
     /**
      * search the id that only DB knows
      *
@@ -700,7 +735,7 @@ public class DatabaseModel {
         }
         return id;
     }
-    
+
     /**
      * search the id that only DB knows
      *
@@ -724,11 +759,9 @@ public class DatabaseModel {
         }
         return id;
     }
-    
-    
+
     // </editor-fold>
-    
-    
+    // <editor-fold defaultstate="collapsed" desc=" GETINFO ">
     /**
      * return Node by id
      *
@@ -737,8 +770,6 @@ public class DatabaseModel {
      */
     private Node getNode(int id_node) {
         Node n = new Node();
-        Statement st2;
-        ResultSet rs2;
 
         try {
             cs = con.prepareCall("{ ? = call getNodeById(?) }");
@@ -749,9 +780,7 @@ public class DatabaseModel {
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
             while (cs1.next()) {
-                n = new Node(cs1.getString("name"),
-                        cs1.getDouble("latitude"),
-                        cs1.getDouble("longitude"));
+                n = this.project.getAirNetwork().getNode(cs1.getString("name"));
             }
 
         } catch (SQLException ex) {
@@ -762,8 +791,6 @@ public class DatabaseModel {
 
     private Airport getAirport(int id_airport) {
         Airport n = null;
-        Statement st2;
-        ResultSet rs2;
 
         try {
             cs = con.prepareCall("{ ? = call getAirportById(?) }");
@@ -774,13 +801,7 @@ public class DatabaseModel {
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
             while (cs1.next()) {
-                Location l = new Location(cs1.getDouble("latitude"),
-                        cs1.getDouble("longitude"),
-                        cs1.getDouble("altitude"));
-                n = new Airport(cs1.getString("name"),
-                        cs1.getString("town"),
-                        cs1.getString("country"),
-                        cs1.getString("cod_iata"), l);
+                n = this.project.getAirportRegister().getAirportByIATACode("cod_iata");
             }
 
         } catch (SQLException ex) {
@@ -788,6 +809,114 @@ public class DatabaseModel {
         }
         return n;
     }
+
+    private Segment getSegment(int id_segment) {
+        Segment s = null;
+
+        try {
+            cs = con.prepareCall("{ ? = call getSegmentById(?) }");
+            cs.setInt(2, id_segment);
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                s = this.project.getAirNetwork().getSegment("name");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
+    }
+
+    private Aircraft getAircraft(int id_aircraft) {
+        Aircraft a = null;
+
+        try {
+            cs = con.prepareCall("{ ? = call getAircraftById(?) }");
+            cs.setInt(2, id_aircraft);
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                a = this.project.getAircraftRegister().getAircraftByID(
+                        cs1.getString("name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return a;
+    }
+
+    private AircraftModel getAircraftModel(int id_aircraftmodel) {
+        AircraftModel am = null;
+
+        try {
+            cs = con.prepareCall("{ ? = call getAircraftModelById(?) }");
+            cs.setInt(2, id_aircraftmodel);
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                am = this.project.getAircraftModelRegister().getAircraftModel(
+                        cs1.getString("name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return am;
+    }
+    
+    private Flight getFlight(int id_flight) {
+        Flight f = null;
+
+        try {
+            cs = con.prepareCall("{ ? = call getFlightById(?) }");
+            cs.setInt(2, id_flight);
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                f = this.project.getFlightRegister().getFlightByID(
+                        cs1.getString("name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
+    }
+    
+    private FlightPlan getFlightPlan(int id_flightplan) {
+        FlightPlan fp = null;
+
+        try {
+            cs = con.prepareCall("{ ? = call getFlightPlanById(?) }");
+            cs.setInt(2, id_flightplan);
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                fp = this.project.getFlightPlanRegister().getFlightPlansList().get(
+                        cs1.getString("name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return fp;
+    }
+
+    
+    // </editor-fold>
 
     private void addSegmentsToFlights(List<Flight> lst_Flight) {
         try {
@@ -814,7 +943,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public boolean validateName(String name) {
         for (Project p : getProjects()) {
             if (p.getName().equals(name)) {

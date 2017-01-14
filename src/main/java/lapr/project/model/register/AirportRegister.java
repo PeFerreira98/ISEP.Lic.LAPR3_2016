@@ -7,6 +7,7 @@ package lapr.project.model.register;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import lapr.project.model.Aircraft;
 import lapr.project.model.Airport;
 
 /**
@@ -19,6 +20,13 @@ public class AirportRegister {
 
     public AirportRegister() {
         this.airportRegister = new LinkedHashMap<>();
+    }
+    
+    public AirportRegister(AirportRegister ar){
+        this();
+        for (Airport air : ar.getAirportRegister().values()) {
+            this.addAirport(new Airport(air));
+        }
     }
 
     public boolean validateAirport(Airport newAirport) {

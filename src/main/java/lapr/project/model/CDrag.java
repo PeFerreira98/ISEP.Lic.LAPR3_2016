@@ -19,6 +19,10 @@ public class CDrag {
         this.cDrag0 = cDrag0;
     }
 
+    public CDrag(CDrag cDrag) {
+        this(cDrag.getSpeed(), cDrag.getcDrag0());
+    }
+
     public double getSpeed() {
         return speed;
     }

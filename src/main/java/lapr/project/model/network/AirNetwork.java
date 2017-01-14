@@ -37,8 +37,9 @@ public class AirNetwork {
     
     public AirNetwork(AirNetwork an){
         this();
-        for (Node node : an.map_Nodes.values()) {
-            this.addNode(new Node(node));
+        System.out.println(an.getMapNodes().values());
+        for (Node nod : an.getMapNodes().values()) {
+            this.addNode(new Node(nod));
         }
         for (Segment segment : an.map_Segment.values()) {
             this.addSegment(new Segment(segment));

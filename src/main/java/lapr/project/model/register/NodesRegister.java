@@ -20,6 +20,13 @@ public class NodesRegister {
     public NodesRegister() {
         mapNodes = new HashMap<>();
     }
+    
+    public NodesRegister(NodesRegister nr){
+        this();
+        for (Node nod : nr.getNodesList().values()) {
+            this.getNodesList().put(nod.getName(), new Node(nod));
+        }
+    }
 
     public Node newNode() {
         return new Node();

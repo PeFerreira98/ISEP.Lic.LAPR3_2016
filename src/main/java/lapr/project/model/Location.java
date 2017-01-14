@@ -21,6 +21,10 @@ public class Location {
         this.altitude = Altitude;
 
     }
+    
+    public Location(Location l){
+        this(l.getLatitude(), l.getLongitude(), l.getAltitude());
+    }
 
     /**
      * @return the latitude

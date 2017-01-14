@@ -21,6 +21,17 @@ public class CDragRegister {
         this.cDragList = new ArrayList<>();
     }
 
+    public CDragRegister(CDragRegister cdragRegister) {
+        this();
+        for (CDrag cDrag : cdragRegister.getCDragList()){
+            this.addCDrag(new CDrag(cDrag));
+        }
+    }
+
+    public List<CDrag> getCDragList(){
+        return this.cDragList;
+    }
+    
     public boolean addCDrag(CDrag newCDrag) {
         if (validateCDrag(newCDrag)) {
             return this.cDragList.add(newCDrag);

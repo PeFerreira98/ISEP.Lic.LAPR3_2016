@@ -22,6 +22,13 @@ public class AircraftModelRegister {
     public AircraftModelRegister() {
         this.aircraftModelMap = new LinkedHashMap<>();
     }
+    
+    public AircraftModelRegister(AircraftModelRegister amr) {
+        this.aircraftModelMap = new LinkedHashMap<>();
+        for (AircraftModel am : amr.getAircraftModelMap().values()) {
+            this.addAircraftModel(new AircraftModel(am));
+        }
+    }
 
     public AircraftModel addAircraftModel(AircraftModel newAircraftModel) {
         if (validateAircraftModel(newAircraftModel)) {

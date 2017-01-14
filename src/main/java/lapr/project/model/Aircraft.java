@@ -44,6 +44,13 @@ public class Aircraft {
         this.fuel = fuel;
         this.model = model;
     }
+    
+    public Aircraft(Aircraft air){
+        this(air.getId(), air.getDescription(), air.getNumberFirstClass(), 
+                air.getNumberNormalClass(), air.getNumberElementsCrew(), 
+                air.getCargo(), air.getFuel(), 
+                new AircraftModel(air.getModel()));
+    }
 
     public String getId() {
         return id;

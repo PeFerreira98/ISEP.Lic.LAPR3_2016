@@ -20,6 +20,13 @@ public class AircraftRegister {
     public AircraftRegister() {
         this.aircraftRegister = new LinkedHashMap<>();
     }
+    
+    public AircraftRegister(AircraftRegister ar){
+        this();
+        for (Aircraft air : ar.getAircraftRegister().values()) {
+            this.addAircraft(new Aircraft(air));
+        }
+    }
 
     public boolean validateAircraft(Aircraft newAircraft) {
         for (Aircraft aircraft : this.aircraftRegister.values()) {

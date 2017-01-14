@@ -20,6 +20,13 @@ public class SegmentsRegister {
         
     }
     
+    public SegmentsRegister(SegmentsRegister sr){
+        this();
+        for (Segment seg : sr.getSegmentsList().values()) {
+            this.getSegmentsList().put(seg.getId(), new Segment(seg));
+        }
+    }
+    
     public Segment addSegment(){
         return new Segment();
     }

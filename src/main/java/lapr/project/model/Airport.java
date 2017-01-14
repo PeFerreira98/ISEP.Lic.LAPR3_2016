@@ -34,6 +34,11 @@ public class Airport {
         this.IATAcode = IATAcode;
     }
 
+    public Airport(Airport air) {
+        this(air.getName(), air.getTown(), air.getCountry(), air.getIATAcode(), 
+                new Location(air.getLocation()));
+    }
+
     public String getName() {
         return name;
     }

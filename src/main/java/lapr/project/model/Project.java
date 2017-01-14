@@ -56,6 +56,19 @@ public class Project {
         this.flightRegister = new FlightRegister();
     }
 
+    public Project(String name, String description, Project p){
+        this.name = name;
+        this.description = description;
+        
+        this.airNetwork = new AirNetwork(p.getAirNetwork());
+        this.aircraftModelRegister = new AircraftModelRegister(p.getAircraftModelRegister());
+        this.aircraftRegister = new AircraftRegister(p.getAircraftRegister());
+        this.airportRegister = new AirportRegister(p.getAirportRegister());
+        
+        this.flightPlanRegister = new FlightPlanRegister(p.getFlightPlanRegister());
+        this.flightRegister = new FlightRegister();
+    }
+    
     public boolean addAircraft(Aircraft newAircraft) {
         return this.aircraftRegister.addAircraft(newAircraft);
     }

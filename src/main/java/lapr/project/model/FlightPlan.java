@@ -34,6 +34,12 @@ public class FlightPlan {
         this.nCrew = nCrew;
     }
 
+    public FlightPlan(FlightPlan fp) {
+        this(fp.getName(), fp.getAircraftType(), new Airport(fp.getOrigin()), 
+                new Airport(fp.getDest()), fp.getnNormalClass(), 
+                fp.getnFirstClass(), fp.getnCrew());
+    }
+
     public int getId() {
         return id;
     }

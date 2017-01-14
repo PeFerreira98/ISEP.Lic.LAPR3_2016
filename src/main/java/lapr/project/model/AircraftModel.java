@@ -114,6 +114,18 @@ public class AircraftModel {
         this.cdragRegister = new CDragRegister();
     }
     
+    public AircraftModel(AircraftModel am){
+        this(am.getId(), am.getDescription(), am.getMaker(), am.getType(),
+                am.getNumberMotors(), am.getMotor(), am.getMotorType(), 
+                am.getCruiseAltitude(), am.getCruiseSpeed(), am.getTSFC(), 
+                am.getLapseRateFactor(), am.getThrust_0(), 
+                am.getThrustMaxSpeed(), am.getMaxSpeed(), am.getEmptyWeight(),
+                am.getMTOW(), am.getMaxPayload(), am.getFuelCapacity(), 
+                am.getVMO(), am.getMMO(), am.getWingArea(), am.getWingSpan(), 
+                am.getAspectRatio(), am.getE(), 
+                new CDragRegister(am.getCdragRegister()));
+    }
+    
     public String getId() {
         return id;
     }
