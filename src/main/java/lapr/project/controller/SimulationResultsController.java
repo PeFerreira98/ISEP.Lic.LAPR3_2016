@@ -5,6 +5,7 @@
  */
 package lapr.project.controller;
 
+import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -48,19 +49,34 @@ public class SimulationResultsController {
         this.aircraft = aircraft;
         this.flightPath = flightPath;
         this.flightPattern = flightPattern;
+        this.arrayListSegments = new ArrayList<>();
     }
 
     public double[] calculatePathByAlgorithm() {
         System.out.println(flightPath);
-        switch (flightPath) {
-            case "Fastest path":
-                break;
-            case "Shortest path":
-                return calculateShortestPath();
-            case "Less energy consuption path":
-                break;
+        try {
+            switch (flightPath) {
+                case "Fastest path":
+                    break;
+                case "Shortest path":
+                    return calculateShortestPath();
+                case "Less energy consuption path":
+                    break;
+            }
+            return null;
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "Error in Calculations >> ", e);
+            return null;
         }
-        return null;
+
+    }
+
+    public ArrayList<Segment> getArrayListSegments() {
+        return this.arrayListSegments;
+    }
+
+    public int getArrayListSegmentsSize() {
+        return this.arrayListSegments.size();
     }
 
     public boolean exportHTML(String filePath) {
@@ -103,10 +119,8 @@ public class SimulationResultsController {
     }
 
     public boolean saveFlight(double time, double energy) {
-        ArrayList<Segment> arrayListSegments = new ArrayList<>(); //TODO: Change to segments list
-
         try {
-            this.flight = new Flight(this.flightPlan, this.aircraft, arrayListSegments, time, energy);
+            this.flight = new Flight(this.flightPlan, this.aircraft, this.arrayListSegments, time, energy);
 
             if (this.flight.equals(this.project.addFlight(flight))) {
                 return true;
@@ -198,7 +212,9 @@ public class SimulationResultsController {
 
         for (i = 0; i < segments1.length; i++) {
             System.out.println("\nArraySegments" + segments1[i]);
+            this.arrayListSegments.add(segments1[i]);
         }
+        this.arrayListSegments.remove(segments1.length - 1);
 
         System.out.println(Physics.calculateAircraftFinalWeight(aircraft));
 

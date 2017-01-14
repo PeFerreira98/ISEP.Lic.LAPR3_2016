@@ -112,7 +112,7 @@ public class CreateFlightPlanUI extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         cmbAircraftModelType = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jScrollPane1.setViewportView(lstOrigin);
 

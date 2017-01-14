@@ -5,11 +5,15 @@
  */
 package lapr.project.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import lapr.project.controller.SimulationResultsController;
 import lapr.project.model.Aircraft;
 import lapr.project.model.FlightPlan;
 import lapr.project.model.Project;
+import lapr.project.model.network.Segment;
 
 /**
  *
@@ -23,6 +27,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     private double distance = 0;
     private String aircraft;
     private String flightPlan;
+    List<Segment> arrayListSegments;
 
     /**
      * Creates new form SimulationResultsUI
@@ -37,6 +42,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         this.simulationResultsController = new SimulationResultsController(project, flightPlan, aircraft, pathChoosed, flightPattern);
         this.aircraft = aircraft.getDescription();
         this.flightPlan = flightPlan.getName();
+        this.arrayListSegments = new ArrayList<>();
 
         if (this.simulationResultsController.isReachable()) {
             initCalculations();
@@ -45,6 +51,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         }
 
         initComponents();
+        initSegmentsList();
         super.setLocationRelativeTo(null);
         this.setVisible(true);
     }
@@ -53,12 +60,46 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         double[] c = this.simulationResultsController.calculatePathByAlgorithm();
 
         if (c == null) {
-            JOptionPane.showMessageDialog(this, "Error Doing Calculations!");
+            JOptionPane.showMessageDialog(this, "Error Doing Calculations! (Not Yet Implemented?)");
         } else {
             distance = c[2];
             energy = c[3];
             time = c[4];
         }
+    }
+
+    private void initSegmentsList() {
+
+        System.out.println(this.simulationResultsController.getArrayListSegments());
+        System.out.println(this.simulationResultsController.getArrayListSegments().size());
+        
+        if (this.simulationResultsController.getArrayListSegments().isEmpty()) {
+        this.jListSegments.setModel(new DefaultListModel());
+            return;
+        }
+
+        for (Segment s : this.simulationResultsController.getArrayListSegments()) {
+            arrayListSegments.add(s);
+        }
+
+        int tam = this.simulationResultsController.getArrayListSegmentsSize();
+        final Segment[] a = new Segment[tam];
+        for (int i = 0; i < tam; i++) {
+            a[i] = arrayListSegments.get(i);
+        }
+
+        DefaultListModel lm = new DefaultListModel() {
+            public int getSize() {
+                return a.length;
+            }
+
+            public Object getElementAt(int i) {
+                return a[i];
+            }
+        };
+
+        this.jListSegments.setModel(lm);
+
     }
 
     /**
@@ -72,7 +113,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstSegments = new javax.swing.JList<>();
+        jListSegments = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
@@ -99,7 +140,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
 
         jLabel1.setText("Segments list:");
 
-        jScrollPane1.setViewportView(lstSegments);
+        jScrollPane1.setViewportView(jListSegments);
 
         jLabel2.setText("Time:");
 
@@ -336,9 +377,9 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jListSegments;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JList<String> lstSegments;
     // End of variables declaration//GEN-END:variables
 }
