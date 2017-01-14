@@ -50,10 +50,15 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     }
 
     private void initCalculations() {
-        double[] c = this.simulationResultsController.calculatePath();
-        distance = c[2];
-        energy = c[3];
-        time = c[4];
+        double[] c = this.simulationResultsController.calculatePathByAlgorithm();
+
+        if (c == null) {
+            JOptionPane.showMessageDialog(this, "Error Doing Calculations!");
+        } else {
+            distance = c[2];
+            energy = c[3];
+            time = c[4];
+        }
     }
 
     /**
@@ -298,7 +303,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     private void ExportHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportHTMLActionPerformed
         if (this.simulationResultsController.exportHTML(jTextField2.getText())) {
             JOptionPane.showMessageDialog(this, "HTML File Created!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Error Creating HTML File!");
         }
     }//GEN-LAST:event_ExportHTMLActionPerformed
@@ -306,7 +311,7 @@ public class SimulationResultsUI extends javax.swing.JFrame {
     private void ExportCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportCSVActionPerformed
         if (this.simulationResultsController.exportCSV(jTextField1.getText())) {
             JOptionPane.showMessageDialog(this, "CSV File Created!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Error Creating CSV File!");
         }
     }//GEN-LAST:event_ExportCSVActionPerformed

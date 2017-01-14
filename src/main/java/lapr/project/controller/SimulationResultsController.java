@@ -50,23 +50,20 @@ public class SimulationResultsController {
         this.flightPattern = flightPattern;
     }
 
-    //TODO: Change this
-    public Map<Double, LinkedList<Node>> getPathByAlgorithm(FlightPlan fp, int algorithm) {
-        switch (algorithm) {
-            //TODO metodo de pesquisa
-            case 1:
+    public double[] calculatePathByAlgorithm() {
+        System.out.println(flightPath);
+        switch (flightPath) {
+            case "Fastest path":
                 break;
-            //TODO metodo de pesquisa
-            case 2:
-                break;
-            //TODO metodo de pesquisa
-            case 3:
+            case "Shortest path":
+                return calculateShortestPath();
+            case "Less energy consuption path":
                 break;
         }
         return null;
     }
-    
-    public boolean exportHTML(String filePath){
+
+    public boolean exportHTML(String filePath) {
         try {
             new ExportHTML(filePath, this.flight);
             return true;
@@ -75,8 +72,8 @@ public class SimulationResultsController {
             return false;
         }
     }
-    
-    public boolean exportCSV(String filePath){
+
+    public boolean exportCSV(String filePath) {
         try {
             ExportCSV.writeCSVFile(filePath, this.flight);
             return true;
@@ -93,7 +90,7 @@ public class SimulationResultsController {
     public Flight getFlight() {
         return this.flight;
     }
-    
+
     public boolean saveFlightToDatabase() {
         DatabaseModel db = new DatabaseModel();
         try {
@@ -122,7 +119,7 @@ public class SimulationResultsController {
         return false;
     }
 
-    public double[] calculatePath() {
+    private double[] calculateShortestPath() {
 
         Airport initialAirport = this.flightPlan.getOrigin();
         Airport endAirport = this.flightPlan.getDest();
