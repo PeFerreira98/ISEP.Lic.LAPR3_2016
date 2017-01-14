@@ -416,6 +416,7 @@ public class SimulateFlightUI extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (!this.lstFlightPlans.isSelectionEmpty()) {
+            lstFlightPlans.removeAll();
             initAircraftModelList(this.ctrlSimulation.getFlightPlanByIndex(this.lstFlightPlans.getSelectedIndex()).getAircraftType());
         } else {
             JOptionPane.showMessageDialog(this, "Select a FlightPlan!", "Error", 1);

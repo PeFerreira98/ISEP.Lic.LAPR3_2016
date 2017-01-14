@@ -1218,7 +1218,17 @@ public class ProjectUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInfoSActionPerformed
 
     private void btnInfoFPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoFPActionPerformed
-        
+        if(listFlightPlan.isSelectionEmpty()){
+            JOptionPane.showMessageDialog(this, "Select one Flight Plan!");
+        }else{
+            lblFlightPlan_Dest.setText(lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getDest().getIATAcode() + " (" + lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getDest().getCountry() + ")");
+            lblFlightPlan_Origin.setText(lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getOrigin().getIATAcode() + " (" + lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getOrigin().getCountry() + ")");
+            lblFlightPlan_NCrew.setText("" + lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getnCrew());
+            lblFlightPlan_NFirstClass.setText(""+ lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getnFirstClass());
+            lblFlightPlan_NNormalClass.setText("" + lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getnNormalClass());
+            lblFlightPlan_Name.setText(lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getName());
+            lblFlightPlan_Type.setText(lst_FlightPlans.get(listFlightPlan.getSelectedIndex()).getAircraftType().name());
+        }
     }//GEN-LAST:event_btnInfoFPActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
