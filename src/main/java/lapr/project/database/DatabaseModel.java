@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.RowSorterEvent;
 import lapr.project.model.*;
 import lapr.project.model.network.*;
 import lapr.project.model.register.CDragRegister;
@@ -292,7 +293,33 @@ public class DatabaseModel {
         return lst_aircraft;
     }
 
-    //Falta DAL
+    public List<FlightPlan> getListFlightPlans(){
+        List<FlightPlan> lst_fp = new ArrayList<>();
+
+        try {
+            this.cs = this.con.prepareCall("{ ? = call getProjectFlightPlans(?) }");
+
+            this.cs.setInt(2, getProjectId());
+            cs.registerOutParameter(1, OracleTypes.CURSOR);
+            cs.execute();
+
+            ResultSet cs1 = (ResultSet) cs.getObject(1);
+
+            while (cs1.next()) {
+                FlightPlan fp = new FlightPlan(cs1.getString("name"), AircraftModel.Type.valueOf(cs1.getString("type")),
+                        getAirport(cs1.getInt("")), getAirport(cs1.getInt("")),
+                        cs1.getDouble(""), cs1.getDouble(""), cs1.getDouble(""));
+                lst_fp.add(fp);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        closeDBDAL();
+        return lst_fp;
+    }
+    
     public List<Flight> getListFlights() {
         List<Flight> lst_flights = new ArrayList<>();
 
@@ -341,7 +368,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        closeDBDAL();
+//        closeDBDAL();
         return lst_cdrag;
     }
     
