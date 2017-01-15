@@ -342,8 +342,12 @@ public class DatabaseModel {
             ResultSet cs1 = (ResultSet) cs.getObject(1);
 
             while (cs1.next()) {
+                String p=cs1.getString("cdrag_0");
+                p = p.replaceAll(",",".");
+                
+                Double d=Double.valueOf(p); 
                 CDrag cd = new CDrag(cs1.getDouble("speed"),
-                        cs1.getDouble("cdrag_0"));
+                       d);
                 lst_cdrag.addCDrag(cd);
             }
 
@@ -607,10 +611,14 @@ public class DatabaseModel {
     public void addCDrag(CDrag cd, AircraftModel air) {
         if (cd != null) {
             try {
-                cs = con.prepareCall("{call insertCDrag(?,?,?) }");
-                cs.setDouble(1, cd.getcDrag0());
-                cs.setDouble(2, cd.getSpeed());
-                cs.setInt(3, getAircraftModelId(air.getId()));
+                CallableStatement cs1;
+                cs1 = con.prepareCall("{call insertCDrag(?,?,?) }");
+                cs1.setDouble(1, cd.getcDrag0());
+                cs1.setDouble(2, cd.getSpeed());
+                cs1.setInt(3, getAircraftModelId(air.getId()));
+                cs1.execute();
+                
+                cs1.close();
             } catch (SQLException ex) {
                 Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
             }
