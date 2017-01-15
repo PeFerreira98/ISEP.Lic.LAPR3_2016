@@ -8,6 +8,7 @@ package lapr.project.model;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -279,13 +280,13 @@ public class PhysicsTest {
         segment2 = project.getAirNetwork().getMapSegment().get("LSMD01");
 
         double expResult = 225000;
-        System.out.println("\n!!!!!!"+calculateSegmentDistance(aircraft, segment));
-        System.out.println("\n!!!!!!"+calculateSegmentDistance(aircraft, segment2));
+        System.out.println("\n!!!!!!" + calculateSegmentDistance(aircraft, segment));
+        System.out.println("\n!!!!!!" + calculateSegmentDistance(aircraft, segment2));
         double result = Physics.calculateSegmentDistance(aircraft, segment);
-        
+
         System.out.println("\naa:" + result);
 
-        assertEquals(expResult, result, expResult*0.01);
+        assertEquals(expResult, result, expResult * 0.01);
     }
 //
 //    /**
@@ -710,11 +711,12 @@ public class PhysicsTest {
 //        c[4] = 20730;
 //        c[5] = 3;
 
+        HashMap<Integer, double[]> ap = new HashMap<>();
         double[] expResult = c;
         for (i = 0; i < expResult.length; i++) {
             System.out.println("\na:" + expResult[i]);
         }
-        double[] result = Physics.allFlightCalculations(aircraft, initialAirport, endAirport, dist, segments1, matrix);
+        double[] result = Physics.allFlightCalculations(aircraft, initialAirport, endAirport, dist, segments1, matrix, ap);
 
         for (i = 0; i < result.length; i++) {
             System.out.println("\naa:" + result[i]);
@@ -722,7 +724,21 @@ public class PhysicsTest {
 
         System.out.println("\ndistance:" + totalDistance);
         System.out.println("\ndistance2:" + result[2]);
- 
+        
+        double[] a1 = ap.get(1);
+        double[] a2 = ap.get(2);
+        double[] a3 = ap.get(3);
+
+        for (i = 0; i < a1.length; i++) {
+            System.out.println(a1[i]);
+        }
+        for (i = 0; i < a2.length; i++) {
+            System.out.println(a2[i]);
+        }
+        for (i = 0; i < a3.length; i++) {
+            System.out.println(a3[i]);
+        }
+
         System.out.println("\n::::::::" + dist);
         assertEquals(expResult[0], result[0], expResult[0] * 0.01);
 //        assertEquals(expResult[1], result[1], expResult[1] * 0.01);

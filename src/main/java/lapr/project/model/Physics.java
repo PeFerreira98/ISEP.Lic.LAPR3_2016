@@ -7,6 +7,8 @@ package lapr.project.model;
 
 import lapr.project.model.network.Segment;
 import java.lang.Math;
+import java.util.HashMap;
+import java.util.Map;
 import static lapr.project.model.Physics.calculateAircraftClimbRate;
 import static lapr.project.model.Physics.calculateAltitudeVariation;
 import static lapr.project.model.Physics.calculateClimbingAngle;
@@ -287,7 +289,8 @@ public class Physics {
                 + aircraft.getModel().getMaxPayload();
     }
 
-    public static double[] aircraftClimb(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments, double[][] matrix, double totalDistance) {
+    public static double[] aircraftClimb(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments, double[][] matrix,
+            double totalDistance, HashMap<Integer, double[]> ap, double[] vecAuxAux) {
 
         double dragForce = 0;
         double thrustAltitude = 0;
@@ -306,12 +309,20 @@ public class Physics {
         double speedOfSound = 0;
         double climbAngle = 0;
         double distanceTraveledInSegment = 0;
+        double fuelConsumptionSegment = 0;
         double percAux;
         double i = valuesVec[5];
         int a = ((int) i);
         Segment segment = segments[a];
         double segmentDistance = calculateSegmentDistance(aircraft, segment);
-
+        vecAuxAux[4] = 1;
+        vecAuxAux[0] = trueAirSpeed;
+        vecAuxAux[1] = altitude;
+        vecAuxAux[2] = fuelConsumptionSegment;
+        vecAuxAux[3] = aircraft.getFuel() - fuelConsumptionSegment;
+        ap.put((int) vecAuxAux[4], vecAuxAux);
+        vecAuxAux[4] = vecAuxAux[4] + 1;
+        
         maxWeight = calculateAircraftFinalWeight(aircraft);
         do {
 
@@ -337,6 +348,16 @@ public class Physics {
                 totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
                 altitude = altitude + altitudeVariation * 60 * percAux;
                 time = time + 60 * percAux;
+
+                fuelConsumptionSegment = fuelConsumptionSegment + fuelConsumptionSegment * percAux;
+
+                vecAuxAux[0] = trueAirSpeed;
+                vecAuxAux[1] = altitude;
+                vecAuxAux[2] = fuelConsumptionSegment;
+                vecAuxAux[3] = aircraft.getFuel() - fuelConsumptionSegment;
+                ap.put((int) vecAuxAux[4], vecAuxAux);
+                vecAuxAux[4] = vecAuxAux[4] + 1;
+                fuelConsumptionSegment = 0;
                 if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
                     segment = segments[(int) i + 1];
                     i = i + 1;
@@ -368,11 +389,13 @@ public class Physics {
         valuesVec[4] = time;
         valuesVec[5] = i;
         valuesVec[6] = distanceTraveledInSegment;
+        valuesVec[8] = fuelConsumptionSegment;
 
         return valuesVec;
     }
 
-    public static double[] aircraftDescent(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments, double[][] matrix) {
+    public static double[] aircraftDescent(Aircraft aircraft, double[] valuesVec, Airport airport, Segment[] segments, double[][] matrix,
+            HashMap<Integer, double[]> ap, double[] vecAuxAux) {
 
         double altitudeAirport = airport.getLocation().getAltitude();
 
@@ -395,6 +418,7 @@ public class Physics {
         double speedOfSound = 0;
         double descentAngle = 0;
         double percAux = 0;
+        double fuelConsumptionSegment = valuesVec[8];
         double distanceTraveledInSegment = valuesVec[6];
         double i = valuesVec[5];
         Segment segment = segments[(int) i];
@@ -418,6 +442,17 @@ public class Physics {
                 maxWeight = maxWeight - fuelBurned * percAux;
                 totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
                 altitude = altitude + altitudeVariation * 60 * percAux;
+
+                fuelConsumptionSegment = fuelConsumptionSegment + fuelConsumptionSegment * percAux;
+
+                vecAuxAux[0] = trueAirSpeed;
+                vecAuxAux[1] = altitude;
+                vecAuxAux[2] = fuelConsumptionSegment;
+                vecAuxAux[3] = aircraft.getFuel() - fuelConsumptionSegment;
+                ap.put((int) vecAuxAux[4], vecAuxAux);
+                vecAuxAux[4] = vecAuxAux[4] + 1;
+                fuelConsumptionSegment = 0;
+
                 time = time + 60 * percAux;
                 if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
                     segment = segments[(int) i + 1];
@@ -430,6 +465,7 @@ public class Physics {
             altitudeVariation = calculateAltitudeVariation(trueAirSpeed, thrustAltitude, dragForce, maxWeight);
             altitudeAux = altitude;
             altitude = altitude + altitudeVariation * 60;
+            fuelConsumptionSegment = fuelConsumptionSegment + fuelBurned;
 
             if (altitude < altitudeAirport) {
                 percAux = -((altitudeAux - altitudeAirport) / (altitudeVariation * 60));
@@ -445,9 +481,15 @@ public class Physics {
             distanceDescending = distanceDescending + distance;
             distanceTraveled = distanceTraveled + distance;
             time = time + 60;
+            distanceTraveledInSegment = distanceTraveledInSegment + distance;
 
-            
         } while (altitude > altitudeAirport);
+
+        vecAuxAux[0] = trueAirSpeed;
+        vecAuxAux[1] = altitude;
+        vecAuxAux[2] = fuelConsumptionSegment;
+        vecAuxAux[3] = aircraft.getFuel() - fuelConsumptionSegment;
+        ap.put((int) vecAuxAux[4], vecAuxAux);
 
         valuesVec[0] = altitude;
         valuesVec[1] = maxWeight;
@@ -457,6 +499,7 @@ public class Physics {
         valuesVec[5] = i;
         valuesVec[6] = distanceTraveledInSegment + distanceDescending;
         valuesVec[7] = distanceDescending;
+        valuesVec[8] = fuelConsumptionSegment;
 
         return valuesVec;
 
@@ -533,7 +576,8 @@ public class Physics {
 
     }
 
-    public static double[] aircraftCruiseAltitudeCalculations(Aircraft aircraft, double[] valuesVec, double totalDist, double distanceToDescend, Segment[] segments, double[][] matrix) {
+    public static double[] aircraftCruiseAltitudeCalculations(Aircraft aircraft, double[] valuesVec, double totalDist, double distanceToDescend, Segment[] segments, double[][] matrix,
+            HashMap<Integer, double[]> ap, double[] vecAuxAux) {
 
         double dragForce = 0;
         double thrustAltitude = 0;
@@ -550,6 +594,7 @@ public class Physics {
         double trueAirSpeed = 0;
         double speedOfSound = 0;
         double percAux;
+        double fuelConsumptionSegment = valuesVec[8];
         double i = valuesVec[5];
         Segment segment = segments[(int) i];
         double segmentDistance = calculateSegmentDistance(aircraft, segment);
@@ -569,12 +614,24 @@ public class Physics {
 
             fuelBurned = calculatedWdT(aircraft, 60, thrustAltitude);
             distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach60secs;
+
             if (distanceTraveledInSegment > segmentDistance) {
                 percAux = (distanceTraveledInSegment - segmentDistance) / distanceTraveledEach60secs;
                 maxWeight = maxWeight - fuelBurned * percAux;
                 totalFuelBurned = totalFuelBurned + fuelBurned * percAux;
                 distanceTraveled = distanceTraveled + distanceTraveledEach60secs * percAux;
                 distanceTraveledInSegment = distanceTraveledInSegment + distanceTraveledEach60secs * percAux;
+
+                fuelConsumptionSegment = fuelConsumptionSegment + fuelConsumptionSegment * percAux;
+
+                vecAuxAux[0] = trueAirSpeed;
+                vecAuxAux[1] = altitude;
+                vecAuxAux[3] = fuelConsumptionSegment;
+                vecAuxAux[4] = aircraft.getFuel() - fuelConsumptionSegment;
+                ap.put((int) vecAuxAux[5], vecAuxAux);
+                vecAuxAux[5] = vecAuxAux[5] + 1;
+                fuelConsumptionSegment = 0;
+
                 if (segments[(int) i + 1] != null && i + 1 <= segments.length) {
                     segment = segments[(int) i + 1];
                     i = i + 1;
@@ -582,6 +639,7 @@ public class Physics {
                 distanceTraveledInSegment = 0;
                 segmentDistance = calculateSegmentDistance(aircraft, segment);
             }
+            fuelConsumptionSegment = fuelConsumptionSegment + fuelBurned;
             maxWeight = maxWeight - fuelBurned;
             totalFuelBurned = totalFuelBurned + fuelBurned;
             distanceTraveled = distanceTraveled + distanceTraveledEach60secs;
@@ -600,15 +658,16 @@ public class Physics {
         valuesVec[4] = time;
         valuesVec[5] = i;
         valuesVec[6] = distanceTraveledInSegment;
+        valuesVec[8] = fuelConsumptionSegment;
 
         return valuesVec;
 
     }
 
-    public static double[] allFlightCalculations(Aircraft aircraft, Airport initialAirport, Airport endAirport, double dist, Segment[] segments, double[][] matrix) {
+    public static double[] allFlightCalculations(Aircraft aircraft, Airport initialAirport, Airport endAirport, double dist, Segment[] segments, double[][] matrix, HashMap<Integer, double[]> ap) {
 
-        double[] valuesVec = new double[8];
-        double[] valuesVecAux = new double[8];
+        double[] valuesVec = new double[9];
+        double[] valuesVecAux = new double[9];
         valuesVec[5] = 0;
         double totalDistance = 0;
 
@@ -620,11 +679,19 @@ public class Physics {
             }
         }
 
-        valuesVec = aircraftClimb(aircraft, valuesVec, initialAirport, segments, matrix, totalDistance);
+        HashMap<Integer, double[]> apAux = new HashMap<>();
+        double[] vecAuxAux = new double[5];
+        for (int i = 0; i < vecAuxAux.length; i++) {
+            vecAuxAux[i] = 0;
+        }
+
+        double[] vecAuxAuxAux = new double[6];
+
+        valuesVec = aircraftClimb(aircraft, valuesVec, initialAirport, segments, matrix, totalDistance, ap, vecAuxAux);
         valuesVecAux = aircraftDistanceToDescent(aircraft, valuesVec, totalDistance, valuesVecAux, segments, matrix); //este método é para saber os valores do vec até 120km antes do aeropor(valor dos slides para quando aviao costuma começar a descer)
-        valuesVecAux = aircraftDescent(aircraft, valuesVecAux, endAirport, segments, matrix);
-        valuesVec = aircraftCruiseAltitudeCalculations(aircraft, valuesVec, totalDistance, valuesVecAux[7], segments, matrix);
-        valuesVec = aircraftDescent(aircraft, valuesVec, endAirport, segments, matrix);
+        valuesVecAux = aircraftDescent(aircraft, valuesVecAux, endAirport, segments, matrix, apAux, vecAuxAuxAux);
+        valuesVec = aircraftCruiseAltitudeCalculations(aircraft, valuesVec, totalDistance, valuesVecAux[7], segments, matrix, ap, vecAuxAux);
+        valuesVec = aircraftDescent(aircraft, valuesVec, endAirport, segments, matrix, ap, vecAuxAux);
 
         return valuesVec;
     }
@@ -763,7 +830,7 @@ public class Physics {
 
         return valuesVec;
     }
-    
+
     public static boolean checkReserve(Aircraft aircraft, double flightTime, double altitude, double speed, double fuelBurned) {
 
         double tMach = calculateTrueMachNumber(aircraft, altitude, speed);
