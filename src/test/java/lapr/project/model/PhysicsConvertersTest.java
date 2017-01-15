@@ -5,8 +5,12 @@
  */
 package lapr.project.model;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 /**
  *
@@ -15,6 +19,22 @@ import static org.junit.Assert.*;
 public class PhysicsConvertersTest {
     
     public PhysicsConvertersTest() {
+    }
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
     }
 
     /**
@@ -111,6 +131,32 @@ public class PhysicsConvertersTest {
         double expResult = liters*0.804;
         double result = PhysicsConverters.litersToKgConverter(liters);
         assertEquals(expResult, result, 0.01*expResult);
+    }
+
+    /**
+     * Test of metersToKm method, of class PhysicsConverters.
+     */
+    @Test
+    public void testMetersToKm() {
+        System.out.println("metersToKm");
+        double meters = 1000;
+        double expResult = 1000*1000;
+        double result = PhysicsConverters.metersToKm(meters);
+        assertEquals(expResult, result, 1000000);
+        
+    }
+
+    /**
+     * Test of secondsToHours method, of class PhysicsConverters.
+     */
+    @Test
+    public void testSecondsToHours() {
+        System.out.println("secondsToHours");
+        double seconds = 30000;
+        double expResult = 30000 *  0.000277777778;
+        double result = PhysicsConverters.secondsToHours(seconds);
+        assertEquals(expResult, result, 8.33333334);
+        
     }
     
 }

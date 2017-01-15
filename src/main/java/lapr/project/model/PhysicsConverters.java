@@ -43,4 +43,13 @@ public class PhysicsConverters {
 
         return liters * 0.804;
     }
+    
+    public static double metersToKm(double meters){
+        return meters * 1000;
+    }
+    
+    public static double secondsToHours(double seconds){
+        return seconds * 0.000277777778;
+    }
+    
 }
