@@ -8,6 +8,7 @@ package lapr.project.controller;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -203,8 +204,10 @@ public class SimulationResultsController {
         initializeArrayListSegments(segments);
 
         System.out.println(Physics.calculateAircraftFinalWeight(aircraft));
+        
+        HashMap<Integer, double[]> map = new HashMap<>();
 
-        double[] result = Physics.allFlightCalculations(aircraft, this.flightPlan.getOrigin(), this.flightPlan.getDest(), distance, segments, this.flightPattern);
+        double[] result = Physics.allFlightCalculations(aircraft, this.flightPlan.getOrigin(), this.flightPlan.getDest(), distance, segments, this.flightPattern, map);
 
         for (int i = 0; i < result.length; i++) {
             System.out.println("\naa:" + result[i]);
