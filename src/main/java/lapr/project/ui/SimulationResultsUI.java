@@ -22,9 +22,9 @@ import lapr.project.model.network.Segment;
 public class SimulationResultsUI extends javax.swing.JFrame {
 
     private SimulationResultsController simulationResultsController;
-    private double time = 0;
-    private double energy = 0;
-    private double distance = 0;
+    private double time = 0.0;
+    private double energy = 0.0;
+    private double distance = 0.0;
     private String aircraft;
     private String flightPlan;
     List<Segment> arrayListSegments;
@@ -62,9 +62,9 @@ public class SimulationResultsUI extends javax.swing.JFrame {
         if (c == null) {
             JOptionPane.showMessageDialog(this, "Error Doing Calculations! (Not Yet Implemented?)");
         } else {
-            distance = c[2];
-            energy = c[3];
-            time = c[4];
+            distance = Math.round(c[2] * 10.0) / 10.0;
+            energy = Math.round(c[3] * 10.0) / 10.0;
+            time = Math.round(c[4] * 10.0) / 10.0;
         }
     }
 
