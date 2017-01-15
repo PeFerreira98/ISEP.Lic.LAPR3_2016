@@ -763,4 +763,26 @@ public class Physics {
 
         return valuesVec;
     }
+    
+    public static boolean checkReserve(Aircraft aircraft, double flightTime, double altitude, double speed, double fuelBurned) {
+
+        double tMach = calculateTrueMachNumber(aircraft, altitude, speed);
+        double thrust = calculateThrust(aircraft, altitude, tMach);
+        double totalThrust = calculateTotalThrust(aircraft, thrust);
+        double fuelConsumption30 = calculatedWdT(aircraft, 30, totalThrust);
+        double fuelConsumption60 = calculatedWdT(aircraft, 60, totalThrust);
+
+        if (flightTime < 10800) {
+            if ((aircraft.getFuel() - (fuelConsumption30 + fuelBurned)) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if ((aircraft.getFuel() - (fuelConsumption60 + fuelBurned)) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }
