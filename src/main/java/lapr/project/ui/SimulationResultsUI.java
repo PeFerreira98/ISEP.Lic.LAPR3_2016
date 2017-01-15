@@ -46,6 +46,9 @@ public class SimulationResultsUI extends javax.swing.JFrame {
 
         if (this.simulationResultsController.isReachable()) {
             initCalculations();
+            if (!this.simulationResultsController.checkReserve(time, energy)) {
+                JOptionPane.showMessageDialog(this, "Not enough fuel to travel");
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Error > No path found between Airports!");
         }

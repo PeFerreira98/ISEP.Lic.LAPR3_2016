@@ -71,6 +71,12 @@ public class SimulationResultsController {
         }
 
     }
+    
+    public boolean checkReserve(double time, double fuel){
+        double altitude = aircraft.getModel().getCruiseAltitude();
+        double speed = Physics.calculateSpeedDueAltitudeClimbing(altitude, flightPattern);
+        return Physics.checkReserve(aircraft, time, altitude, speed, fuel);
+    }
 
     public ArrayList<Segment> getArrayListSegments() {
         return this.arrayListSegments;
