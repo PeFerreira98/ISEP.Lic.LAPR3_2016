@@ -594,142 +594,142 @@ public class PhysicsTest {
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
-//    /**
-//     * Test of allFlightCalculations method, of class Physics.
-//     */
-//    @Test
-//    public void testAllFlightCalculations() {
-//        System.out.println("allFlightCalculations");
-//
-//        Project project = listProjects.get(0);
-//        System.out.println(project.getDescription());
-//        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 120000, 320000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
-//        project.getAircraftRegister().addAircraft(aircraft);
-//        aircraft.setDescription("aaa");
-//        System.out.print(project.getAircraftRegister().getAircraftRegister().values().toString());
-//        double[][] matrix = ImportFlightPatternCSV.CSVImport("inOutFiles/Flight_pattern_A380_v1a.csv");
-//
-//        Airport initialAirport = project.getAirportRegister().getAirportByIATACode("LIS");
-//        Airport endAirport = project.getAirportRegister().getAirportByIATACode("MAD");
-//
-//        Node voInf = null;
-//        Node vdInf = null;
-//
-//        System.out.println("\naaaaaaaaaa" + project.getAirNetwork().getMapNodes().values());
-//
-//        for (Node node : project.getAirNetwork().getMapNodes().values()) {
-//            if (node.getLatitude() == initialAirport.getLocation().getLatitude()
-//                    && node.getLongitude() == initialAirport.getLocation().getLongitude()) {
-//                voInf = node;
-//            }
-//        }
-//
-//        for (Node node : project.getAirNetwork().getMapNodes().values()) {
-//            if (node.getLatitude() == endAirport.getLocation().getLatitude()
-//                    && node.getLongitude() == endAirport.getLocation().getLongitude()) {
-//                vdInf = node;
-//            }
-//        }
-//
-//        Deque<Node> shortPath = new ArrayDeque<>();
-//
-//        LinkedList<Node> a = new LinkedList<>();
-//        Map<Double, LinkedList<Node>> aaaaaaaaa = project.getAirNetwork().getShortestPath(project.getAirNetwork().getNetwork(), voInf, vdInf, shortPath, aircraft);
-//
-//        double dist = 0;
-//        Set<Double> b = aaaaaaaaa.keySet();
-//
-//        Iterable<Double> b2 = b;
-//        Iterator<Double> it = b.iterator();
-//
-//        while (it.hasNext()) {
-//            dist = it.next();
-//        }
-//
-//        a = aaaaaaaaa.get(dist);
-//
-//        Iterator<Node> nodess = a.iterator();
-//
-//        List<Node> listNodes = new ArrayList<>();
-//
-//        while (nodess.hasNext()) {
-//            listNodes.add(nodess.next());
-//        }
-//
-//        Segment[] segments1 = new Segment[shortPath.size()];
-//
-//        int i = 0;
-//        int i1 = 0;
-//
-//        System.out.println("\nMap Segments total:" + project.getAirNetwork().getMapSegment());
-//
-//        System.out.println("\nNodesList: " + listNodes);
-//
-//        while (i < listNodes.size() - 1) {
-//            for (Segment segmentaa : project.getAirNetwork().getMapSegment().values()) {
-//                if (listNodes.get(i).equals(segmentaa.getBeginningNode()) && listNodes.get(i + 1).equals(segmentaa.getEndNode())
-//                        || listNodes.get(i).equals(segmentaa.getEndNode()) && listNodes.get(i + 1).equals(segmentaa.getBeginningNode())) {
-//                    segments1[i1] = segmentaa;
-//                    i1++;
-//                    i++;
-//                    if (i == listNodes.size() - 1) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//
-//        System.out.println("\nShortPath" + shortPath);
-//
-//        for (i = 0; i < segments1.length; i++) {
-//            System.out.println("\nArraySegments" + segments1[i]);
-//        }
-//        double totalDistance = 0;
-//
-//        for (i = 0; i <= segments1.length; i++) {
-//            if (segments1[i] != null) {
-//                totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments1[i]);
-//            } else {
-//                break;
-//            }
-//        }
-//
-//        System.out.println(Physics.calculateAircraftFinalWeight(aircraft));
-//        double[] c = new double[8];
-////        c[0] = 7;
-////        c[1] = 1039777;
-////        c[2] = totalDistance;
-////        c[3] = 179420;
-////        c[4] = 12300;
-////        c[5] = 2;
-//
-//        c[0] = 610;
-////        c[1] = 591773;
-////        c[2] = totalDistance;
-////        c[3] = 179420;
-////        c[4] = 20730;
-////        c[5] = 3;
-//
-//        double[] expResult = c;
-//        for (i = 0; i < expResult.length; i++) {
-//            System.out.println("\na:" + expResult[i]);
-//        }
-//        double[] result = Physics.allFlightCalculations(aircraft, initialAirport, endAirport, dist, segments1, matrix);
-//
-//        for (i = 0; i < result.length; i++) {
-//            System.out.println("\naa:" + result[i]);
-//        }
-//
-//        System.out.println("\ndistance:" + totalDistance);
-//        System.out.println("\ndistance2:" + result[2]);
-//
-//        System.out.println("\n::::::::" + dist);
-//        assertEquals(expResult[0], result[0], expResult[0] * 0.01);
-////        assertEquals(expResult[1], result[1], expResult[1] * 0.01);
-////        assertEquals(expResult[2], result[2], expResult[2] * 0.01);
-////        assertEquals(expResult[3], result[3], expResult[2] * 0.01);
-////        assertEquals(expResult[4], result[4], expResult[4] * 0.01);
-////        assertEquals(expResult[5], result[5], expResult[5] * 0.01);
-//
-//    }
+    /**
+     * Test of allFlightCalculations method, of class Physics.
+     */
+    @Test
+    public void testAllFlightCalculations() {
+        System.out.println("allFlightCalculations");
+
+        Project project = listProjects.get(0);
+        System.out.println(project.getDescription());
+        Aircraft aircraft = new Aircraft("aaa", 0, 0, 0, 120000, 320000, project.getAircraftModelRegister().getAircraftModelMap().get("A380"));
+        project.getAircraftRegister().addAircraft(aircraft);
+        aircraft.setDescription("aaa");
+        System.out.print(project.getAircraftRegister().getAircraftRegister().values().toString());
+        double[][] matrix = ImportFlightPatternCSV.CSVImport("inOutFiles/Flight_pattern_A380_v1a.csv");
+
+        Airport initialAirport = project.getAirportRegister().getAirportByIATACode("LIS");
+        Airport endAirport = project.getAirportRegister().getAirportByIATACode("OPO");
+
+        Node voInf = null;
+        Node vdInf = null;
+
+        System.out.println("\naaaaaaaaaa" + project.getAirNetwork().getMapNodes().values());
+
+        for (Node node : project.getAirNetwork().getMapNodes().values()) {
+            if (node.getLatitude() == initialAirport.getLocation().getLatitude()
+                    && node.getLongitude() == initialAirport.getLocation().getLongitude()) {
+                voInf = node;
+            }
+        }
+
+        for (Node node : project.getAirNetwork().getMapNodes().values()) {
+            if (node.getLatitude() == endAirport.getLocation().getLatitude()
+                    && node.getLongitude() == endAirport.getLocation().getLongitude()) {
+                vdInf = node;
+            }
+        }
+
+        Deque<Node> shortPath = new ArrayDeque<>();
+
+        LinkedList<Node> a = new LinkedList<>();
+        Map<Double, LinkedList<Node>> aaaaaaaaa = project.getAirNetwork().getShortestPath(project.getAirNetwork().getNetwork(), voInf, vdInf, shortPath, aircraft);
+
+        double dist = 0;
+        Set<Double> b = aaaaaaaaa.keySet();
+
+        Iterable<Double> b2 = b;
+        Iterator<Double> it = b.iterator();
+
+        while (it.hasNext()) {
+            dist = it.next();
+        }
+
+        a = aaaaaaaaa.get(dist);
+
+        Iterator<Node> nodess = a.iterator();
+
+        List<Node> listNodes = new ArrayList<>();
+
+        while (nodess.hasNext()) {
+            listNodes.add(nodess.next());
+        }
+
+        Segment[] segments1 = new Segment[shortPath.size()];
+
+        int i = 0;
+        int i1 = 0;
+
+        System.out.println("\nMap Segments total:" + project.getAirNetwork().getMapSegment());
+
+        System.out.println("\nNodesList: " + listNodes);
+
+        while (i < listNodes.size() - 1) {
+            for (Segment segmentaa : project.getAirNetwork().getMapSegment().values()) {
+                if (listNodes.get(i).equals(segmentaa.getBeginningNode()) && listNodes.get(i + 1).equals(segmentaa.getEndNode())
+                        || listNodes.get(i).equals(segmentaa.getEndNode()) && listNodes.get(i + 1).equals(segmentaa.getBeginningNode())) {
+                    segments1[i1] = segmentaa;
+                    i1++;
+                    i++;
+                    if (i == listNodes.size() - 1) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        System.out.println("\nShortPath" + shortPath);
+
+        for (i = 0; i < segments1.length; i++) {
+            System.out.println("\nArraySegments" + segments1[i]);
+        }
+        double totalDistance = 0;
+
+        for (i = 0; i <= segments1.length; i++) {
+            if (segments1[i] != null) {
+                totalDistance = totalDistance + calculateSegmentDistance(aircraft, segments1[i]);
+            } else {
+                break;
+            }
+        }
+
+        System.out.println(Physics.calculateAircraftFinalWeight(aircraft));
+        double[] c = new double[8];
+//        c[0] = 7;
+//        c[1] = 1039777;
+//        c[2] = totalDistance;
+//        c[3] = 179420;
+//        c[4] = 12300;
+//        c[5] = 2;
+
+        c[0] = 69;
+//        c[1] = 591773;
+//        c[2] = totalDistance;
+//        c[3] = 179420;
+//        c[4] = 20730;
+//        c[5] = 3;
+
+        double[] expResult = c;
+        for (i = 0; i < expResult.length; i++) {
+            System.out.println("\na:" + expResult[i]);
+        }
+        double[] result = Physics.allFlightCalculations(aircraft, initialAirport, endAirport, dist, segments1, matrix);
+
+        for (i = 0; i < result.length; i++) {
+            System.out.println("\naa:" + result[i]);
+        }
+
+        System.out.println("\ndistance:" + totalDistance);
+        System.out.println("\ndistance2:" + result[2]);
+ 
+        System.out.println("\n::::::::" + dist);
+        assertEquals(expResult[0], result[0], expResult[0] * 0.01);
+//        assertEquals(expResult[1], result[1], expResult[1] * 0.01);
+//        assertEquals(expResult[2], result[2], expResult[2] * 0.01);
+//        assertEquals(expResult[3], result[3], expResult[2] * 0.01);
+//        assertEquals(expResult[4], result[4], expResult[4] * 0.01);
+//        assertEquals(expResult[5], result[5], expResult[5] * 0.01);
+
+    }
 }
