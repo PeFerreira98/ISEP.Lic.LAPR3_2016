@@ -52,7 +52,7 @@ public class DatabaseModel {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void closeDB() {
         try {
             this.con.close();
@@ -162,7 +162,7 @@ public class DatabaseModel {
                         cs1.getDouble("fuel_capacity"), cs1.getDouble("VMO"),
                         cs1.getDouble("MMO"), cs1.getDouble("wing_area"),
                         cs1.getDouble("wing_span"), cs1.getDouble("aspect_ratio"),
-                        cs1.getDouble("e"), 
+                        cs1.getDouble("e"),
                         getListCDrag(cs1.getString("name")));
                 lst_a.add(am);
             }
@@ -240,7 +240,7 @@ public class DatabaseModel {
         closeDB();
         return lst_nodes;
     }
-    
+
     /**
      * return the list of nodes by project(DAL)
      *
@@ -268,7 +268,6 @@ public class DatabaseModel {
 //                        getAircraftModel(cs1.getInt("aircraftmodel_id")));
 //                lst_aircraft.add(a);
 //            }
-
         } catch (Exception ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -277,7 +276,7 @@ public class DatabaseModel {
         return lst_aircraft;
     }
 
-    public List<FlightPlan> getListFlightPlans(){
+    public List<FlightPlan> getListFlightPlans() {
         List<FlightPlan> lst_fp = new ArrayList<>();
 
         try {
@@ -303,7 +302,7 @@ public class DatabaseModel {
         closeDB();
         return lst_fp;
     }
-    
+
     public List<Flight> getListFlights() {
         List<Flight> lst_flights = new ArrayList<>();
 
@@ -330,7 +329,7 @@ public class DatabaseModel {
         return lst_flights;
     }
 
-    public CDragRegister getListCDrag(String aircraftModelName){
+    public CDragRegister getListCDrag(String aircraftModelName) {
         CDragRegister lst_cdrag = new CDragRegister();
 
         try {
@@ -355,10 +354,9 @@ public class DatabaseModel {
 //        closeDB();
         return lst_cdrag;
     }
-    
+
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" INSERTS">
-    
     /**
      * add the project and the lists to Database.(DAL)
      *
@@ -398,6 +396,9 @@ public class DatabaseModel {
             if (!project.getAircraftModelRegister().getAircraftModelMap().isEmpty()) {
                 project.getAircraftModelRegister().getAircraftModelMap().values().stream().forEach((airModel) -> {
                     addAircraftModel(airModel);
+                    airModel.getCdragRegister().getCDragList().stream().forEach((cdrag) -> {
+                        addCDrag(cdrag, airModel);
+                    });
                 });
                 flag = 1;
             }
@@ -497,7 +498,7 @@ public class DatabaseModel {
             cs.setInt(8, getAircraftModelId(air.getId()));
             cs.setInt(9, getProjectId());
             cs.executeUpdate();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -543,7 +544,7 @@ public class DatabaseModel {
             cs.setInt(6, getAirportId(fp.getOrigin().getIATAcode()));
             cs.setInt(7, getAirportId(fp.getDest().getIATAcode()));
             cs.setInt(8, getProjectId());
-            
+
             cs.execute();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -589,10 +590,36 @@ public class DatabaseModel {
             }
         }
     }
+    
+    public void addFlightSegment(Flight f,Segment s, int index) {
+        if (f != null) {
+            try {
+                cs = con.prepareCall("{call insertFlight_Segment(?,?,?) }");
+                cs.setInt(1, getFlightId(f.getId()));
+                cs.setInt(2, getSegmentId(s.getId()));
+                cs.setInt(3, index);
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void addCDrag(CDrag cd, AircraftModel air) {
+        if (cd != null) {
+            try {
+                cs = con.prepareCall("{call insertCDrag(?,?,?) }");
+                cs.setDouble(1, cd.getcDrag0());
+                cs.setDouble(2, cd.getSpeed());
+                cs.setInt(3, getAircraftModelId(air.getId()));
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
 // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc=" EDIT ">
-    //DONE
+// <editor-fold defaultstate="collapsed" desc=" EDIT ">
+//DONE
     public void editProject(String name, String description) {
         try {
             openDB();
@@ -603,14 +630,15 @@ public class DatabaseModel {
 
             cs.execute();
             closeDB();
+
         } catch (Exception ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" GETID ">
-    
     /**
      * search the id that only DB knows
      *
@@ -627,8 +655,10 @@ public class DatabaseModel {
 
             id = cs1.getInt(1);
             cs1.close();
+
         } catch (Exception ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         return id;
@@ -653,7 +683,8 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
@@ -677,7 +708,8 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
@@ -701,7 +733,8 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
@@ -725,7 +758,8 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
@@ -749,7 +783,8 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
@@ -773,7 +808,8 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
@@ -797,14 +833,14 @@ public class DatabaseModel {
             id = cs1.getInt(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" GETINFO ">
-    
     /**
      * return Node by id
      *
@@ -824,10 +860,12 @@ public class DatabaseModel {
 
             while (cs1.next()) {
                 n = this.project.getAirNetwork().getNode(cs1.getString("name"));
+
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return n;
     }
@@ -845,10 +883,12 @@ public class DatabaseModel {
 
             while (cs1.next()) {
                 n = this.project.getAirportRegister().getAirportByIATACode("cod_iata");
+
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return n;
     }
@@ -866,10 +906,12 @@ public class DatabaseModel {
 
             while (cs1.next()) {
                 s = this.project.getAirNetwork().getSegment("name");
+
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return s;
     }
@@ -888,9 +930,11 @@ public class DatabaseModel {
             while (cs1.next()) {
                 a = this.project.getAircraftRegister().getAircraftByID(
                         cs1.getString("name"));
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return a;
     }
@@ -909,13 +953,15 @@ public class DatabaseModel {
             while (cs1.next()) {
                 am = this.project.getAircraftModelRegister().getAircraftModel(
                         cs1.getString("name"));
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return am;
     }
-    
+
     private Flight getFlight(int id_flight) {
         Flight f = null;
 
@@ -930,13 +976,15 @@ public class DatabaseModel {
             while (cs1.next()) {
                 f = this.project.getFlightRegister().getFlightByID(
                         cs1.getString("name"));
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return f;
     }
-    
+
     private FlightPlan getFlightPlan(int id_flightplan) {
         FlightPlan fp = null;
 
@@ -951,16 +999,16 @@ public class DatabaseModel {
             while (cs1.next()) {
                 fp = this.project.getFlightPlanRegister().getFlightPlansList().get(
                         cs1.getString("name"));
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseModel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return fp;
     }
 
-    
     // </editor-fold>
-
     public boolean validateName(String name) {
         for (Project p : getProjects()) {
             if (p.getName().equals(name)) {
